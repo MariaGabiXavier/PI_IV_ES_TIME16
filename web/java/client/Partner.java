@@ -1,0 +1,38 @@
+package client;
+
+import java.io.*;
+import java.net.Socket;
+
+// Classe responsável pela comunicação com o servidor
+public class Partner {
+    private Socket connection;
+    private ObjectOutputStream out;
+    private ObjectInputStream in;
+
+    public Partner(Socket connection) throws Exception {
+        if (connection == null)
+            throw new Exception("Conexão ausente");
+
+        this.connection = connection;
+        this.out = new ObjectOutputStream(connection.getOutputStream());
+        this.in = new ObjectInputStream(connection.getInputStream());
+    }
+
+    // Envia uma mensagem ao servidor
+    public void send(Message message) throws Exception {
+        this.out.writeObject(message);
+        this.out.flush();
+    }
+
+    // Recebe uma mensagem do servidor
+    public Message receive() throws Exception {
+        return (Message) this.in.readObject();
+    }
+
+    // Fecha a comunicação
+    public void close() throws Exception {
+        this.in.close();
+        this.out.close();
+        this.connection.close();
+    }
+}
