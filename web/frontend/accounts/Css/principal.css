@@ -1,10 +1,5 @@
-/* Importar Google Icons */
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons+Outlined');
 
-/* =====================================
-VARIÁVEIS GLOBAIS (Do seu site principal)
-=====================================
-*/
 :root {
     --color-primary: #a9ff00;
     --color-text: #000;
@@ -17,15 +12,11 @@ html {
     scroll-behavior: smooth;
 }
 
-/* =====================================
-SOBREPOSIÇÃO DE ESTILO DO BODY (Específico do Painel)
-=====================================
-*/
 body {
-    display: block; /* Reseta o 'flex' do principal.css */
+    display: block; 
     flex-direction: unset;
     align-items: unset;
-    background-color: #f9f9f9; /* Fundo cinza específico do painel */
+    background-color: #f9f9f9; 
     font-family: var(--font-family);
     margin: 0;
     padding: 0;
@@ -33,21 +24,15 @@ body {
     min-height: 100vh;
 }
 
-/* =====================================
-LAYOUT DO PAINEL (Estilos Exclusivos)
-=====================================
-*/
-
 .dashboard-container {
     display: flex;
     min-height: 100vh;
 }
 
-/* ==== BARRA LATERAL ==== */
 .dashboard-sidebar {
     width: 330px;
     background-color: #49643E; 
-    color: var(--color-background); /* Texto branco */
+    color: var(--color-background); 
     padding: 120px 30px;
     box-sizing: border-box;
     flex-shrink: 0;
@@ -57,7 +42,7 @@ LAYOUT DO PAINEL (Estilos Exclusivos)
 
 .dashboard-sidebar .logo-getgreen {
     font-size: 28px;
-    color: black; /* Branco */
+    color: black; 
     margin-bottom: 40px;
     text-decoration: none;
     font-family: var(--font-family);
@@ -94,7 +79,7 @@ LAYOUT DO PAINEL (Estilos Exclusivos)
 }
 
 .sidebar-nav li a:hover {
-    color: var(--color-primary); /* Verde-limão */
+    color: var(--color-primary); 
     padding-left: 5px;
 }
 
@@ -103,29 +88,23 @@ LAYOUT DO PAINEL (Estilos Exclusivos)
     font-size: 22px;
 }
 
-/* ==== CONTEÚDO PRINCIPAL ==== */
 .dashboard-main {
     flex: 1;
     padding: 40px 50px;
-    background-color: var(--color-background); /* Branco */
+    background-color: var(--color-background); 
     box-sizing: border-box;
     overflow-y: auto;
 }
 
-/* ▼▼▼ SEÇÃO MODIFICADA ▼▼▼ */
-/* O header do painel (diferente do header-getgreen) */
 .dashboard-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 40px;
     
-    /* Estilos copiados do .header-getgreen (index.css) */
     background-color: var(--color-background);
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    /* Adicionando um padding para se parecer com o header principal */
     padding: 20px 30px; 
-    /* Ajustando a margem para compensar o padding do .dashboard-main */
     margin-left: -50px;
     margin-right: -50px;
     margin-top: -40px;
@@ -138,20 +117,16 @@ LAYOUT DO PAINEL (Estilos Exclusivos)
     color: var(--color-text);
     transition: color 0.3s;
     
-    /* Estilos copiados do .nav-getgreen a (index.css) */
     margin-left: 100px;
     font-size: 17px;
     font-weight: 500; 
 }
-/* ▲▲▲ FIM DA SEÇÃO MODIFICADA ▲▲▲ */
-
 
 .main-nav a:first-child {
     margin-left: 0;
 }
 
 .main-nav a:hover {
-    /* Cor exata do .nav-getgreen a:hover (index.css) */
     color: #88cc00;
 }
 
@@ -161,7 +136,7 @@ LAYOUT DO PAINEL (Estilos Exclusivos)
     font-size: 18px;
     color: var(--color-text);
     text-decoration: none;
-   
+    
 }
 
 .user-profile .material-icons-outlined {
@@ -170,7 +145,6 @@ LAYOUT DO PAINEL (Estilos Exclusivos)
     color: #49643E;
 }
 
-/* ==== PESQUISA ==== */
 .search-section {
     margin-bottom: 50px;
 }
@@ -208,7 +182,6 @@ LAYOUT DO PAINEL (Estilos Exclusivos)
     padding: 5px;
 }
 
-/* ==== CARDS DE COLETA ==== */
 .content-feed {
     display: grid;
     grid-template-columns: 1fr;
@@ -270,7 +243,6 @@ LAYOUT DO PAINEL (Estilos Exclusivos)
     font-weight: bold;
 }
 
-/* Botão "ver mais" */
 .button-vermais {
     display: inline-block;
     background-color: var(--color-primary); 
@@ -287,35 +259,19 @@ LAYOUT DO PAINEL (Estilos Exclusivos)
 }
 
 .button-vermais:hover {
-    background-color: #92e000; /* Verde-lima um pouco mais escuro */
+    background-color: #92e000; 
 }
 
-/* =====================================
-SEÇÕES COMPARTILHADAS (Do seu site principal)
-=====================================
-*/
 
-
-
-
-/* =====================================
-MEDIA QUERIES (Combinadas)
-=====================================
-*/
-
-/* Não usado no painel, mas parte do seu CSS de referência */
 @media (max-width: 1360px) {
-    /* (Estilos de .hero-image-getgreen omitidos, pois não estão nesta página) */
 }
 
 
 @media (max-width: 992px) {
-    /* Estilos do Painel */
     .dashboard-main {
         padding: 30px;
     }
     
-    /* Ajuste do header modificado */
     .dashboard-header {
         margin-left: -30px;
         margin-right: -30px;
@@ -325,11 +281,9 @@ MEDIA QUERIES (Combinadas)
     }
     
     .main-nav a {
-        /* Reduz o espaçamento em telas menores */
         margin-left: 35px;
     }
 
-    /* Estilos do Site Principal (para sobre, social, footer) */
     .about-getgreen {
         padding: 40px 20px;
     }
@@ -361,7 +315,6 @@ MEDIA QUERIES (Combinadas)
 
 
 @media (max-width: 768px) {
-    /* Estilos do Painel */
     .dashboard-container {
         flex-direction: column;
     }
@@ -375,7 +328,6 @@ MEDIA QUERIES (Combinadas)
         padding: 30px 20px;
     }
     
-    /* Ajuste do header modificado */
     .dashboard-header {
         margin-left: -20px;
         margin-right: -20px;
@@ -383,13 +335,11 @@ MEDIA QUERIES (Combinadas)
         padding-left: 20px;
         padding-right: 20px;
         
-        /* Ajuste do layout do header para mobile */
         flex-direction: column;
         align-items: flex-start;
         gap: 20px;
     }
     .main-nav {
-        /* Correção da sua regra anterior */
         margin-left: 0; 
     }
     .main-nav a {
@@ -424,7 +374,6 @@ MEDIA QUERIES (Combinadas)
         --content-padding-x: 20px;
     }
 
-    /* Estilos do Site Principal (para sobre, social, footer) */
     .button-secondary {
         padding: 12px 30px;
         font-size: 16px;

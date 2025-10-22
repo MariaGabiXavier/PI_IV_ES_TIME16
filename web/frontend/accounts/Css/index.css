@@ -30,7 +30,6 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* AJUSTADO: Aumenta o padding para acomodar o logo de 75px sem desalinhar o menu */
     padding: 10px var(--content-padding-x); 
     box-sizing: border-box;
     z-index: 10;
@@ -45,9 +44,7 @@ body {
     align-items: center;
 }
 
-/* NOVO: Estiliza a imagem do logo no cabeçalho */
 .header-logo-image {
-    /* AJUSTADO: Altura do logo para 75px */
     height: 75px; 
     width: auto;
     margin-right: 10px; 
@@ -87,7 +84,6 @@ body {
     width: 100%;
     max-width: 1500px;
     height: 700px;
-    /* AJUSTADO: Aumenta a margem superior para compensar o cabeçalho mais alto */
     margin-top: 140px; 
     margin-bottom: 60px;
 }
@@ -102,7 +98,6 @@ body {
     border-radius: 20px;
     padding: 0;
     position: relative;
-    /* REMOVIDO: overflow: hidden; para permitir que o coletor transborde e fique visível */
 }
 
 .hero-content-getgreen {
@@ -159,17 +154,11 @@ body {
     align-items: flex-end;
 }
 
-/* AJUSTE CHAVE: Posição e Transbordo do Coletor */
 .hero-image-getgreen img {
-    /* Tamanho absoluto que se encaixa na proporção */
     width: 700px;
     height: auto;
     display: block;
-    
-    /* X (Horizontal): Move para a direita para transbordar a caixa.
-       Y (Vertical): Move para cima (-30px) para alinhar a cabeça. */
     transform: translate(100px, -1px);
-    
     z-index: 0;
 }
 
@@ -469,11 +458,9 @@ body {
 
     .logo-getgreen {
         font-size: 24px;
-        /* ADICIONADO: para evitar que o logo ocupe muito espaço em telas menores */
         white-space: nowrap; 
     }
     
-    /* ADICIONADO: Ajuste o tamanho do logo para telas menores */
     .header-logo-image {
         height: 30px; 
         margin-right: 5px;
