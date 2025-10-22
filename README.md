@@ -12,9 +12,7 @@ O projeto foi desenvolvido como parte do componente curricular **Ideação e Val
 - [Objetivo](#-objetivo)
 - [Funcionalidades Principais](#-funcionalidades-principais)
 - [Tecnologias Utilizadas](#-tecnologias-utilizadas)
-- [MVP e Prototipagem](#-mvp-e-prototipagem)
 - [Equipe](#-equipe)
-- [Licença](#-licença)
 
 ---
 
@@ -47,7 +45,6 @@ reduzindo a burocracia e **conectando empresas a coletores parceiros**, garantin
 2. Reduzir a informalidade no setor de reciclagem.
 3. Conectar empresas e coletores de maneira confiável.
 4. Ampliar as oportunidades de renda para catadores.
-5. Oferecer relatórios e comprovação de conformidade ambiental (ESG).
 
 ---
 
@@ -58,7 +55,37 @@ reduzindo a burocracia e **conectando empresas a coletores parceiros**, garantin
 ✅ **Solicitação de coletas** – empresas descrevem tipo e quantidade de resíduos.  
 ✅ **Pesquisa de solicitações** – coletores encontram coletas próximas.  
 ✅ **Agendamento de coletas** – negociação colaborativa entre coletor e empresa.  
-✅ **Avaliação de serviços** – sistema de feedback e classificação dos coletores.
 
 ---
+
+## 💻 Tecnologias Utilizadas
+
+| Camada | Tecnologia |
+|---------|-------------|
+| Frontend | HTML, CSS, TypeScript |
+| Backend | Java |
+| Banco de Dados | Mongo DB |
+| Design | Figma |
+| Gestão | GIT Project |
+
+---
+
+## 👥 Equipe de Desenvolvimento
+
+- **Anna Clara Olbi** 
+- **Christian Lindoso Froz** 
+- **Ester Teresa Amaral** 
+- **Larissa Furlan Ferreira** 
+- **Leonardo Vicente**
+- **Maria Gabriella Xavier Puccinelli** 
+
+---
+
+## 🏫 Instituição
+
+**Pontifícia Universidade Católica de Campinas (PUC-Campinas)**  
+**Curso:** Engenharia de Software  
+**Disciplina:** Projeto Integrador IV  
+**Professora:** Dra. Renata Arantes  
+**Ano:** 2025
 
