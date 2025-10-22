@@ -1,0 +1,221 @@
+:root {
+    --color-primary: #a9ff00;
+    --color-text: #000;
+    --color-background: #fff;
+    --font-family: 'Jomolhari', serif;
+    --content-padding-x: 80px;
+}
+
+body {
+    font-family: var(--font-family);
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-background);
+    color: var(--color-text);
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    align-items: center;
+}
+
+.header-getgreen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: none;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px var(--content-padding-x);
+    box-sizing: border-box;
+    z-index: 10;
+}
+
+.logo-getgreen {
+    font-size: 28px;
+    font-weight: 800;
+}
+
+.nav-getgreen {
+    display: flex;
+    align-items: center;
+}
+
+.nav-getgreen a {
+    margin-left: 150px;
+    text-decoration: none;
+    color: var(--color-text);
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.nav-getgreen a:last-child {
+    margin-left: 650px;
+}
+
+.hero-getgreen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 1300px;
+    height: 700px;
+    margin-top: 0;
+}
+
+.hero-box {
+    background-color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    padding: 0;
+    position: relative;
+}
+
+.hero-content-getgreen {
+    flex: none;
+    width: 50%;
+    max-width: 500px;
+    padding-left: var(--content-padding-x);
+    padding-right: 20px;
+    box-sizing: border-box;
+    z-index: 1;
+    align-self: center;
+}
+
+.hero-content-getgreen h1 {
+    font-size: 54px;
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-weight: bold;
+}
+
+.hero-content-getgreen p {
+    font-size: 35px;
+    line-height: 1.4;
+    margin-bottom: 25px;
+    font-weight: 500;
+}
+
+.button-getgreen {
+    display: inline-block;
+    background-color: transparent;
+    border: 1px solid var(--color-text);
+    color: var(--color-text);
+    padding: 15px 80px;
+    text-decoration: none;
+    font-size: 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-weight: bold;
+}
+
+.button-getgreen:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.hero-image-getgreen {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    height: auto;
+    width: auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.hero-image-getgreen img {
+    width: 700px;
+    height: auto;
+    display: block;
+    transform: translate(150px, -0px);
+    z-index: 0;
+}
+
+@media (max-width: 1360px) {
+    .hero-image-getgreen img {
+        width: 600px;
+        transform: translate(80px, -40px);
+    }
+}
+
+@media (max-width: 992px) {
+    .header-getgreen {
+        flex-direction: column;
+        position: relative;
+        transform: none;
+        max-width: 100%;
+        padding: 20px;
+        width: auto;
+    }
+    .nav-getgreen {
+        margin-top: 15px;
+    }
+    .nav-getgreen a {
+        margin-left: 15px;
+    }
+    .nav-getgreen a:last-child {
+        margin-left: 15px;
+    }
+    .hero-getgreen {
+        height: auto;
+        padding: 40px 20px;
+    }
+    .hero-box {
+        flex-direction: column;
+        padding: 40px 20px;
+        text-align: center;
+        align-items: center;
+    }
+    .hero-content-getgreen {
+        width: 100%;
+        max-width: 100%;
+        padding: 0 0 30px 0;
+        align-self: center;
+    }
+    .hero-image-getgreen {
+        position: relative;
+        width: 100%;
+        height: auto;
+        margin-top: 30px;
+        justify-content: center;
+        align-items: center;
+    }
+    .hero-image-getgreen img {
+        width: 100%;
+        max-width: 400px;
+        transform: none;
+    }
+}
+
+@media (max-width: 576px) {
+    .header-getgreen {
+        padding: 15px;
+    }
+    .logo-getgreen {
+        font-size: 20px;
+    }
+    .nav-getgreen a {
+        margin: 0 10px;
+        font-size: 14px;
+    }
+    .nav-getgreen a:last-child {
+        margin-left: 10px;
+    }
+    .hero-content-getgreen h1 {
+        font-size: 36px;
+    }
+    .hero-content-getgreen p {
+        font-size: 20px;
+    }
+    .button-getgreen {
+        padding: 12px 30px;
+        font-size: 16px;
+    }
+}
