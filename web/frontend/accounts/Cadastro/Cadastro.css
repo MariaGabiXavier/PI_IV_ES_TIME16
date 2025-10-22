@@ -1,0 +1,291 @@
+@import url('https://fonts.googleapis.com/css2?family=Jomolhari&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Jomolhari', serif;
+}
+
+body {
+  background: linear-gradient(120deg, #e9f8ed, #f7fff9);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  display: flex;
+  width: 100%;
+  max-width: 1100px;
+  height: 90vh;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  background-color: #ffffff;
+}
+
+.left-side {
+  width: 45%;
+  background-color: #C6FE31;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  text-align: center;
+  border-radius: 0 20px 20px 0;
+}
+
+.left-side .logo {
+  color: #1d1d1d;
+  margin-bottom: 20px;
+  align-self: flex-start; 
+  margin-top: -170px;     
+  margin-left: 10px;   
+  font-size: 25px;
+  font-weight: 570;
+  font-weight: bold;
+  font-family: 'Jomolhari', serif;
+}
+
+.left-side .illustration {
+  width: 400px;
+  margin-bottom: 20px;
+}
+
+.left-side .quote {
+  font-size: 20px;
+  color: #1d1d1d;
+  line-height: 1.5;
+}
+
+.right-side {
+  width: 55%;
+  background-color: #fff;
+  padding: 40px 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: nowrap;
+}
+
+.tab {
+  position: relative;
+  font-size: 16px;
+  color: #8a8a8a;
+  padding-bottom: 5px;
+  transition: color 0.3s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.tab::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 0;
+  background-color: #C6FE31;
+  transition: width 0.3s ease;
+}
+
+.tab.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 0;
+  background-color: #1d1d1d;
+  transition: width 0.3s ease;
+}
+
+.tab.active::after {
+  width: 100%;
+}
+
+.tab:hover::after {
+  width: 100%;
+}
+
+.tabs:hover .tab.active::after {
+  width: 0;
+}
+
+.tab.active {
+  color: #1d1d1d;
+  font-weight: bold;
+  pointer-events: none;
+  cursor: default;
+}
+
+.tab:hover {
+  color: #1d1d1d;
+  font-weight: bold;
+}
+
+.tab.disabled:hover {
+  color: #C6FE31;
+  font-weight: bold;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 5px;
+  margin-top: 0px;
+  color: #1d1d1d;
+}
+
+.form h4 {
+  margin-top: 0px;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.input-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.input-row input {
+  flex: 1;
+  padding: 10px 15px;
+  border: 1px solid #aaa;
+  border-radius: 10px;
+  outline: none;
+  font-size: 14px;
+  font-weight: 400;
+  color: #1d1d1d; 
+}
+
+.input-row input:focus {
+  border: 1.5px solid #C6FE31; 
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn {
+  background-color: #49643E;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  width: 100%;
+  margin-top: 10px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-weight: 500; 
+}
+
+.btn:hover {
+  background-color: #285719c5;
+}
+
+.login-text {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 14px;
+  color: #444;
+}
+
+.login-text a {
+  color: #3E845E;
+  text-decoration: none;
+}
+
+.login-text a:hover {
+  color: #C6FE31;
+}
+
+@media (max-width: 768px) {
+  body {
+    height: auto;
+    padding: 20px;
+  }
+
+  .container {
+    flex-direction: column;
+    height: auto;
+    max-height: none;
+    border-radius: 10px;
+  }
+
+  .left-side {
+    width: 100%;
+    height: auto;
+    border-radius: 10px 10px 0 0;
+    padding: 20px;
+  }
+
+  .left-side .logo {
+    margin-top: 0;
+    margin-left: 0;
+    font-size: 22px;
+    align-self: center;
+  }
+
+  .left-side .illustration {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .left-side .quote {
+    font-size: 16px;
+  }
+
+  .right-side {
+    width: 100%;
+    padding: 20px 30px;
+  }
+
+  .tabs {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: nowrap;
+  }
+
+  .tab {
+    font-size: 14px;
+    padding-bottom: 5px;
+    white-space: nowrap;
+  }
+
+  h2 {
+    font-size: 22px;
+  }
+
+  .form h4 {
+    font-size: 14px;
+  }
+
+  .input-row {
+    flex-direction: column;
+  }
+
+  .input-row input {
+    font-size: 13px;
+  }
+
+  .btn {
+    font-size: 16px;
+    padding: 10px;
+  }
+
+  .login-text {
+    font-size: 13px;
+  }
+}
