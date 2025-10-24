@@ -16,8 +16,8 @@ mongoose.connect(process.env.MONGODB_URI, {
 .then(() => console.log('MongoDB conectado!'))
 .catch((err) => console.error('Erro ao conectar MongoDB:', err));
 
-// Criar modelo de usuário
-const UserModel = new mongoose.Schema({
+// Criar modelo de usuário da Empresa
+const UserEmpresaModel = new mongoose.Schema({
   cnpj: String,
   razaoSocial: String,
   segmento: String,
@@ -32,14 +32,14 @@ const UserModel = new mongoose.Schema({
   numero: Number  
 });
 
-const users = mongoose.model('Users', UserModel);
+const users = mongoose.model('Users', UserEmpresaModel);
 
 app.get('/', (req, res) => {
   res.send('Servidor e MongoDB estão funcionando!');
 });
 
 // Criar usuário
-app.post('/api/user', async (req, res) => {
+app.post('/api/userEmpresa', async (req, res) => {
   try {
     const novoUser = new users(req.body);
     await novoUser.save();

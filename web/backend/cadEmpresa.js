@@ -19,7 +19,7 @@ document.getElementById('cadastroEmpresa').addEventListener('submit', async func
   };
 
   try {
-    const resposta = await fetch('http://localhost:4000/api/user', {
+    const resposta = await fetch('http://localhost:4000/api/userEmpresa', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(dados)
