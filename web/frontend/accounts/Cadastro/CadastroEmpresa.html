@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GetGreen - Cadastro</title>
   <link rel="stylesheet" href="Cadastro.css">
+  
 </head>
 <body>
   <div class="container">
@@ -22,42 +23,38 @@
 
       <h2>Torne-se um parceiro nosso</h2>
 
-      <form class="form">
-        <h4>Dados empresariais</h4>
-        <div class="input-row">
-          <input type="text" placeholder="Cnpj">
-          <input type="text" placeholder="Razão Social">
-        </div>
-        <div class="input-row">
-          <input type="text" placeholder="Segmento/Setor">
-          <input type="email" placeholder="Email">
-        </div>
-        <div class="input-row">
-          <input type="password" placeholder="Senha">
-          <input type="password" placeholder="Confirmar senha">
-        </div>
-
-        <h4>Endereço</h4>
-        <div class="input-row">
-          <input type="text" placeholder="UF">
-          <input type="text" placeholder="Cidade">
-        </div>
-        <div class="input-row">
-          <input type="text" placeholder="Cep">
-          <input type="text" placeholder="Bairro">
-        </div>
-        <div class="input-row">
-          <input type="text" placeholder="Logradouro">
-          <input type="text" placeholder="Número">
-        </div>
-
-        <button type="submit" class="btn">Solicitar</button>
-
-        <p class="login-text">
-          Já é um de nossos parceiros? <a href="../Login/Login.html">Clique aqui</a>
-        </p>
-      </form>
+<form class="form" id="cadastroEmpresa">
+  <h4>Dados empresariais</h4>
+    <div class="input-row">
+      <input type="text" name="cnpj" placeholder="Cnpj">
+      <input type="text" name="razaoSocial" placeholder="Razão Social">
     </div>
-  </div>
+    <div class="input-row">
+      <input type="text" name="segmento" placeholder="Segmento/Setor">
+      <input type="email" name="email" placeholder="Email">
+    </div>
+    <div class="input-row">
+      <input type="password" name="senha" placeholder="Senha">
+      <input type="password" name="confirmarSenha" placeholder="Confirmar senha">
+    </div>
+  <h4>Endereço</h4>
+    <div class="input-row">
+      <input type="text" name="uf" placeholder="UF">
+      <input type="text" name="cidade" placeholder="Cidade">
+    </div>
+      <div class="input-row">
+        <input type="text" name="cep" placeholder="Cep">
+        <input type="text" name="bairro" placeholder="Bairro">
+      </div>
+    <div class="input-row">
+      <input type="text" name="logradouro" placeholder="Logradouro">
+      <input type="text" name="numero" placeholder="Número">
+    </div>
+    <button type="submit" class="btn">Solicitar</button>
+      <p class="login-text">
+        Já é um de nossos parceiros? <a href="../Login/Login.html">Clique aqui</a>
+      </p>
+  </form>
+   <script src="../../../backend/cadEmpresa.js"></script>
 </body>
 </html>
