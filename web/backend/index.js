@@ -32,27 +32,61 @@ const UserEmpresaModel = new mongoose.Schema({
   numero: Number  
 });
 
-const users = mongoose.model('Users', UserEmpresaModel);
+// Criar modelo de usuário do Colaborador
+const UserColaboradorModel = new mongoose.Schema({
+  nome: String,
+  cpf: String,
+  data: Date,
+  email: String,
+  senha: String,
+  conirmarSenha: String, 
+  uf: String,
+  cidade: String,
+  cep: String,
+  bairro: String,
+  logradouro: String,
+  numero: Number  
+});
+
+const userEmpresa = mongoose.model('User Empresa', UserEmpresaModel);
+const userColaborador = mongoose.model('User Colaborador', UserColaboradorModel);
 
 app.get('/', (req, res) => {
   res.send('Servidor e MongoDB estão funcionando!');
 });
 
-// Criar usuário
+// Criar usuário Empresa
 app.post('/api/userEmpresa', async (req, res) => {
   try {
-    const novoUser = new users(req.body);
-    await novoUser.save();
-    res.status(201).json(novoUser);
+    const novoUserEmpresa = new userEmpresa(req.body);
+    await novoUserEmpresa.save();
+    res.status(201).json(novoUserEmpresa);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 });
 
-// Listar usuários
-app.get('/api/users', async (req, res) => {
-  const users = await users.find();
-  res.json(user);
+// Criar usuário Colaborador
+app.post('/api/userColaborador', async (req, res) => {
+  try {
+    const novoUserColaborador = new userColaborador(req.body);
+    await novoUserColaborador.save();
+    res.status(201).json(novoUserColaborador);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// Listar usuários Empresa
+app.get('/api/usersEmpresa', async (req, res) => {
+  const userEmpresa = await userEmpresa.find();
+  res.json(userEmpresa);
+});
+
+// Listar usuários Colaborador
+app.get('/api/usersColaborador', async (req, res) => {
+  const userColaborador = await userColaborador.find();
+  res.json(userColaborador);
 });
 
 
