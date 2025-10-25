@@ -8,7 +8,7 @@
 
     <link rel="stylesheet" href="/web/frontend/accounts/PrincipalGetGreen/principal.css">
     
-    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="principal.css">
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     
@@ -48,9 +48,11 @@
                 </nav>
                 <a href="#" class="user-profile">
                     <span class="material-icons-outlined">account_circle</span>
-                    User
+                    <span id="usuarioNome">Usuário</span>
                 </a>
             </header>
+
+            <h2 id="boasVindas"></h2>
 
             <section class="search-section">
                 <form class="search-bar">
@@ -109,5 +111,15 @@
                     </div>
                 </article>
             </section>
-</body>
+        <script>
+            const nome = localStorage.getItem('usuarioNome');
+            const tipo = localStorage.getItem('usuarioTipo');
+
+            if (nome && tipo) {
+                document.getElementById('usuarioNome').textContent = nome;
+            } else {
+                document.getElementById('usuarioNome').textContent = 'Usuário';
+            }
+        </script>
+    </body>
 </html>

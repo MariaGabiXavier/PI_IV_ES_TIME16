@@ -23,7 +23,7 @@ const UserEmpresaModel = new mongoose.Schema({
   segmento: String,
   email: String,
   senha: String,
-  conirmarSenha: String, 
+  confirmarSenha: String, 
   uf: String,
   cidade: String,
   cep: String,
@@ -39,7 +39,7 @@ const UserColaboradorModel = new mongoose.Schema({
   data: Date,
   email: String,
   senha: String,
-  conirmarSenha: String, 
+  confirmarSenha: String, 
   uf: String,
   cidade: String,
   cep: String,
@@ -87,6 +87,38 @@ app.get('/api/usersEmpresa', async (req, res) => {
 app.get('/api/usersColaborador', async (req, res) => {
   const userColaborador = await userColaborador.find();
   res.json(userColaborador);
+});
+
+//Login
+app.post('/api/login', async (req, res) => {
+  const { email, senha } = req.body;
+
+  try {
+    // Tenta encontrar a Empresa
+    const empresa = await userEmpresa.findOne({ email });
+
+    if (empresa) {
+      if (empresa.senha === senha) {
+        return res.json({ tipo: 'empresa', mensagem: 'Login bem-sucedido', usuario: empresa });
+      } 
+    }
+
+    // Se não e, tenta encontrar na coleção Colaborador
+    const colaborador = await userColaborador.findOne({ email });
+
+    if (colaborador) {
+      if (colaborador.senha === senha) {
+        return res.json({ tipo: 'colaborador', mensagem: 'Login bem-sucedido', usuario: colaborador });
+        console.log(resultado);
+
+      }
+    }
+    // Se não encontrar em nenhuma coleção
+    res.status(404).json({ error: 'Usuário não encontrado' });
+
+  } catch (err) {
+    res.status(500).json({ error: 'Erro no servidor' });
+  }
 });
 
 
