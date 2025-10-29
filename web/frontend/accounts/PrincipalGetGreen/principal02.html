@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GetGreen</title>
+
+    <link rel="stylesheet" href="/web/frontend/accounts/PrincipalGetGreen/principal02.css">
+    
+    <link rel="stylesheet" href="principal02.css">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    
+    </head>
+
+<body>
+
+    <div class="dashboard-container">
+        
+        <aside class="dashboard-sidebar">
+            <a href="index.html" class="logo-getgreen">GetGreen</a>
+
+            <nav class="sidebar-nav">
+                <h4>Perfil</h4>
+                <ul>
+                    <li><a href="#"><span class="material-icons-outlined">person</span>visualizar perfil</a></li>
+                    <li><a href="#"><span class="material-icons-outlined">edit</span>editar perfil</a></li>
+                    <li><a href="#"><span class="material-icons-outlined">home</span>editar endereço</a></li>
+                    <li><a href="#"><span class="material-icons-outlined">add_location</span>adicionar novo endereço</a></li>
+                </ul>
+
+                <h4>Minhas atividades</h4>
+                <ul>
+                    <li><a href="#"><span class="material-icons-outlined">recycling</span>minhas coletas</a></li>
+                    <li><a href="#"><span class="material-icons-outlined">feedback</span>visualizar feedbacks</a></li>
+                    <li><a href="#"><span class="material-icons-outlined">report</span>realizar denúncia</a></li>
+                    <li><a href="#"><span class="material-icons-outlined">support_agent</span>solicitar suporte</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="dashboard-main">
+            
+            <header class="dashboard-header">
+                <nav class="main-nav">
+                    <a href="/web/frontend/accounts/IndexGetGreen/index.html">Home</a>
+                </nav>
+                <a href="#" class="user-profile">
+                    <span class="material-icons-outlined">account_circle</span>
+                    <span id="usuarioNome">Usuário</span>
+                </a>
+            </header>
+
+            <div class="title-row">
+                <h2 id="boasVindas"></h2>
+                <button type="button" class="btn-nova-coleta" id="openNovaColeta">
+                    nova coleta
+                </button>
+            </div>
+
+            <section class="requests-section">
+                <h4 class="requests-title">Pendentes</h4>
+                <div class="requests-list">
+                    <article class="request-card is-pending">
+                        <div class="request-main">
+                            <div class="request-title">id:devdevww 12354563</div>
+                            <div class="request-sub">Coleta pendente - Agendar: Sexta-Feira - Matutino</div>
+                            <div class="request-status"><span class="pill pill-pending">pendente</span></div>
+                        </div>
+                        <div class="request-side">
+                            <div class="request-date">15/10/2025 às 10:00</div>
+                            <button class="btn-action btn-cancel"><span class="material-icons-outlined">close</span>cancelar</button>
+                        </div>
+                    </article>
+                    <article class="request-card is-pending">
+                        <div class="request-main">
+                            <div class="request-title">id:devdevww 12354563</div>
+                            <div class="request-sub">Coleta pendente - Aguardando atribuição de coleta</div>
+                            <div class="request-status"><span class="pill pill-pending">pendente</span></div>
+                        </div>
+                        <div class="request-side">
+                            <div class="request-date">15/10/2025 às 10:00</div>
+                            <button class="btn-action btn-cancel"><span class="material-icons-outlined">close</span>cancelar</button>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="requests-section">
+                <h4 class="requests-title">Concluídas</h4>
+                <div class="requests-list">
+                    <article class="request-card is-done">
+                        <div class="request-main">
+                            <div class="request-title">id:devdevww 12354563</div>
+                            <div class="request-sub">Coleta concluída - Confira o feedback</div>
+                            <div class="request-status"><span class="pill pill-done">concluída</span></div>
+                        </div>
+                        <div class="request-side">
+                            <div class="request-date">15/10/2025 às 10:00</div>
+                            <button class="btn-action btn-finish"><span class="material-icons-outlined">check</span>finalizar</button>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Modal Nova Coleta -->
+            <div class="modal-overlay" id="novaColetaModal" aria-hidden="true">
+                <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitleNovaColeta">
+                    <button class="modal-close" id="closeNovaColeta" aria-label="Fechar">
+                        <span class="material-icons-outlined">close</span>
+                    </button>
+                    <h3 id="modalTitleNovaColeta">Nova coleta</h3>
+                    <form class="form-nova-coleta" id="formNovaColeta">
+                        <div class="form-row">
+                            <input type="text" placeholder="Responsável" required>
+                        </div>
+                        <div class="form-row">
+                            <input type="text" placeholder="Material" required>
+                        </div>
+                        <div class="form-row two-cols">
+                            <input type="number" placeholder="Quantidade" min="0" step="any" required>
+                            <input type="text" placeholder="Unidade de medida" required>
+                        </div>
+                        <div class="form-row">
+                            <input type="date" placeholder="Data preferencial" required>
+                        </div>
+                        <div class="form-row">
+                            <textarea rows="3" placeholder="Descrição"></textarea>
+                        </div>
+                        <div class="form-row">
+                            <textarea rows="3" placeholder="Observações"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-submit-nova-coleta">solicitar coleta</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        <script>
+            const nome = localStorage.getItem('usuarioNome');
+            const tipo = localStorage.getItem('usuarioTipo');
+
+            if (nome && tipo) {
+                document.getElementById('usuarioNome').textContent = nome;
+            } else {
+                document.getElementById('usuarioNome').textContent = 'Usuário';
+            }
+
+            // Modal open/close handlers
+            const openBtn = document.getElementById('openNovaColeta');
+            const modal = document.getElementById('novaColetaModal');
+            const closeBtn = document.getElementById('closeNovaColeta');
+            const form = document.getElementById('formNovaColeta');
+
+            function openModal() {
+                modal.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+            }
+            function closeModal() {
+                modal.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+            }
+            openBtn.addEventListener('click', openModal);
+            closeBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                // TODO: enviar dados
+                closeModal();
+            });
+        </script>
+    </body>
+</html>
