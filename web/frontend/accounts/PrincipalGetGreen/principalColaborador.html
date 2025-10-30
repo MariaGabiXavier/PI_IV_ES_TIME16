@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GetGreen</title>
+
+    <link rel="stylesheet" href="/web/frontend/accounts/PrincipalGetGreen/principal.css">
+    
+    <link rel="stylesheet" href="principalColaborador.css">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    
+    </head>
+
+<body>
+
+    <div class="dashboard-container">
+        
+        <aside class="dashboard-sidebar">
+            <a href="index.html" class="logo-getgreen">GetGreen</a>
+
+            <nav class="sidebar-nav">
+                <h4>Perfil</h4>
+                <ul>
+                    <li><a href="#"><span class="material-icons-outlined">person</span>visualizar perfil</a></li>
+                    <li><a href="#"><span class="material-icons-outlined">edit</span>editar perfil</a></li>
+                    <li><a href="#"><span class="material-icons-outlined">home</span>editar endereço</a></li>
+                    <li><a href="#"><span class="material-icons-outlined">add_location</span>adicionar novo endereço</a></li>
+                </ul>
+
+                <h4>Minhas atividades</h4>
+                <ul>
+                    <li><a href="#"><span class="material-icons-outlined">recycling</span>minhas coletas</a></li>
+                    <li><a href="#"><span class="material-icons-outlined">feedback</span>visualizar feedbacks</a></li>
+                    <li><a href="#"><span class="material-icons-outlined">report</span>realizar denúncia</a></li>
+                    <li><a href="#"><span class="material-icons-outlined">support_agent</span>solicitar suporte</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="dashboard-main">
+            
+            <header class="dashboard-header">
+                <nav class="main-nav">
+                    <a href="/web/frontend/accounts/IndexGetGreen/index.html">Home</a>
+                </nav>
+                <a href="#" class="user-profile">
+                    <span class="material-icons-outlined">account_circle</span>
+                    <span id="usuarioNome">Usuário</span>
+                </a>
+            </header>
+
+            <section class="search-section">
+                <form class="search-bar">
+                    <input type="search" placeholder="pesquise aqui">
+                    <button type="submit"><span class="material-icons-outlined">search</span></button>
+                </form>
+            </section>
+
+            <section class="content-feed" id="feedColetas">
+                <p>Carregando coletas...</p>
+            </section>
+        
+        <script>
+            // Configuração inicial do usuário
+            const nome = localStorage.getItem('usuarioNome');
+            const tipo = localStorage.getItem('usuarioTipo');
+
+            if (nome && tipo) {
+                document.getElementById('usuarioNome').textContent = nome;
+                // REMOVIDO: document.getElementById('boasVindas').textContent = `Bem-vindo(a), ${nome}!`; 
+            } else {
+                document.getElementById('usuarioNome').textContent = 'Usuário';
+                // REMOVIDO: document.getElementById('boasVindas').textContent = 'Seja bem-vindo(a)!';
+            }
+
+            // Função para buscar e renderizar as coletas
+            async function carregarColetas() {
+                const feedColetas = document.getElementById('feedColetas');
+                feedColetas.innerHTML = '<p>Carregando coletas...</p>'; 
+
+                try {
+                    // *** ENDEREÇO CORRIGIDO para http://localhost:4000/api/coletas ***
+                    const response = await fetch('http://localhost:4000/api/coletas');
+                    const coletas = await response.json();
+
+                    feedColetas.innerHTML = ''; // Limpa a mensagem de carregamento
+
+                    if (coletas.length === 0) {
+                        feedColetas.innerHTML = '<p>Nenhuma coleta solicitada ainda.</p>';
+                        return;
+                    }
+
+                    coletas.forEach(coleta => {
+                        const dataCriacao = new Date(coleta.dataCriacao).toLocaleDateString('pt-BR', {
+                            day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                        });
+                        
+                        const dataPreferencial = new Date(coleta.dataPreferencial).toLocaleDateString('pt-BR', {
+                            day: '2-digit', month: '2-digit', year: 'numeric'
+                        });
+
+                        const cardHTML = `
+                            <article class="collection-card">
+                                <div class="card-content">
+                                    <h3>Responsável: ${coleta.responsavel}</h3>
+                                    <p><strong>Material:</strong> ${coleta.material}</p>
+                                    <p><strong>Quantidade:</strong> ${coleta.quantidade} ${coleta.unidadeMedida}</p>
+                                    <p><strong>Data Preferencial:</strong> ${dataPreferencial}</p>
+                                    <p><strong>Status:</strong> ${coleta.status.toUpperCase()}</p>
+                                </div>
+                                <div class="card-actions">
+                                    <span>${dataCriacao}</span>
+                                    <a href="#" class="button-vermais">ver mais</a>
+                                </div>
+                            </article>
+                        `;
+                        feedColetas.innerHTML += cardHTML;
+                    });
+
+                } catch (error) {
+                    console.error('Erro ao buscar coletas:', error);
+                    feedColetas.innerHTML = '<p>Erro ao carregar as coletas. Verifique a conexão com o servidor.</p>';
+                }
+            }
+
+            // Carrega as coletas ao iniciar a página
+            carregarColetas();
+
+        </script>
+    </body>
+</html>
