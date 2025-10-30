@@ -373,7 +373,7 @@ body {
 .request-main { display: grid; gap: 6px; }
 .request-title { font-weight: 600; font-size: 14px; }
 .request-sub { color: #666; font-size: 13px; }
-.request-status-details { margin-top: 2px; } /* Corrigido: era .request-status */
+.request-status { margin-top: 2px; }
 .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; }
 .pill-pending { background: #ffeded; color: #cc0000; }
 .pill-done { background: #eaffea; color: #1a8f1a; }
