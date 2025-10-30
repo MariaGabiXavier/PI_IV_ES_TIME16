@@ -17,7 +17,7 @@ document.getElementById('login').addEventListener('submit', async function(e) {
       const nome = resultado.usuario.razaoSocial || resultado.usuario.nome;
       localStorage.setItem('usuarioNome', nome);
       localStorage.setItem('usuarioTipo', resultado.tipo);
-      window.location.href = "../PrincipalGetGreen/principal.html";
+      window.location.href = "../PrincipalGetGreen/principalColaborador.html";
     } else {
       alert('Erro: ' + resultado.error);
     }
