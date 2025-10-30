@@ -52,7 +52,7 @@ const UserColaboradorModel = new mongoose.Schema({
   numero: Number  
 });
 
-// Criar modelo de Coleta
+// Criar modelo de Coleta - ATUALIZADO
 const ColetaSchema = new mongoose.Schema({
   responsavel: { type: String, required: true },
   material: { type: String, required: true },
@@ -62,7 +62,10 @@ const ColetaSchema = new mongoose.Schema({
   descricao: String,
   observacoes: String,
   dataCriacao: { type: Date, default: Date.now },
-  status: { type: String, default: 'pendente' } // Ex: pendente, agendada, concluida
+  status: { type: String, default: 'pendente' }, // Ex: pendente, agendada, concluida
+  // Campos de rastreamento de usuário (Empresa)
+  usuarioId: { type: String, required: true }, 
+  usuarioNome: { type: String, required: true } 
 });
 
 
@@ -120,7 +123,7 @@ app.get('/api/usersColaborador', async (req, res) => {
   res.json(users);
 });
 
-// Login
+// Login - ATUALIZADO (salvando o ID no objeto de retorno)
 app.post('/api/login', async (req, res) => {
   const { email, senha } = req.body;
 
@@ -130,7 +133,13 @@ app.post('/api/login', async (req, res) => {
 
     if (empresa) {
       if (empresa.senha === senha) {
-        return res.json({ tipo: 'empresa', mensagem: 'Login bem-sucedido', usuario: empresa });
+        // Retorna o ID do usuário
+        return res.json({ 
+          tipo: 'empresa', 
+          mensagem: 'Login bem-sucedido', 
+          usuario: empresa, 
+          usuarioId: empresa._id // Adicionando o ID
+        });
       } 
     }
 
@@ -139,9 +148,14 @@ app.post('/api/login', async (req, res) => {
 
     if (colaborador) {
       if (colaborador.senha === senha) {
-        // Incluindo o console.log (que estava no código anterior, mas deve ser removido em produção)
         console.log({ tipo: 'colaborador', mensagem: 'Login bem-sucedido', usuario: colaborador }); 
-        return res.json({ tipo: 'colaborador', mensagem: 'Login bem-sucedido', usuario: colaborador });
+        // Retorna o ID do usuário
+        return res.json({ 
+          tipo: 'colaborador', 
+          mensagem: 'Login bem-sucedido', 
+          usuario: colaborador,
+          usuarioId: colaborador._id // Adicionando o ID
+        });
       }
     }
     // Se não encontrar em nenhuma coleção
@@ -156,8 +170,15 @@ app.post('/api/login', async (req, res) => {
 // ROTAS DE COLETAS
 // ===================================
 
-// Criar nova Coleta
+// Criar nova Coleta - ATUALIZADO
 app.post('/api/coletas', async (req, res) => {
+  // Verifica se a requisição tem o ID e Nome do usuário para autenticação básica
+  const { usuarioId, usuarioNome } = req.body;
+  
+  if (!usuarioId || !usuarioNome) {
+      return res.status(401).json({ error: 'Dados de autenticação (ID/Nome) ausentes. A coleta deve ser solicitada por um usuário logado.' });
+  }
+
   try {
     const novaColeta = new Coleta(req.body);
     await novaColeta.save();
@@ -167,11 +188,18 @@ app.post('/api/coletas', async (req, res) => {
   }
 });
 
-// Listar Coletas
+// Listar Coletas - ATUALIZADO (permite filtrar por usuárioId via query parameter)
 app.get('/api/coletas', async (req, res) => {
   try {
-    // Busca todas as coletas, ordenando pela mais recente
-    const coletas = await Coleta.find().sort({ dataCriacao: -1 }); 
+    let filtro = {};
+
+    // Se um usuarioId for fornecido na query (ex: /api/coletas?usuarioId=123), aplica o filtro
+    if (req.query.usuarioId) {
+        filtro = { usuarioId: req.query.usuarioId };
+    }
+
+    // Busca as coletas com ou sem filtro, ordenando pela mais recente
+    const coletas = await Coleta.find(filtro).sort({ dataCriacao: -1 }); 
     res.json(coletas);
   } catch (err) {
     res.status(500).json({ error: 'Erro ao buscar coletas' });
