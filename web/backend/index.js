@@ -16,10 +16,6 @@ mongoose.connect(process.env.MONGODB_URI, {
 .then(() => console.log('MongoDB conectado!'))
 .catch((err) => console.error('Erro ao conectar MongoDB:', err));
 
-// ===================================
-// DEFINIÇÃO DOS SCHEMAS
-// ===================================
-
 // Criar modelo de usuário da Empresa
 const UserEmpresaModel = new mongoose.Schema({
   cnpj: String,
@@ -52,7 +48,7 @@ const UserColaboradorModel = new mongoose.Schema({
   numero: Number  
 });
 
-// Criar modelo de Coleta - ATUALIZADO
+// Criar modelo de Coleta 
 const ColetaSchema = new mongoose.Schema({
   responsavel: { type: String, required: true },
   material: { type: String, required: true },
@@ -62,52 +58,85 @@ const ColetaSchema = new mongoose.Schema({
   descricao: String,
   observacoes: String,
   dataCriacao: { type: Date, default: Date.now },
-  status: { type: String, default: 'pendente' }, // Ex: pendente, agendada, concluida
-  // Campos de rastreamento de usuário (Empresa)
+  status: { type: String, default: 'pendente' },
   usuarioId: { type: String, required: true }, 
   usuarioNome: { type: String, required: true } 
 });
 
-
-// ===================================
-// DEFINIÇÃO DOS MODELOS
-// ===================================
-
 const userEmpresa = mongoose.model('User Empresa', UserEmpresaModel);
 const userColaborador = mongoose.model('User Colaborador', UserColaboradorModel);
-const Coleta = mongoose.model('Coleta', ColetaSchema); // Modelo Coleta
-
-// ===================================
-// ROTAS GERAIS
-// ===================================
+const Coleta = mongoose.model('Coleta', ColetaSchema); 
 
 app.get('/', (req, res) => {
   res.send('Servidor e MongoDB estão funcionando!');
 });
 
-// ===================================
-// ROTAS DE CADASTRO E LOGIN
-// ===================================
+const MIN_PASSWORD_LENGTH = 6; 
 
-// Criar usuário Empresa
+//Criar usuário Empresa
 app.post('/api/userEmpresa', async (req, res) => {
   try {
+    const { email, senha, confirmarSenha } = req.body;
+    
+    if (!senha || senha.length < MIN_PASSWORD_LENGTH) {
+      return res.status(400).json({ error: `A senha deve ter no mínimo ${MIN_PASSWORD_LENGTH} caracteres.` });
+    }
+    if (senha !== confirmarSenha) {
+        return res.status(400).json({ error: 'As senhas não coincidem (erro interno).' });
+    }
+
+    const empresaExistente = await userEmpresa.findOne({ email });
+    const colaboradorExistente = await userColaborador.findOne({ email });
+
+    if (empresaExistente || colaboradorExistente) {
+      return res.status(409).json({ error: 'Este email já está cadastrado. Por favor, use outro.' });
+    }
+    
     const novoUserEmpresa = new userEmpresa(req.body);
     await novoUserEmpresa.save();
-    res.status(201).json(novoUserEmpresa);
+
+    res.status(201).json({
+      tipo: 'empresa', 
+      mensagem: 'Cadastro bem-sucedido',
+      usuario: { 
+        razaoSocial: novoUserEmpresa.razaoSocial,
+        email: novoUserEmpresa.email 
+      }, 
+      usuarioId: novoUserEmpresa._id
+    });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(500).json({ error: 'Erro ao cadastrar empresa: ' + err.message });
   }
 });
 
 // Criar usuário Colaborador
 app.post('/api/userColaborador', async (req, res) => {
   try {
+    const { email, senha } = req.body; 
+    const colaboradorExistente = await userColaborador.findOne({ email });
+    const empresaExistente = await userEmpresa.findOne({ email });
+
+    if (colaboradorExistente || empresaExistente) {
+      return res.status(409).json({ error: 'Este email já está cadastrado. Por favor, use outro.' });
+    }
+    if (!senha || senha.length < MIN_PASSWORD_LENGTH) {
+      return res.status(400).json({ error: `A senha deve ter no mínimo ${MIN_PASSWORD_LENGTH} caracteres.` });
+    }
+    if (senha !== req.body.confirmarSenha) {
+        return res.status(400).json({ error: 'As senhas não coincidem.' });
+    }
+    
     const novoUserColaborador = new userColaborador(req.body);
     await novoUserColaborador.save();
-    res.status(201).json(novoUserColaborador);
+    
+    res.status(201).json({
+      tipo: 'colaborador', 
+      mensagem: 'Cadastro bem-sucedido',
+      usuario: novoUserColaborador, 
+      usuarioId: novoUserColaborador._id
+    });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(500).json({ error: 'Erro ao cadastrar colaborador: ' + err.message });
   }
 });
 
@@ -123,42 +152,36 @@ app.get('/api/usersColaborador', async (req, res) => {
   res.json(users);
 });
 
-// Login - ATUALIZADO (salvando o ID no objeto de retorno)
+// Login 
 app.post('/api/login', async (req, res) => {
   const { email, senha } = req.body;
 
   try {
-    // Tenta encontrar a Empresa
     const empresa = await userEmpresa.findOne({ email });
 
     if (empresa) {
       if (empresa.senha === senha) {
-        // Retorna o ID do usuário
         return res.json({ 
           tipo: 'empresa', 
           mensagem: 'Login bem-sucedido', 
           usuario: empresa, 
-          usuarioId: empresa._id // Adicionando o ID
+          usuarioId: empresa._id 
         });
       } 
     }
-
-    // Se não for, tenta encontrar na coleção Colaborador
     const colaborador = await userColaborador.findOne({ email });
 
     if (colaborador) {
       if (colaborador.senha === senha) {
         console.log({ tipo: 'colaborador', mensagem: 'Login bem-sucedido', usuario: colaborador }); 
-        // Retorna o ID do usuário
         return res.json({ 
           tipo: 'colaborador', 
           mensagem: 'Login bem-sucedido', 
           usuario: colaborador,
-          usuarioId: colaborador._id // Adicionando o ID
+          usuarioId: colaborador._id 
         });
       }
     }
-    // Se não encontrar em nenhuma coleção
     res.status(404).json({ error: 'Usuário não encontrado' });
 
   } catch (err) {
@@ -166,13 +189,8 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-// ===================================
-// ROTAS DE COLETAS
-// ===================================
-
-// Criar nova Coleta - ATUALIZADO
+// Criar nova Coleta 
 app.post('/api/coletas', async (req, res) => {
-  // Verifica se a requisição tem o ID e Nome do usuário para autenticação básica
   const { usuarioId, usuarioNome } = req.body;
   
   if (!usuarioId || !usuarioNome) {
@@ -188,17 +206,15 @@ app.post('/api/coletas', async (req, res) => {
   }
 });
 
-// Listar Coletas - ATUALIZADO (permite filtrar por usuárioId via query parameter)
+// Listar Coletas 
 app.get('/api/coletas', async (req, res) => {
   try {
     let filtro = {};
-
-    // Se um usuarioId for fornecido na query (ex: /api/coletas?usuarioId=123), aplica o filtro
     if (req.query.usuarioId) {
         filtro = { usuarioId: req.query.usuarioId };
     }
 
-    // Busca as coletas com ou sem filtro, ordenando pela mais recente
+    // Buscar as coletas
     const coletas = await Coleta.find(filtro).sort({ dataCriacao: -1 }); 
     res.json(coletas);
   } catch (err) {
@@ -206,27 +222,20 @@ app.get('/api/coletas', async (req, res) => {
   }
 });
 
-// EXCLUIR Coleta por ID
+// Excluir Coleta por ID
 app.delete('/api/coletas/:id', async (req, res) => {
   try {
     const coletaId = req.params.id;
-    // Usa findByIdAndDelete para encontrar e remover a coleta
     const resultado = await Coleta.findByIdAndDelete(coletaId); 
 
     if (!resultado) {
       return res.status(404).json({ error: 'Coleta não encontrada' });
     }
-
-    // Retorna a coleta excluída ou uma mensagem de sucesso
     res.json({ mensagem: 'Coleta excluída com sucesso', coletaExcluida: resultado });
   } catch (err) {
     res.status(500).json({ error: 'Erro ao excluir coleta' });
   }
 });
-
-// ===================================
-// INICIALIZAÇÃO DO SERVIDOR
-// ===================================
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`Servidor rodando em http://localhost:${PORT}`));
