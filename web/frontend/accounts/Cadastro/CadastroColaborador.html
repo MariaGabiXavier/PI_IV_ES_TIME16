@@ -22,6 +22,9 @@
 
   <h2>Crie uma conta conosco</h2>
   <form class="form" id="cadastroColaborador">
+    
+    <span id="erro-cadastro-geral" class="mensagem-erro"></span> 
+    
     <h4>Dados pessoais</h4>
     <div class="input-row">
       <input type="text" name="nome" placeholder="Nome" required>
@@ -35,6 +38,7 @@
       <input type="password" name="senha" placeholder="Senha" required>
       <input type="password" name="confirmarSenha" placeholder="Confirmar senha" required>
     </div>
+    <span id="erro-confirmar-senha" class="mensagem-erro"></span>
 
   <h4>Endereço</h4>
     <div class="input-row">

@@ -179,6 +179,43 @@ h2 {
   transition: border 0.2s ease, box-shadow 0.2s ease;
 }
 
+.mensagem-erro {
+  color: #ff0000; 
+  font-size: 13px;
+  margin-top: 5px; 
+  margin-bottom: 10px;
+  text-align: left;
+  display: block; 
+  height: 0; 
+  overflow: hidden; 
+  transition: height 0.3s ease-in-out, opacity 0.3s ease-in-out; 
+  opacity: 0;
+}
+
+.mensagem-sucesso {
+  color: #49643E; 
+  font-size: 14px;
+  margin-top: 5px; 
+  margin-bottom: 10px;
+  text-align: center;
+  font-weight: bold;
+  display: block;
+  height: 0;
+  overflow: hidden;
+  transition: height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  opacity: 0;
+}
+
+.mensagem-erro.visivel,
+.mensagem-sucesso.visivel {
+  height: 20px;
+  opacity: 1;
+}
+
+.input-erro {
+    border: 1.5px solid red !important;
+}
+
 .btn {
   background-color: #49643E;
   color: white;

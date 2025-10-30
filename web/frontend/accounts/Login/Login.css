@@ -125,6 +125,30 @@ button:hover {
   background-color: #afe123;
 }
 
+.mensagem-erro {
+  color: #ff0000; 
+  font-size: 14px;
+  margin-top: 15px; 
+  margin-bottom: -5px;
+  text-align: center;
+  display: block;
+  height: 0; 
+  overflow: hidden; 
+  transition: height 0.3s ease-in-out, opacity 0.3s ease-in-out; 
+  opacity: 0;
+  font-family: 'Jomolhari', serif;
+}
+
+.mensagem-erro.visivel {
+  height: 40px; 
+  opacity: 1;
+}
+
+/* Estilo para inputs com erro */
+.input-erro {
+    border: 1.5px solid red !important;
+}
+
 .register {
   margin-top: 15px;
   text-align: center;

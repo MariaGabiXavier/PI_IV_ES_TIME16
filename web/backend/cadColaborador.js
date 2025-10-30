@@ -1,15 +1,50 @@
-
 document.getElementById('cadastroColaborador').addEventListener('submit', async function(e) {
   e.preventDefault();
 
   const form = e.target;
+  const senha = form.senha.value;
+  const confirmarSenha = form.confirmarSenha.value;
+  
+  const erroSpanConfirmar = document.getElementById('erro-confirmar-senha');
+  const erroSpanGeral = document.getElementById('erro-cadastro-geral');
+  const confirmarInput = form.confirmarSenha;
+  const senhaInput = form.senha;
+  const emailInput = form.email;
+
+  const limparFeedbacks = () => {
+    erroSpanConfirmar.textContent = '';
+    erroSpanConfirmar.classList.remove('visivel');
+    erroSpanGeral.textContent = '';
+    erroSpanGeral.classList.remove('visivel');
+    confirmarInput.classList.remove('input-erro');
+    senhaInput.classList.remove('input-erro');
+    emailInput.classList.remove('input-erro');
+  };
+
+  const exibirErroGeral = (mensagem) => {
+    erroSpanGeral.textContent = mensagem;
+    erroSpanGeral.classList.add('visivel');
+  };
+  
+  limparFeedbacks(); 
+
+  if (senha !== confirmarSenha) {
+    erroSpanConfirmar.textContent = 'As senhas não coincidem. Por favor, verifique.';
+    erroSpanConfirmar.classList.add('visivel');
+    confirmarInput.classList.add('input-erro');
+    confirmarInput.focus();
+    return; 
+  }
+
+  confirmarInput.classList.remove('input-erro');
+
   const dados = {
     nome: form.nome.value,
     cpf: form.cpf.value,
     data: form.data.value,
     email: form.email.value,
-    senha: form.senha.value,
-    confirmarSenha: form.confirmarSenha.value,
+    senha: senha,
+    confirmarSenha: confirmarSenha,
     uf: form.uf.value,
     cidade: form.cidade.value,
     cep: form.cep.value,
@@ -26,14 +61,31 @@ document.getElementById('cadastroColaborador').addEventListener('submit', async 
     });
 
     const resultado = await resposta.json();
+    
     if (resposta.ok) {
-      alert('Cadastro realizado com sucesso!');
-      form.reset();
+      
+      const nome = resultado.usuario.nome;
+      
+      localStorage.setItem('usuarioNome', nome);
+      localStorage.setItem('usuarioTipo', resultado.tipo);
+      localStorage.setItem('usuarioId', resultado.usuarioId); 
+      window.location.href = "../PrincipalGetGreen/principalColaborador.html"; 
+
     } else {
-      alert('Erro: ' + resultado.error);
+      const errorMessage = resultado.error || 'Erro desconhecido ao cadastrar.';
+      
+      exibirErroGeral(errorMessage);
+
+      if (errorMessage.includes('email já está cadastrado')) {
+          emailInput.classList.add('input-erro');
+          emailInput.focus();
+      } else if (errorMessage.includes('senha deve ter no mínimo')) {
+          senhaInput.classList.add('input-erro');
+          senhaInput.focus();
+      }
     }
   } catch (erro) {
-    console.error('Erro ao enviar:', erro);
-    alert('Erro ao conectar com o servidor.');
+    console.error('Erro ao conectar com o servidor:', erro);
+    exibirErroGeral('Erro ao conectar com o servidor. Verifique sua conexão.');
   }
 });
