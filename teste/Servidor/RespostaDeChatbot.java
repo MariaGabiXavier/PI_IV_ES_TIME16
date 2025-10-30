@@ -1,3 +1,4 @@
+package servidor;
 public class RespostaDeChatbot extends Comunicado {
     private String resposta;
 

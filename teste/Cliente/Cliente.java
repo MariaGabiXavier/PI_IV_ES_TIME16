@@ -1,3 +1,6 @@
+package cliente;
+
+import servidor.*;
 import java.net.*;
 import java.io.*;
 
@@ -23,49 +26,64 @@ public class Cliente {
             return;
         }
 
-        ObjectOutputStream transmissor = null;
-        try {
-            transmissor = new ObjectOutputStream(conexao.getOutputStream());
-        } catch (Exception erro) {
-            System.err.println("Indique o servidor e a porta corretos!\n");
-            return;
-        }
+    final Parceiro servidor; // agora é final
 
-        ObjectInputStream receptor = null;
-        try {
-            receptor = new ObjectInputStream(conexao.getInputStream());
-        } catch (Exception erro) {
-            System.err.println("Indique o servidor e a porta corretos!\n");
-            return;
-        }
+    // ANSI colors (may not render on old PowerShell, but harmless)
+    final String ANSI_RESET = "\u001B[0m";
+    final String ANSI_CYAN = "\u001B[36m";
+    final String ANSI_GREEN = "\u001B[32m";
+    final String ANSI_YELLOW = "\u001B[33m";
 
-        Parceiro servidor = null;
         try {
-            servidor = new Parceiro(conexao, receptor, transmissor);
+            // use new DataInput/DataOutput based Parceiro which opens streams from the socket
+            servidor = new Parceiro(conexao);
         } catch (Exception erro) {
-            System.err.println("Indique o servidor e a porta corretos!\n");
+            System.err.println("Falha ao estabelecer comunicacao com o servidor:\n" + erro.getMessage());
             return;
         }
 
         try {
-            TratadoraDeComunicadoDeDesligamento tratadora = new TratadoraDeComunicadoDeDesligamento(servidor);
+            // Read initial menu synchronously so it's shown before the prompt
+            Comunicado inicial = servidor.envie();
+            if (inicial instanceof RespostaDeChatbot) {
+                String texto = ((RespostaDeChatbot) inicial).getResposta();
+                printMenu(texto, ANSI_CYAN, ANSI_RESET);
+            }
+
+            TratadoraDeComunicadoDeDesligamento tratadora =
+                new TratadoraDeComunicadoDeDesligamento(servidor);
             tratadora.start();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            // if we fail to read the initial menu, continue; the leitor thread may receive later
+        }
 
-        // Thread pra ler respostas do servidor e exibir
+        // Thread para ler respostas do servidor
         Thread leitor = new Thread(() -> {
             try {
                 for (;;) {
+                    // consume the next comunicado
                     Comunicado c = (Comunicado) servidor.envie();
                     if (c instanceof RespostaDeChatbot) {
                         RespostaDeChatbot r = (RespostaDeChatbot) c;
-                        System.out.println(r.getResposta());
+                        String texto = r.getResposta();
+                        if (isMenu(texto)) {
+                            // servidor enviou o menu — printar como menu
+                            printMenu(texto, ANSI_CYAN, ANSI_RESET);
+                        } else {
+                            // format response nicely
+                            System.out.println();
+                            System.out.println(ANSI_GREEN + "--- Resposta do Chatbot ---" + ANSI_RESET);
+                            System.out.println(texto);
+                            System.out.println(ANSI_GREEN + "---------------------------\n" + ANSI_RESET);
+                        }
                     } else if (c instanceof ComunicadoDeDesligamento) {
                         System.out.println("Servidor vai desligar.");
                         System.exit(0);
                     }
                 }
             } catch (Exception e) {
+                // imprimir stacktrace para diagnosticar a causa da perda de conexão
+                e.printStackTrace();
                 System.out.println("Conexão perdida.");
                 System.exit(0);
             }
@@ -79,18 +97,32 @@ public class Cliente {
                 int opcao = Teclado.getUmInt();
                 servidor.receba(new PedidoDePergunta(opcao));
                 if (opcao == 0) {
-                    // envia pedido para sair e encerra
                     servidor.receba(new PedidoParaSair());
                     System.out.println("Encerrando cliente. Obrigado!");
                     System.exit(0);
                 }
-                // a resposta será impressa pela thread leitor
-                // aguardamos um pouco para próxima interação (opcional)
                 Thread.sleep(200);
             }
         } catch (Exception e) {
             System.out.println("Erro de comunicação; encerre e tente novamente.");
             System.exit(0);
         }
+    }
+
+    private static boolean isMenu(String texto) {
+        if (texto == null) return false;
+        String lower = texto.toLowerCase();
+        return lower.contains("bem-vindo") || lower.contains("escolha uma") || lower.contains("0 - sair");
+    }
+
+    private static void printMenu(String texto, String color, String reset) {
+        if (texto == null) return;
+        String[] linhas = texto.split("\\n");
+        System.out.println();
+        System.out.println(color + "====== Menu do Chatbot ======" + reset);
+        for (String l : linhas) {
+            System.out.println(l);
+        }
+        System.out.println(color + "=============================" + reset + "\n");
     }
 }

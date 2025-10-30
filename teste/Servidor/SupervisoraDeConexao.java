@@ -1,3 +1,4 @@
+package servidor;
 import java.net.*;
 import java.io.*;
 import java.util.*;
@@ -19,31 +20,23 @@ public class SupervisoraDeConexao extends Thread {
     }
 
     public void run() {
-        ObjectOutputStream transmissor;
+        // construct Parceiro which will open DataInput/Output streams directly
         try {
-            transmissor = new ObjectOutputStream(this.conexao.getOutputStream());
-        } catch (Exception erro) {
+            this.usuario = new Parceiro(this.conexao);
+        } catch (Exception e) {
+            e.printStackTrace();
             return;
         }
-
-        ObjectInputStream receptor = null;
-        try {
-            receptor = new ObjectInputStream(this.conexao.getInputStream());
-        } catch (Exception err0) {
-            try { transmissor.close(); } catch (Exception falha) {}
-            return;
-        }
-
-        try {
-            this.usuario = new Parceiro(this.conexao, receptor, transmissor);
-        } catch (Exception e) {}
 
         try {
             synchronized (this.usuarios) {
                 this.usuarios.add(this.usuario);
             }
 
+            System.out.println("Nova conexao: " + this.conexao.getRemoteSocketAddress());
+
             // Envia menu inicial
+            System.out.println("Enviando menu inicial para " + this.conexao.getRemoteSocketAddress());
             this.usuario.receba(new RespostaDeChatbot(chatbot.montarMenu()));
 
             for (;;) {
@@ -85,6 +78,7 @@ public class SupervisoraDeConexao extends Thread {
                 // (Parceiro.adeus já fecha)
                 if (this.usuario != null) this.usuario.adeus();
             } catch (Exception falha) {}
+            erro.printStackTrace();
             return;
         }
     }

@@ -1,3 +1,4 @@
+package servidor;
 public class PedidoDePergunta extends Comunicado {
     private int opcao;
 

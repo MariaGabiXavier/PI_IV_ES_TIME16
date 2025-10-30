@@ -1,4 +1,7 @@
+package cliente;
 import java.io.*;
+
+
 
 public class Teclado {
     private static BufferedReader teclado =
