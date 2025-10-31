@@ -1,6 +1,7 @@
 const handleLogout = () => {
     localStorage.clear(); 
-    window.location.href = "../Login/Login.html"; 
+    // Caminho corrigido para o index
+    window.location.href = "/web/frontend/accounts/IndexGetGreen/index.html"; 
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -15,7 +16,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('saudacao-menu').textContent = `Olá, ${nomeArmazenado.split(' ')[0]}!`;
     document.getElementById('link-logout').addEventListener('click', (e) => {
         e.preventDefault();
-        handleLogout();
+        // Adiciona a confirmação
+        if (confirm('Tem certeza que deseja sair da conta?')) { 
+             handleLogout();
+        }
     });
 
     if (!usuarioId || !usuarioTipo) {
@@ -50,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 dadosUsuario.cidade,
                 dadosUsuario.uf,
                 dadosUsuario.cep ? `(CEP: ${dadosUsuario.cep})` : ''
-            ].filter(Boolean).join(', '); 
+            ].filter(Boolean).join(', ');
 
             document.getElementById('endereco-completo').textContent = endereco || 'Endereço não cadastrado.';
 

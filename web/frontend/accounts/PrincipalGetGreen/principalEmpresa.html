@@ -32,8 +32,7 @@
 
                 <h4>Minhas atividades</h4>
                 <ul>
-                    <li><a href="#"><span class="material-icons-outlined">recycling</span>minhas coletas</a></li>
-                    <li><a href="#"><span class="material-icons-outlined">feedback</span>visualizar feedbacks</a></li>
+             <li><a href="#"><span class="material-icons-outlined">feedback</span>visualizar feedbacks</a></li>
                     <li><a href="#"><span class="material-icons-outlined">report</span>realizar denúncia</a></li>
                     <li><a href="#"><span class="material-icons-outlined">support_agent</span>solicitar suporte</a></li>
                     <li><a href="#" id="logoutLink"><span class="material-icons-outlined">logout</span>sair da conta</a></li>
@@ -358,7 +357,9 @@
 
             logoutLink.addEventListener('click', (e) => {
                 e.preventDefault(); 
-                logout();
+                if (confirm('Tem certeza que deseja sair da conta?')) { // Adiciona a confirmação
+                    logout();
+                }
             });
 
         </script>
