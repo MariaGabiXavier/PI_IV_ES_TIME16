@@ -107,30 +107,24 @@
                 </div>
             </div>
         <script>
-            // ATUALIZADO: Lendo ID, Nome e Tipo do usuário do localStorage
             const nome = localStorage.getItem('usuarioNome');
             const tipo = localStorage.getItem('usuarioTipo');
             const id = localStorage.getItem('usuarioId'); 
 
             const profileLink = document.getElementById('profileLink');
 
-            // LÓGICA DE EXIBIÇÃO E REDIRECIONAMENTO DO PERFIL (HEADER)
             if (nome && tipo) {
-                // Usuário Logado: Mostra o nome e mantém o link como está
                 document.getElementById('usuarioNome').textContent = nome;
                 document.getElementById('boasVindas').textContent = `Bem-vindo(a), ${nome}!`;
                 profileLink.href = "#"; 
             } else {
-                // Usuário NÃO Logado: Mantém o texto "Usuário", mas redireciona para o login
-                document.getElementById('usuarioNome').textContent = 'Usuário'; // Mantém o texto original
+                document.getElementById('usuarioNome').textContent = 'Usuário'; 
                 document.getElementById('boasVindas').textContent = 'Seja bem-vindo(a)!';
                 
-                // Define o link para a página de login
                 profileLink.href = "/web/frontend/accounts/Login/loginGetGreen.html"; 
             }
 
 
-            // Modal open/close handlers
             const openBtn = document.getElementById('openNovaColeta');
             const modal = document.getElementById('novaColetaModal');
             const closeBtn = document.getElementById('closeNovaColeta');
@@ -138,13 +132,11 @@
             const listPendentes = document.getElementById('listPendentes'); 
             const listConcluidas = document.getElementById('listConcluidas'); 
 
-            // ATUALIZADO: Verifica o login antes de abrir a modal
             function openModal() {
                 const nomeLogado = localStorage.getItem('usuarioNome');
                 const tipoLogado = localStorage.getItem('usuarioTipo');
                 
                 if (!nomeLogado || tipoLogado !== 'empresa') {
-                    // Redireciona o usuário não logado para o login ao tentar abrir a modal
                     alert('Você precisa estar logado como uma empresa para solicitar uma nova coleta.');
                     window.location.href = "/web/frontend/accounts/IndexGetGreen/index.html";
                     return; 
@@ -156,7 +148,7 @@
             function closeModal() {
                 modal.setAttribute('aria-hidden', 'true');
                 document.body.style.overflow = '';
-                form.reset(); // Limpa o formulário
+                form.reset(); 
             }
             openBtn.addEventListener('click', openModal);
             closeBtn.addEventListener('click', closeModal);
@@ -164,7 +156,6 @@
                 if (e.target === modal) closeModal();
             });
             
-            // Função para excluir a coleta
             async function excluirColeta(coletaId) {
                 if (!confirm('Tem certeza que deseja cancelar esta coleta? Esta ação não pode ser desfeita.')) {
                     return;
@@ -179,7 +170,6 @@
 
                     if (response.ok) {
                         alert(resultado.mensagem);
-                        // Recarrega a lista para refletir a exclusão em tempo real
                         carregarColetasEmpresa(); 
                     } else {
                         alert(`Erro ao cancelar coleta: ${resultado.error}`);
@@ -191,7 +181,6 @@
             }
 
 
-            // FUNÇÃO PARA CARREGAR E RENDERIZAR COLETAS (Atualizada para filtrar pelo ID do usuário)
             async function carregarColetasEmpresa() {
                 const usuarioId = localStorage.getItem('usuarioId');
                 
@@ -205,7 +194,6 @@
                 listConcluidas.innerHTML = '<p>Carregando coletas...</p>';
 
                 try {
-                    // Adicionando o filtro do usuarioId na requisição
                     const response = await fetch(`http://localhost:4000/api/coletas?usuarioId=${usuarioId}`);
                     const coletas = await response.json();
                     
@@ -247,7 +235,6 @@
                         listPendentes.innerHTML = '<p>Nenhuma coleta pendente no momento.</p>';
                     } else {
                         pendentes.forEach(coleta => {
-                            // Renderização simplificada
                             const cardHTML = `
                                 <article class="request-card is-pending">
                                     <div class="request-main">
@@ -271,7 +258,6 @@
                         listConcluidas.innerHTML = '<p>Nenhuma coleta concluída ainda.</p>';
                     } else {
                          concluidas.forEach(coleta => {
-                             // Renderização simplificada
                             const cardHTML = `
                                 <article class="request-card is-done">
                                     <div class="request-main">
@@ -291,12 +277,10 @@
                         });
                     }
                     
-                    // Anexar o listener de clique após a renderização
                     document.querySelectorAll('.btn-cancel').forEach(button => {
                         button.addEventListener('click', (e) => {
                             e.preventDefault(); 
                             
-                            // Encontra o ID da coleta no atributo data
                             const coletaId = e.currentTarget.getAttribute('data-coleta-id');
                             
                             if (coletaId) {
@@ -313,7 +297,6 @@
                 }
             }
             
-            // Lógica de envio do formulário (AJAX POST) - ATUALIZADO
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
@@ -329,10 +312,8 @@
                 const formData = new FormData(form);
                 const data = Object.fromEntries(formData.entries());
 
-                // Converte a quantidade para número
                 data.quantidade = parseFloat(data.quantidade);
 
-                // Adiciona os dados do usuário logado à requisição
                 data.usuarioId = idLogado; 
                 data.usuarioNome = nomeLogado; 
 
@@ -350,7 +331,6 @@
                     if (response.ok) {
                         alert('Coleta solicitada com sucesso!');
                         closeModal();
-                        // Recarrega as coletas na tela
                         carregarColetasEmpresa(); 
                     } else if (response.status === 401) {
                          alert(`Acesso negado: ${resultado.error}`);
@@ -364,24 +344,20 @@
                 }
             });
             
-            // Carrega as coletas ao iniciar a página
             carregarColetasEmpresa(); 
             
-            // Lógica de Sair da Conta (Logout) - NOVO BLOCO
             const logoutLink = document.getElementById('logoutLink');
 
             function logout() {
-                // Remove todas as informações de sessão do usuário
                 localStorage.removeItem('usuarioNome');
                 localStorage.removeItem('usuarioTipo');
                 localStorage.removeItem('usuarioId'); 
                 
-                // Redireciona para a página inicial
                 window.location.href = "/web/frontend/accounts/IndexGetGreen/index.html"; 
             }
 
             logoutLink.addEventListener('click', (e) => {
-                e.preventDefault(); // Impede a navegação padrão do link
+                e.preventDefault(); 
                 logout();
             });
 

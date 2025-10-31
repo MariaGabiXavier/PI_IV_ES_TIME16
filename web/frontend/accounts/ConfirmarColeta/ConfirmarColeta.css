@@ -123,7 +123,6 @@ body {
   color: var(--color-sidebar);
 }
 
-/* Conteúdo */
 .coleta-detalhes {
   max-width: 850px;
   margin: 0 auto;
@@ -152,7 +151,6 @@ body {
   margin-bottom: 20px;
 }
 
-/* === TAGS IGUAIS AO PRINT === */
 .tag {
   background-color: #3E5533;
   color: #ffffff;
@@ -169,7 +167,6 @@ body {
   color: #333;
 }
 
-/* Botão */
 .btn-confirmar {
   background-color: var(--color-primary);
   border: none;
@@ -186,7 +183,6 @@ body {
   background-color: #a7ff00;
 }
 
-/* Responsividade */
 @media (max-width: 992px) {
   .dashboard-container {
     flex-direction: column;

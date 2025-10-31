@@ -11,8 +11,8 @@ body {
     background: linear-gradient(120deg, #e9f8ed, #f7fff9); 
     display: flex;
     justify-content: center;
-    align-items: center; 
-    padding: 5px 0;
+    align-items: flex-start; 
+    padding: 40px 0; 
 }
 
 .main-wrapper {
@@ -41,19 +41,36 @@ body {
 }
 
 .sidebar-menu a {
-    display: block;
+    display: flex; 
+    align-items: center;
     padding: 12px 20px;
     color: #e9f8ed;
     text-decoration: none;
     font-size: 15px;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, padding-left 0.3s; 
 }
 
-.sidebar-menu a:hover,
+.sidebar-menu a .material-icons-outlined {
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+.sidebar-menu a:hover {
+    background-color: #5d7e50; 
+    border-left: 5px solid #C6FE31; 
+    padding-left: 15px;
+}
+
 .sidebar-menu a.active {
     background-color: #5d7e50; 
     border-left: 5px solid #C6FE31; 
     padding-left: 15px;
+}
+
+.sidebar-divider {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    margin: 10px 20px;
 }
 
 .main-content {
