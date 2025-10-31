@@ -239,3 +239,21 @@ form.addEventListener('submit', async (e) => {
 });
 
 carregarColetasEmpresa();
+
+// Adicionando a função e o event listener de logout aqui
+const logoutLink = document.getElementById('logoutLink');
+
+function logout() {
+    localStorage.removeItem('usuarioNome');
+    localStorage.removeItem('usuarioTipo');
+    localStorage.removeItem('usuarioId'); 
+    
+    window.location.href = "/web/frontend/accounts/IndexGetGreen/index.html"; 
+}
+
+logoutLink.addEventListener('click', (e) => {
+    e.preventDefault(); 
+    if (confirm('Tem certeza que deseja sair da conta?')) { // Adiciona a confirmação
+        logout();
+    }
+});
