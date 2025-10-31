@@ -26,7 +26,6 @@ public class Parceiro {
 
     public void receba(Comunicado x) throws Exception {
         try {
-            // serialize simple protocol: TYPE|payload
             if (x instanceof servidor.RespostaDeChatbot) {
                 servidor.RespostaDeChatbot r = (servidor.RespostaDeChatbot) x;
                 this.transmissor.writeUTF("RESP|" + r.getResposta());
@@ -38,7 +37,6 @@ public class Parceiro {
             } else if (x instanceof servidor.ComunicadoDeDesligamento) {
                 this.transmissor.writeUTF("DES|");
             } else {
-                // unknown type - send as text
                 this.transmissor.writeUTF("MSG|unknown");
             }
             this.transmissor.flush();
@@ -48,11 +46,10 @@ public class Parceiro {
     }
 
     public Comunicado espie() throws Exception {
+        this.mutEx.acquireUninterruptibly();
         try {
-            this.mutEx.acquireUninterruptibly();
             if (this.proximoComunicado == null) {
                 String s = this.receptor.readUTF();
-                // parse type|payload
                 String tipo = "";
                 String payload = "";
                 int idx = s.indexOf('|');
@@ -73,18 +70,19 @@ public class Parceiro {
                 } else if ("DES".equals(tipo)) {
                     this.proximoComunicado = new servidor.ComunicadoDeDesligamento();
                 } else {
-                    // unknown -> wrap as Resposta
                     this.proximoComunicado = new servidor.RespostaDeChatbot(s);
                 }
             }
-            this.mutEx.release();
             return this.proximoComunicado;
         } catch (Exception erro) {
             throw new Exception("Erro de recepcao", erro);
+        } finally {
+            this.mutEx.release();
         }
     }
 
     public Comunicado envie() throws Exception {
+        this.mutEx.acquireUninterruptibly();
         try {
             if (this.proximoComunicado == null) {
                 String s = this.receptor.readUTF();
@@ -116,6 +114,8 @@ public class Parceiro {
             return ret;
         } catch (Exception erro) {
             throw new Exception("Erro de recepcao", erro);
+        } finally {
+            this.mutEx.release();
         }
     }
 

@@ -2,7 +2,6 @@ package cliente;
 
 import servidor.*;
 import java.net.*;
-import java.io.*;
 
 public class Cliente {
     public static final String HOST_PADRAO = "localhost";
@@ -26,16 +25,14 @@ public class Cliente {
             return;
         }
 
-    final Parceiro servidor; // agora é final
+    final Parceiro servidor; 
 
-    // ANSI colors (may not render on old PowerShell, but harmless)
     final String ANSI_RESET = "\u001B[0m";
     final String ANSI_CYAN = "\u001B[36m";
     final String ANSI_GREEN = "\u001B[32m";
     final String ANSI_YELLOW = "\u001B[33m";
 
         try {
-            // use new DataInput/DataOutput based Parceiro which opens streams from the socket
             servidor = new Parceiro(conexao);
         } catch (Exception erro) {
             System.err.println("Falha ao estabelecer comunicacao com o servidor:\n" + erro.getMessage());
@@ -43,7 +40,6 @@ public class Cliente {
         }
 
         try {
-            // Read initial menu synchronously so it's shown before the prompt
             Comunicado inicial = servidor.envie();
             if (inicial instanceof RespostaDeChatbot) {
                 String texto = ((RespostaDeChatbot) inicial).getResposta();
@@ -54,7 +50,7 @@ public class Cliente {
                 new TratadoraDeComunicadoDeDesligamento(servidor);
             tratadora.start();
         } catch (Exception e) {
-            // if we fail to read the initial menu, continue; the leitor thread may receive later
+            
         }
 
         // Thread para ler respostas do servidor
@@ -70,7 +66,7 @@ public class Cliente {
                             // servidor enviou o menu — printar como menu
                             printMenu(texto, ANSI_CYAN, ANSI_RESET);
                         } else {
-                            // format response nicely
+                            // formatar resposta bonitinho
                             System.out.println();
                             System.out.println(ANSI_GREEN + "--- Resposta do Chatbot ---" + ANSI_RESET);
                             System.out.println(texto);
@@ -82,7 +78,6 @@ public class Cliente {
                     }
                 }
             } catch (Exception e) {
-                // imprimir stacktrace para diagnosticar a causa da perda de conexão
                 e.printStackTrace();
                 System.out.println("Conexão perdida.");
                 System.exit(0);

@@ -1,6 +1,5 @@
 package servidor;
 import java.net.*;
-import java.io.*;
 import java.util.*;
 
 public class SupervisoraDeConexao extends Thread {
@@ -20,7 +19,6 @@ public class SupervisoraDeConexao extends Thread {
     }
 
     public void run() {
-        // construct Parceiro which will open DataInput/Output streams directly
         try {
             this.usuario = new Parceiro(this.conexao);
         } catch (Exception e) {
@@ -53,7 +51,7 @@ public class SupervisoraDeConexao extends Thread {
                         synchronized (this.usuarios) {
                             this.usuarios.remove(this.usuario);
                         }
-                        this.usuario.receba(new RespostaDeChatbot("👋 Até mais! Obrigado por usar o GetGreen!"));
+                        this.usuario.receba(new RespostaDeChatbot("Até mais! Obrigado por usar o GetGreen!"));
                         this.usuario.adeus();
                         return;
                     } else {

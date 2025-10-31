@@ -44,8 +44,8 @@ public class Parceiro {
     }
 
     public Comunicado espie() throws Exception {
+        this.mutEx.acquireUninterruptibly();
         try {
-            this.mutEx.acquireUninterruptibly();
             if (this.proximoComunicado == null) {
                 String s = this.receptor.readUTF();
                 String tipo = "";
@@ -71,14 +71,16 @@ public class Parceiro {
                     this.proximoComunicado = new RespostaDeChatbot(s);
                 }
             }
-            this.mutEx.release();
             return this.proximoComunicado;
         } catch (Exception erro) {
             throw new Exception("Erro de recepcao", erro);
+        } finally {
+            this.mutEx.release();
         }
     }
 
     public Comunicado envie() throws Exception {
+        this.mutEx.acquireUninterruptibly();
         try {
             if (this.proximoComunicado == null) {
                 String s = this.receptor.readUTF();
@@ -110,6 +112,8 @@ public class Parceiro {
             return ret;
         } catch (Exception erro) {
             throw new Exception("Erro de recepcao", erro);
+        } finally {
+            this.mutEx.release();
         }
     }
 
