@@ -144,7 +144,6 @@ button:hover {
   opacity: 1;
 }
 
-/* Estilo para inputs com erro */
 .input-erro {
     border: 1.5px solid red !important;
 }

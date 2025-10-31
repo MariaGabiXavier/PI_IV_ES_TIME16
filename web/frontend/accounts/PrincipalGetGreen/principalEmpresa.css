@@ -147,7 +147,6 @@ body {
 
 .search-section { display: none; }
 
-/* Title row with action button */
 .title-row {
     display: flex;
     justify-content: space-between;
@@ -162,10 +161,11 @@ body {
     background-color: var(--color-primary);
     color: var(--color-text);
     border: none;
-    border-radius: 999px;
-    padding: 10px 18px;
+    border-radius: 8px; 
+    padding: 12px 35px; 
     font-family: var(--font-family);
-    font-size: 16px;
+    font-size: 17px; 
+    font-weight: lighter; 
     cursor: pointer;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     transition: background-color 0.2s ease, transform 0.1s ease;
@@ -286,7 +286,6 @@ body {
     background-color: #92e000; 
 }
 
-/* Modal styles */
 .modal-overlay[aria-hidden="true"] { display: none; }
 .modal-overlay {
     position: fixed;
@@ -355,7 +354,6 @@ body {
 }
 .btn-submit-nova-coleta:hover { background-color: #92e000; }
  
-/* Requests sections and cards */
 .requests-section { margin-top: 20px; }
 .requests-title { margin: 0 0 8px 0; font-weight: 600; }
 .requests-list { display: flex; flex-direction: column; gap: 12px; }
@@ -373,7 +371,7 @@ body {
 .request-main { display: grid; gap: 6px; }
 .request-title { font-weight: 600; font-size: 14px; }
 .request-sub { color: #666; font-size: 13px; }
-.request-status-details { margin-top: 2px; } /* Corrigido: era .request-status */
+.request-status-details { margin-top: 2px; } 
 .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; }
 .pill-pending { background: #ffeded; color: #cc0000; }
 .pill-done { background: #eaffea; color: #1a8f1a; }
