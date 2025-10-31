@@ -189,6 +189,37 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+// Buscar perfil por Id e Tipo
+app.get('/api/perfil/:tipo/:id', async (req, res) => {
+    const { tipo, id } = req.params;
+    let usuario = null;
+
+    try {
+        if (tipo === 'empresa') {
+            usuario = await userEmpresa.findById(id);
+        } else if (tipo === 'colaborador') {
+            usuario = await userColaborador.findById(id);
+        }
+
+        if (!usuario) {
+            return res.status(404).json({ error: 'Usuário não encontrado.' });
+        }
+        
+        const dadosPerfil = { ...usuario.toObject(), tipo: tipo }; 
+
+        delete dadosPerfil.senha;
+        delete dadosPerfil.confirmarSenha;
+        delete dadosPerfil.resetPasswordToken;
+        delete dadosPerfil.resetPasswordExpires;
+
+        res.status(200).json(dadosPerfil);
+
+    } catch (err) {
+        console.error('Erro ao buscar perfil:', err);
+        res.status(500).json({ error: 'Erro no servidor ao buscar dados do perfil.' });
+    }
+});
+
 // Criar nova Coleta 
 app.post('/api/coletas', async (req, res) => {
   const { usuarioId, usuarioNome } = req.body;
