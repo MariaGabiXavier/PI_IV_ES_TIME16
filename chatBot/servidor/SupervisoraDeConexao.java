@@ -51,8 +51,12 @@ public class SupervisoraDeConexao extends Thread {
                         synchronized (this.usuarios) {
                             this.usuarios.remove(this.usuario);
                         }
+                        System.out.println("Usuario pediu para sair: " + this.conexao.getRemoteSocketAddress());
                         this.usuario.receba(new RespostaDeChatbot("Até mais! Obrigado por usar o GetGreen!"));
-                        this.usuario.adeus();
+                        try {
+                            this.usuario.adeus();
+                        } catch (Exception e) {}
+                        System.out.println("Usuario desconectado: " + this.conexao.getRemoteSocketAddress());
                         return;
                     } else {
                         String resp = chatbot.responder(opcao);
@@ -64,7 +68,11 @@ public class SupervisoraDeConexao extends Thread {
                     synchronized (this.usuarios) {
                         this.usuarios.remove(this.usuario);
                     }
-                    this.usuario.adeus();
+                    System.out.println("Usuario enviou PedidoParaSair: " + this.conexao.getRemoteSocketAddress());
+                    try {
+                        this.usuario.adeus();
+                    } catch (Exception e) {}
+                    System.out.println("Usuario desconectado: " + this.conexao.getRemoteSocketAddress());
                     return;
                 } else {
                     // mensagens desconhecidas - ignora

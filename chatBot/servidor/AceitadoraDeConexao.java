@@ -27,6 +27,9 @@ public class AceitadoraDeConexao extends Thread {
             } catch (Exception erro) {
                 continue;
             }
+            try {
+        
+            } catch (Exception e) { }
 
             SupervisoraDeConexao supervisora = null;
             try {
