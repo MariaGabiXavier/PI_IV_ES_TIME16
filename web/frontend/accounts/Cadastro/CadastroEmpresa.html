@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GetGreen - Cadastro</title>
   <link rel="stylesheet" href="Cadastro.css">
+
+
 </head>
 <body>
   <div class="container">
@@ -22,42 +24,74 @@
 
       <h2>Torne-se um parceiro nosso</h2>
 
-      <form class="form">
-        <h4>Dados empresariais</h4>
-        <div class="input-row">
-          <input type="text" placeholder="Cnpj">
-          <input type="text" placeholder="Razão Social">
-        </div>
-        <div class="input-row">
-          <input type="text" placeholder="Segmento/Setor">
-          <input type="email" placeholder="Email">
-        </div>
-        <div class="input-row">
-          <input type="password" placeholder="Senha">
-          <input type="password" placeholder="Confirmar senha">
-        </div>
 
-        <h4>Endereço</h4>
-        <div class="input-row">
-          <input type="text" placeholder="UF">
-          <input type="text" placeholder="Cidade">
-        </div>
-        <div class="input-row">
-          <input type="text" placeholder="Cep">
-          <input type="text" placeholder="Bairro">
-        </div>
-        <div class="input-row">
-          <input type="text" placeholder="Logradouro">
-          <input type="text" placeholder="Número">
-        </div>
+<form class="form" id="cadastroEmpresa">
+    
+  <span id="erro-cadastro-geral" class="mensagem-erro"></span>
 
-        <button type="submit" class="btn">Solicitar</button>
-
-        <p class="login-text">
-          Já é um de nossos parceiros? <a href="../Login/Login.html">Clique aqui</a>
-        </p>
-      </form>
+  <h4>Dados empresariais</h4>
+    <div class="input-row">
+      <input type="text" name="cnpj" placeholder="Cnpj" required>
+      <input type="text" name="razaoSocial" placeholder="Razão Social" required>
     </div>
-  </div>
+    <div class="input-row">
+      <input type="text" name="segmento" placeholder="Segmento/Setor" required>
+      <input type="email" name="email" placeholder="Email" required>
+    </div>
+    <div class="input-row">
+      <input type="password" name="senha" placeholder="Senha" required>
+      <input type="password" name="confirmarSenha" placeholder="Confirmar senha" required>
+    </div>
+    <span id="erro-confirmar-senha" class="mensagem-erro"></span>
+
+  <h4>Endereço</h4>
+    <div class="input-row">
+      <select name="uf" id="uf" required>
+        <option value="">Uf</option>
+        <option value="AC">AC</option>
+        <option value="AL">AL</option>
+        <option value="AP">AP</option>
+        <option value="AM">AM</option>
+        <option value="BA">BA</option>
+        <option value="CE">CE</option>
+        <option value="DF">DF</option>
+        <option value="ES">ES</option>
+        <option value="GO">GO</option>
+        <option value="MA">MA</option>
+        <option value="MT">MT</option>
+        <option value="MS">MS</option>
+        <option value="MG">MG</option>
+        <option value="PA">PA</option>
+        <option value="PB">PB</option>
+        <option value="PR">PR</option>
+        <option value="PE">PE</option>
+        <option value="PI">PI</option>
+        <option value="RJ">RJ</option>
+        <option value="RN">RN</option>
+        <option value="RS">RS</option>
+        <option value="RO">RO</option>
+        <option value="RR">RR</option>
+        <option value="SC">SC</option>
+        <option value="SP">SP</option>
+        <option value="SE">SE</option>
+        <option value="TO">TO</option>
+      </select>
+      <input type="text" name="cidade" placeholder="Cidade" required>
+    </div>
+      <div class="input-row">
+        <input type="text" name="cep" placeholder="Cep">
+        <input type="text" name="bairro" placeholder="Bairro">
+      </div>
+    <div class="input-row">
+      <input type="text" name="logradouro" placeholder="Logradouro">
+      <input type="text" name="numero" placeholder="Número">
+    </div>
+    <button type="submit" class="btn">Solicitar</button>
+      <p class="login-text">
+        Já é um de nossos parceiros? <a href="../Login/Login.html">Clique aqui</a>
+      </p>
+  </form>
+   <script src="../../../backend/cadEmpresa.js"></script>
 </body>
 </html>
+

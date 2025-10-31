@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil - GetGreen</title>
+    <link rel="stylesheet" href="Perfil.css"> 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+</head>
+<body>
+    <div class="main-wrapper">
+        
+        <div class="sidebar">
+            <h3 id="saudacao-menu">Olá!</h3>
+            <div class="sidebar-menu">
+                <a href="#" id="link-voltar" class="btn-voltar">
+                    <span class="material-icons-outlined">arrow_back</span>Voltar
+                </a>
+                
+                <hr class="sidebar-divider"> 
+                
+                <a href="#"><span class="material-icons-outlined">person</span>Meu Perfil</a>
+                <a href="#" id="link-logout"><span class="material-icons-outlined">logout</span>Sair da conta</a> 
+            </div>
+        </div>
+
+        <div class="main-content">
+            
+            <div class="header-perfil">
+                <h1>
+                    Detalhes da Conta
+                </h1>
+                <img src="../IndexGetGreen/Logo_getgreenMeiaFundo.png" alt="Logo GetGreen" class="header-logo"> 
+                </div>
+            
+            <p id="loading-message" class="loading">Carregando dados...</p>
+
+            <div id="perfil-detalhes" style="display: none;">
+                <h3 class="section-title">Dados Pessoais/Empresariais</h3>
+                
+                <div class="perfil-grid">
+                    <div class="info-box">
+                        <strong id="label-nome">Nome/Razão Social</strong>
+                        <span id="nome-usuario"></span>
+                    </div>
+                    
+                    <div class="info-box">
+                        <strong>E-mail</strong>
+                        <span id="email-usuario"></span>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>CPF/CNPJ</strong>
+                        <span id="documento-usuario"></span>
+                    </div>
+                    
+                    <div class="info-box">
+                        <strong>Tipo de Conta</strong>
+                        <span id="tipo-conta"></span>
+                    </div>
+                    
+                    <div id="campo-segmento" class="info-box" style="display: none;">
+                        <strong>Segmento</strong>
+                        <span id="segmento-empresa"></span>
+                    </div>
+                    </div>
+
+                <h3 class="section-title">Endereço de Cadastro</h3>
+                <div class="perfil-grid">
+                    <div class="info-box endereco-section"> 
+                        <strong>Localização</strong>
+                        <span id="endereco-completo"></span>
+                    </div>
+                </div>
+
+                <button id="btn-edit" class="btn-edit" style="margin-top: 20px;">Editar Perfil</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('link-voltar').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.history.back(); 
+        });
+        
+        document.getElementById('link-logout').addEventListener('click', (e) => {
+            e.preventDefault(); 
+            // ** Modificação: Adiciona a confirmação aqui **
+            if (confirm('Tem certeza que deseja sair da conta?')) { 
+                localStorage.removeItem('usuarioNome');
+                localStorage.removeItem('usuarioTipo');
+                localStorage.removeItem('usuarioId'); 
+                
+                // O caminho para o index.html
+                window.location.href = "/web/frontend/accounts/IndexGetGreen/index.html"; 
+            }
+        });
+        
+    </script>
+    <script src="../../../backend/perfil.js"></script>
+</body>
+</html>

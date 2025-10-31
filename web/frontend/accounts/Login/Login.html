@@ -14,20 +14,25 @@
 
     <div class="right-side">
       <h2>Login</h2>
-      <form>
+
+      <form id="login">
         <label for="email">Email</label>
-        <input type="email" id="email" placeholder="Digite seu email" required>
+        <input type="email" name="email" id="email" placeholder="Digite seu email" required>
 
         <label for="senha">Senha</label>
-        <input type="password" id="senha" placeholder="Digite sua senha" required>
+        <input type="password" name="senha" id="senha" placeholder="Digite sua senha" required>
 
         <a href="#" class="forgot">Esqueceu sua senha?</a>
+
+        <span id="erro-login" class="mensagem-erro"></span> 
+        
 
         <button type="submit">Entrar</button>
 
         <p class="register">Ainda não tem uma conta? <a href="../Cadastro/CadastroColaborador.html">Cadastre-se</a></p>
       </form>
-    </div>
-  </div>
+
+      <script src="../../../backend/login.js"></script>
 </body>
 </html>
+

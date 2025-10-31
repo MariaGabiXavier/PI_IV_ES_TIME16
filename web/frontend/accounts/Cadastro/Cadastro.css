@@ -159,7 +159,10 @@ h2 {
   margin-bottom: 10px;
 }
 
-.input-row input {
+
+.input-row input,
+.input-row select {
+
   flex: 1;
   padding: 10px 15px;
   border: 1px solid #aaa;
@@ -167,13 +170,55 @@ h2 {
   outline: none;
   font-size: 14px;
   font-weight: 400;
-  color: #1d1d1d; 
+
+  color: #4c4c4ce2;
+  background-color: #fff;
+  
 }
 
-.input-row input:focus {
-  border: 1.5px solid #C6FE31; 
+.input-row input:focus,
+.input-row select:focus {
+  border: 1.5px solid #C6FE31;
   transition: border 0.2s ease, box-shadow 0.2s ease;
 }
+
+.mensagem-erro {
+  color: #ff0000; 
+  font-size: 13px;
+  margin-top: 5px; 
+  margin-bottom: 10px;
+  text-align: left;
+  display: block; 
+  height: 0; 
+  overflow: hidden; 
+  transition: height 0.3s ease-in-out, opacity 0.3s ease-in-out; 
+  opacity: 0;
+}
+
+.mensagem-sucesso {
+  color: #49643E; 
+  font-size: 14px;
+  margin-top: 5px; 
+  margin-bottom: 10px;
+  text-align: center;
+  font-weight: bold;
+  display: block;
+  height: 0;
+  overflow: hidden;
+  transition: height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  opacity: 0;
+}
+
+.mensagem-erro.visivel,
+.mensagem-sucesso.visivel {
+  height: 20px;
+  opacity: 1;
+}
+
+.input-erro {
+    border: 1.5px solid red !important;
+}
+
 
 .btn {
   background-color: #49643E;

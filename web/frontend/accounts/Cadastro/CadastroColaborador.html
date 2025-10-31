@@ -12,52 +12,83 @@
       <h1 class="logo">GetGreen</h1>
       <img src="../img/Simplification.png" alt="Reciclagem" class="illustration">
       <p class="quote">“Com o GetGreen, cada coleta é<br>um passo para um futuro mais<br>limpo e justo”</p>
-    </div>
 
-    <div class="right-side">
-      <div class="tabs">
-        <a href="CadastroColaborador.html" class="tab active">Colaborador</a>
-        <a href="CadastroEmpresa.html" class="tab disabled">Empresas</a>
-      </div>
-
-      <h2>Crie uma conta conosco</h2>
-
-      <form class="form">
-        <h4>Dados pessoais</h4>
-        <div class="input-row">
-          <input type="text" placeholder="Nome">
-          <input type="text" placeholder="Cpf">
-        </div>
-        <div class="input-row">
-          <input type="date" placeholder="Data de nascimento">
-          <input type="email" placeholder="Email">
-        </div>
-        <div class="input-row">
-          <input type="password" placeholder="Senha">
-          <input type="password" placeholder="Confirmar senha">
-        </div>
-
-        <h4>Endereço</h4>
-        <div class="input-row">
-          <input type="text" placeholder="UF">
-          <input type="text" placeholder="Cidade">
-        </div>
-        <div class="input-row">
-          <input type="text" placeholder="Cep">
-          <input type="text" placeholder="Bairro">
-        </div>
-        <div class="input-row">
-          <input type="text" placeholder="Logradouro">
-          <input type="text" placeholder="Número">
-        </div>
-
-        <button type="submit" class="btn">Cadastrar</button>
-
-        <p class="login-text">
-          Já é um de nossos colaboradores? <a href="../Login/Login.html">Clique aqui</a>
-        </p>
-      </form>
-    </div>
   </div>
+
+  <div class="right-side">
+    <div class="tabs">
+      <a href="CadastroColaborador.html" class="tab active">Colaborador</a>
+      <a href="CadastroEmpresa.html" class="tab disabled">Empresas</a>
+  </div>
+
+  <h2>Crie uma conta conosco</h2>
+  <form class="form" id="cadastroColaborador">
+    
+    <span id="erro-cadastro-geral" class="mensagem-erro"></span> 
+    
+    <h4>Dados pessoais</h4>
+    <div class="input-row">
+      <input type="text" name="nome" placeholder="Nome" required>
+      <input type="text" name="cpf"placeholder="Cpf" required>
+    </div>
+    <div class="input-row">
+      <input type="text" placeholder="Data de nascimento" onfocus="(this.type='date')" name="data" id="data" required>
+      <input type="email" name="email" placeholder="Email" required>
+    </div>
+    <div class="input-row">
+      <input type="password" name="senha" placeholder="Senha" required>
+      <input type="password" name="confirmarSenha" placeholder="Confirmar senha" required>
+    </div>
+    <span id="erro-confirmar-senha" class="mensagem-erro"></span>
+
+  <h4>Endereço</h4>
+    <div class="input-row">
+    <select name="uf" id="uf" required>
+      <option value="">Uf</option>
+      <option value="AC">AC</option>
+      <option value="AL">AL</option>
+      <option value="AP">AP</option>
+      <option value="AM">AM</option>
+      <option value="BA">BA</option>
+      <option value="CE">CE</option>
+      <option value="DF">DF</option>
+      <option value="ES">ES</option>
+      <option value="GO">GO</option>
+      <option value="MA">MA</option>
+      <option value="MT">MT</option>
+      <option value="MS">MS</option>
+      <option value="MG">MG</option>
+      <option value="PA">PA</option>
+      <option value="PB">PB</option>
+      <option value="PR">PR</option>
+      <option value="PE">PE</option>
+      <option value="PI">PI</option>
+      <option value="RJ">RJ</option>
+      <option value="RN">RN</option>
+      <option value="RS">RS</option>
+      <option value="RO">RO</option>
+      <option value="RR">RR</option>
+      <option value="SC">SC</option>
+      <option value="SP">SP</option>
+      <option value="SE">SE</option>
+      <option value="TO">TO</option>
+    </select>
+    <input type="text" placeholder="Cidade" name="cidade" required>
+    </div>
+    <div class="input-row">
+      <input type="text" name="cep" placeholder="Cep">
+      <input type="text" name="bairro" placeholder="Bairro">
+    </div>
+    <div class="input-row">
+      <input type="text" name="logradouro" placeholder="Logradouro">
+      <input type="text" name="numero" placeholder="Número">
+    </div>
+    <button type="submit" class="btn">Cadastrar</button>
+    <p class="login-text">
+      Já é um de nossos colaboradores? <a href="../Login/Login.html">Clique aqui</a>
+    </p>
+  </form>
+    <script src="../../../backend/cadColaborador.js"></script>
 </body>
 </html>
+
