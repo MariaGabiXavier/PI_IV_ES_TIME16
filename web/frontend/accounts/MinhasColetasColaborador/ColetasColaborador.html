@@ -1,18 +1,15 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GetGreen</title>
+    <title>Minhas Coletas - GetGreen</title>
 
-    <link rel="stylesheet" href="/web/frontend/accounts/PrincipalGetGreen/principal02.css">
-    
     <link rel="stylesheet" href="ColetasColaborador.css">
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     
-    </head>
+</head>
 
 <body>
 
@@ -24,7 +21,7 @@
             <nav class="sidebar-nav">
                 <h4>Perfil</h4>
                 <ul>
-                    <li><a href="#"><span class="material-icons-outlined">person</span>visualizar perfil</a></li>
+                    <li><a href="../Perfil/Perfil.html"><span class="material-icons-outlined">person</span>visualizar perfil</a></li>
                     <li><a href="#"><span class="material-icons-outlined">edit</span>editar perfil</a></li>
                     <li><a href="#"><span class="material-icons-outlined">home</span>editar endereço</a></li>
                     <li><a href="#"><span class="material-icons-outlined">add_location</span>adicionar novo endereço</a></li>
@@ -32,10 +29,11 @@
 
                 <h4>Minhas atividades</h4>
                 <ul>
-                    <li><a href="#"><span class="material-icons-outlined">recycling</span>minhas coletas</a></li>
+                    <li><a href="/web/frontend/accounts/ColetasColaborador/ColetasColaborador.html"><span class="material-icons-outlined">recycling</span>minhas coletas</a></li> 
                     <li><a href="#"><span class="material-icons-outlined">feedback</span>visualizar feedbacks</a></li>
                     <li><a href="#"><span class="material-icons-outlined">report</span>realizar denúncia</a></li>
                     <li><a href="#"><span class="material-icons-outlined">support_agent</span>solicitar suporte</a></li>
+                    <li><a href="#" id="logoutLink"><span class="material-icons-outlined">logout</span>sair da conta</a></li> 
                 </ul>
             </nav>
         </aside>
@@ -44,328 +42,247 @@
             
             <header class="dashboard-header">
                 <nav class="main-nav">
-                    <a href="/web/frontend/accounts/IndexGetGreen/index.html">Home</a>
+                    <a href="/web/frontend/accounts/PrincipalGetGreen/principalColaborador.html">Home</a>
                 </nav>
                 <a href="#" class="user-profile" id="profileLink">
                     <span class="material-icons-outlined">account_circle</span>
-                    <span id="usuarioNome">Usuário</span>
+                    <span id="usuarioNome">Colaborador</span>
                 </a>
             </header>
 
             <div class="title-row">
-                <h2 id="boasVindas"></h2>
-                <button type="button" class="btn-nova-coleta" id="openNovaColeta">
-                    nova coleta
-                </button>
+                <h2 id="pageTitle">Minhas Coletas</h2>
             </div>
-
+            
             <section class="requests-section">
                 <h4 class="requests-title">Pendentes</h4>
-                <div class="requests-list" id="listPendentes">
+                <div class="requests-list" id="listARealizar">
                     <p>Carregando coletas...</p>
                 </div>
             </section>
 
             <section class="requests-section">
                 <h4 class="requests-title">Concluídas</h4>
-                <div class="requests-list" id="listConcluidas">
+                <div class="requests-list" id="listRealizadas">
                     <p>Carregando coletas...</p>
                 </div>
             </section>
-
-            <div class="modal-overlay" id="novaColetaModal" aria-hidden="true">
-                <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitleNovaColeta">
-                    <button class="modal-close" id="closeNovaColeta" aria-label="Fechar">
-                        <span class="material-icons-outlined">close</span>
-                    </button>
-                    <h3 id="modalTitleNovaColeta">Nova coleta</h3>
-                    <form class="form-nova-coleta" id="formNovaColeta">
-                        <div class="form-row">
-                            <input type="text" placeholder="Responsável" name="responsavel" required>
-                        </div>
-                        <div class="form-row">
-                            <input type="text" placeholder="Material" name="material" required>
-                        </div>
-                        <div class="form-row two-cols">
-                            <input type="number" placeholder="Quantidade" name="quantidade" min="0" step="any" required>
-                            <input type="text" placeholder="Unidade de medida" name="unidadeMedida" required>
-                        </div>
-                        <div class="form-row">
-                            <input type="date" placeholder="Data preferencial" name="dataPreferencial" required>
-                        </div>
-                        <div class="form-row">
-                            <textarea rows="3" placeholder="Descrição" name="descricao"></textarea>
-                        </div>
-                        <div class="form-row">
-                            <textarea rows="3" placeholder="Observações" name="observacoes"></textarea>
-                        </div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn-submit-nova-coleta">solicitar coleta</button>
-                        </div>
-                    </form>
+            
+            <section class="requests-section">
+                <h4 class="requests-title">Finalizadas</h4>
+                <div class="requests-list" id="listFinalizadas">
+                    <p>Carregando coletas...</p>
                 </div>
-            </div>
+            </section>
+            
+        </main>
+        
         <script>
-            // ATUALIZADO: Lendo ID, Nome e Tipo do usuário do localStorage
+            const logoutLink = document.getElementById('logoutLink');
+            function logout() {
+                localStorage.removeItem('usuarioNome');
+                localStorage.removeItem('usuarioTipo');
+                localStorage.removeItem('usuarioId'); 
+                
+                window.location.href = "/web/frontend/accounts/IndexGetGreen/index.html"; 
+            }
+            logoutLink.addEventListener('click', (e) => {
+                e.preventDefault(); 
+                logout();
+            });
+        
             const nome = localStorage.getItem('usuarioNome');
             const tipo = localStorage.getItem('usuarioTipo');
             const id = localStorage.getItem('usuarioId'); 
 
             const profileLink = document.getElementById('profileLink');
+            const listARealizar = document.getElementById('listARealizar'); 
+            const listRealizadas = document.getElementById('listRealizadas'); 
+            const listFinalizadas = document.getElementById('listFinalizadas'); 
+            const pageTitle = document.getElementById('pageTitle');
 
-            // LÓGICA DE EXIBIÇÃO E REDIRECIONAMENTO DO PERFIL (HEADER)
             if (nome && tipo) {
-                // Usuário Logado: Mostra o nome e mantém o link como está
                 document.getElementById('usuarioNome').textContent = nome;
-                document.getElementById('boasVindas').textContent = `Bem-vindo(a), ${nome}!`;
-                profileLink.href = "#"; 
+                pageTitle.textContent = `Minhas Coletas`;
+                profileLink.href = "../Perfil/Perfil.html"; 
             } else {
-                // Usuário NÃO Logado: Mantém o texto "Usuário", mas redireciona para o login
-                document.getElementById('usuarioNome').textContent = 'Usuário'; // Mantém o texto original
-                document.getElementById('boasVindas').textContent = 'Seja bem-vindo(a)!';
-                
-                // Define o link para a página de login
+                document.getElementById('usuarioNome').textContent = 'Colaborador';
+                pageTitle.textContent = 'Minhas Coletas';
                 profileLink.href = "/web/frontend/accounts/Login/loginGetGreen.html"; 
             }
 
-
-            // Modal open/close handlers
-            const openBtn = document.getElementById('openNovaColeta');
-            const modal = document.getElementById('novaColetaModal');
-            const closeBtn = document.getElementById('closeNovaColeta');
-            const form = document.getElementById('formNovaColeta');
-            const listPendentes = document.getElementById('listPendentes'); 
-            const listConcluidas = document.getElementById('listConcluidas'); 
-
-            // ATUALIZADO: Verifica o login antes de abrir a modal
-            function openModal() {
-                const nomeLogado = localStorage.getItem('usuarioNome');
-                const tipoLogado = localStorage.getItem('usuarioTipo');
-                
-                if (!nomeLogado || tipoLogado !== 'empresa') {
-                    // Redireciona o usuário não logado para o login ao tentar abrir a modal
-                    alert('Você precisa estar logado como uma empresa para solicitar uma nova coleta.');
-                    window.location.href = "/web/frontend/accounts/IndexGetGreen/index.html";
-                    return; 
-                }
-                
-                modal.setAttribute('aria-hidden', 'false');
-                document.body.style.overflow = 'hidden';
-            }
-            function closeModal() {
-                modal.setAttribute('aria-hidden', 'true');
-                document.body.style.overflow = '';
-                form.reset(); // Limpa o formulário
-            }
-            openBtn.addEventListener('click', openModal);
-            closeBtn.addEventListener('click', closeModal);
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) closeModal();
-            });
             
-            // Função para excluir a coleta
-            async function excluirColeta(coletaId) {
-                if (!confirm('Tem certeza que deseja cancelar esta coleta? Esta ação não pode ser desfeita.')) {
-                    return;
-                }
-
+            async function cancelarColeta(coletaId) {
+                if (!confirm('Tem certeza que deseja cancelar esta coleta que você aceitou?')) return;
                 try {
-                    const response = await fetch(`http://localhost:4000/api/coletas/${coletaId}`, {
-                        method: 'DELETE'
+                    const response = await fetch(`http://localhost:4000/api/coletas/${coletaId}/cancelar-coletor`, {
+                        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ coletorId: null, status: 'disponivel' }) 
                     });
-
                     const resultado = await response.json();
-
                     if (response.ok) {
-                        alert(resultado.mensagem);
-                        // Recarrega a lista para refletir a exclusão em tempo real
-                        carregarColetasEmpresa(); 
+                        alert('Coleta cancelada. Ela retornará para a lista de coletas disponíveis.');
+                        carregarColetasColaborador(); 
                     } else {
                         alert(`Erro ao cancelar coleta: ${resultado.error}`);
                     }
                 } catch (err) {
                     console.error('Fetch error:', err);
-                    alert('Erro de conexão com o servidor ao tentar excluir a coleta.');
+                    alert('Erro de conexão com o servidor ao tentar cancelar a coleta.');
                 }
             }
 
 
-            // FUNÇÃO PARA CARREGAR E RENDERIZAR COLETAS (Atualizada para filtrar pelo ID do usuário)
-            async function carregarColetasEmpresa() {
-                const usuarioId = localStorage.getItem('usuarioId');
+            async function marcarComoRealizada(coletaId) {
+                if (!confirm('Você concluiu esta coleta? Esta ação irá movê-la para a aba de Concluídas.')) return;
+                try {
+                    const response = await fetch(`http://localhost:4000/api/coletas/${coletaId}`, {
+                        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ status: 'realizada' }) 
+                    });
+                    const resultado = await response.json();
+                    if (response.ok) {
+                        alert('Coleta marcada como realizada com sucesso! Ela está aguardando a finalização pelo solicitante.');
+                        carregarColetasColaborador(); 
+                    } else {
+                        alert(`Erro ao marcar como realizada: ${resultado.error}`);
+                    }
+                } catch (err) {
+                    console.error('Fetch error:', err);
+                    alert('Erro de conexão com o servidor ao tentar marcar como realizada.');
+                }
+            }
+            
+            function visualizarColetaFinalizada() {
+                 alert("Esta coleta já foi marcada como FINALIZADA pelo solicitante. Use esta aba para visualizar o histórico.");
+            }
+
+
+            async function carregarColetasColaborador() {
+                const coletorId = localStorage.getItem('usuarioId');
                 
-                if (!usuarioId) {
-                    listPendentes.innerHTML = '<p>Faça login para visualizar suas coletas.</p>';
-                    listConcluidas.innerHTML = '';
-                    return; 
+                if (!coletorId || localStorage.getItem('usuarioTipo') !== 'colaborador') {
+                    listARealizar.innerHTML = '<p>Faça login como Colaborador para visualizar suas coletas.</p>';
+                    listRealizadas.innerHTML = ''; listFinalizadas.innerHTML = ''; return; 
                 }
                 
-                listPendentes.innerHTML = '<p>Carregando coletas...</p>';
-                listConcluidas.innerHTML = '<p>Carregando coletas...</p>';
+                listARealizar.innerHTML = '<p>Carregando coletas...</p>';
+                listRealizadas.innerHTML = '<p>Carregando coletas...</p>';
+                listFinalizadas.innerHTML = '<p>Carregando coletas...</p>'; 
 
                 try {
-                    // Adicionando o filtro do usuarioId na requisição
-                    const response = await fetch(`http://localhost:4000/api/coletas?usuarioId=${usuarioId}`);
+                    const response = await fetch(`http://localhost:4000/api/coletas?coletorId=${coletorId}`);
                     const coletas = await response.json();
                     
-                    listPendentes.innerHTML = ''; 
-                    listConcluidas.innerHTML = '';
-                    
+                    listARealizar.innerHTML = ''; listRealizadas.innerHTML = ''; listFinalizadas.innerHTML = ''; 
                     
                     const coletasMapeadas = coletas.map((coleta, index) => {
                         const dataCriacao = new Date(coleta.dataCriacao).toLocaleDateString('pt-BR', {
                             day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
                         });
 
-                        let statusText = 'Aguardando atribuição de coleta';
-                        let coletorNome = '-';
-                        let actionButton = `<button class="btn-action btn-cancel" data-coleta-id="${coleta._id}"><span class="material-icons-outlined">close</span>cancelar</button>`;
-                        let isDone = false;
+                        const isFinalizada = coleta.status === 'concluida'; 
+                        const isRealizada = coleta.status === 'realizada'; 
+                        const isPendente = !isRealizada && !isFinalizada; 
 
-                        if (coleta.status === 'concluida') {
-                            statusText = 'Coleta realizada';
-                            coletorNome = '-'; 
-                            actionButton = `<button class="btn-action btn-finish"><span class="material-icons-outlined">check</span>finalizar</button>`;
-                            isDone = true;
+                        let statusText = coleta.status || 'Agendada com o Colaborador';
+                        let actionButton = '';
+                        let destinatarioNome = coleta.usuarioNome || '-';
+                        let cardClass = '';
+                        let requestSideClass = 'request-side'; 
+
+                        if (isPendente) {
+                            statusText = 'Aceita/A Realizar';
+                            cardClass = 'is-pending';
+                            requestSideClass = 'request-side request-side-pending-actions'; 
+                            actionButton = `
+                                <div class="action-buttons-group">
+                                    <button class="btn-action btn-finish" data-coleta-id="${coleta._id}"><span class="material-icons-outlined">check</span>Marcar Realizada</button>
+                                    <button class="btn-action btn-cancel" data-coleta-id="${coleta._id}"><span class="material-icons-outlined">close</span>Cancelar</button>
+                                </div>
+                            `;
+                        } else if (isRealizada) {
+                            statusText = 'Aguardando Finalização';
+                            cardClass = 'is-done'; 
+                            actionButton = `<button class="btn-action btn-finish btn-realizada" data-coleta-id="${coleta._id}"><span class="material-icons-outlined">visibility</span>Visualizar</button>`;
+                        } else if (isFinalizada) {
+                            statusText = 'Coleta Finalizada';
+                            cardClass = 'is-finalized'; 
+                            actionButton = `<button class="btn-action btn-finish btn-finalizada" data-coleta-id="${coleta._id}"><span class="material-icons-outlined">check_circle</span>Finalizada</button>`;
                         }
                         
-                        return {
-                            ...coleta,
-                            dataCriacaoFormatada: dataCriacao,
-                            coletorNome: coletorNome,
-                            statusDetail: statusText,
-                            actionButton: actionButton,
-                            isDone: isDone
-                        };
+                        return { ...coleta, dataCriacaoFormatada: dataCriacao, destinatarioNome: destinatarioNome, statusDetail: statusText, actionButton: actionButton, isPendente: isPendente, isRealizada: isRealizada, isFinalizada: isFinalizada, cardClass: cardClass, requestSideClass: requestSideClass };
                     });
 
-                    const pendentes = coletasMapeadas.filter(c => !c.isDone);
-                    const concluidas = coletasMapeadas.filter(c => c.isDone);
+                    const aRealizar = coletasMapeadas.filter(c => c.isPendente);
+                    const realizadas = coletasMapeadas.filter(c => c.isRealizada);
+                    const finalizadas = coletasMapeadas.filter(c => c.isFinalizada);
                     
-                    if (pendentes.length === 0) {
-                        listPendentes.innerHTML = '<p>Nenhuma coleta pendente no momento.</p>';
+                    
+                    if (aRealizar.length === 0) {
+                        listARealizar.innerHTML = '<p>Nenhuma coleta pendente para você no momento.</p>';
                     } else {
-                        pendentes.forEach(coleta => {
-                            // Renderização simplificada
-                            const cardHTML = `
-                                <article class="request-card is-pending">
-                                    <div class="request-main">
-                                        <div class="request-title">id:${coleta._id}</div>
-                                        <div class="request-sub">Coletor parceiro: ${coleta.coletorNome}</div>
-                                        <div class="request-status-details">
-                                            <span class="status-text">Status: ${coleta.statusDetail}</span>
-                                        </div>
-                                    </div>
-                                    <div class="request-side">
-                                        <div class="request-date">${coleta.dataCriacaoFormatada}</div>
-                                        ${coleta.actionButton}
-                                    </div>
-                                </article>
-                            `;
-                            listPendentes.innerHTML += cardHTML;
+                        aRealizar.forEach(coleta => {
+                            const cardHTML = `<article class="request-card ${coleta.cardClass}"><div class="request-main"><div class="request-title">id:${coleta._id}</div><div class="request-sub">Solicitante: ${coleta.destinatarioNome}</div><div class="request-status-details"><span class="status-text">${coleta.statusDetail}</span></div></div><div class="${coleta.requestSideClass}"><div class="request-date">${coleta.dataCriacaoFormatada}</div>${coleta.actionButton}</div></article>`;
+                            listARealizar.innerHTML += cardHTML;
+                        });
+                        
+                        document.querySelectorAll('#listARealizar .btn-cancel').forEach(button => {
+                            button.addEventListener('click', (e) => {
+                                e.preventDefault(); const coletaId = e.currentTarget.getAttribute('data-coleta-id');
+                                if (coletaId) cancelarColeta(coletaId);
+                            });
+                        });
+                        
+                         document.querySelectorAll('#listARealizar .btn-finish').forEach(button => {
+                            button.addEventListener('click', (e) => {
+                                e.preventDefault(); const coletaId = e.currentTarget.getAttribute('data-coleta-id');
+                                if (coletaId) marcarComoRealizada(coletaId); 
+                            });
                         });
                     }
 
-                    if (concluidas.length === 0) {
-                        listConcluidas.innerHTML = '<p>Nenhuma coleta concluída ainda.</p>';
+                    if (realizadas.length === 0) {
+                        listRealizadas.innerHTML = '<p>Nenhuma coleta marcada como concluída (aguardando finalização do solicitante).</p>';
                     } else {
-                         concluidas.forEach(coleta => {
-                             // Renderização simplificada
-                            const cardHTML = `
-                                <article class="request-card is-done">
-                                    <div class="request-main">
-                                        <div class="request-title">id:${coleta._id}</div>
-                                        <div class="request-sub">Coletor parceiro: ${coleta.coletorNome}</div>
-                                        <div class="request-status-details">
-                                            <span class="status-text">Status: ${coleta.statusDetail}</span>
-                                        </div>
-                                    </div>
-                                    <div class="request-side">
-                                        <div class="request-date">${coleta.dataCriacaoFormatada}</div>
-                                        ${coleta.actionButton}
-                                    </div>
-                                </article>
-                            `;
-                            listConcluidas.innerHTML += cardHTML;
+                         realizadas.forEach(coleta => {
+                             const cardHTML = `<article class="request-card ${coleta.cardClass}"><div class="request-main"><div class="request-title">id:${coleta._id}</div><div class="request-sub">Solicitante: ${coleta.destinatarioNome}</div><div class="request-status-details"><span class="status-text">${coleta.statusDetail}</span></div></div><div class="request-side"><div class="request-date">${coleta.dataCriacaoFormatada}</div>${coleta.actionButton}</div></article>`;
+                            listRealizadas.innerHTML += cardHTML;
+                        });
+                        
+                        document.querySelectorAll('#listRealizadas .btn-realizada').forEach(button => {
+                            button.addEventListener('click', (e) => {
+                                e.preventDefault(); alert("Esta coleta foi marcada como realizada por você e está aguardando a finalização do solicitante.");
+                            });
                         });
                     }
                     
-                    // Anexar o listener de clique após a renderização
-                    document.querySelectorAll('.btn-cancel').forEach(button => {
-                        button.addEventListener('click', (e) => {
-                            e.preventDefault(); 
-                            
-                            // Encontra o ID da coleta no atributo data
-                            const coletaId = e.currentTarget.getAttribute('data-coleta-id');
-                            
-                            if (coletaId) {
-                                excluirColeta(coletaId);
-                            }
+                     if (finalizadas.length === 0) {
+                        listFinalizadas.innerHTML = '<p>Nenhuma coleta finalizada no histórico.</p>';
+                    } else {
+                         finalizadas.forEach(coleta => {
+                             const cardHTML = `<article class="request-card ${coleta.cardClass}"><div class="request-main"><div class="request-title">id:${coleta._id}</div><div class="request-sub">Solicitante: ${coleta.destinatarioNome}</div><div class="request-status-details"><span class="status-text">${coleta.statusDetail}</span></div></div><div class="request-side"><div class="request-date">${coleta.dataCriacaoFormatada}</div>${coleta.actionButton}</div></article>`;
+                            listFinalizadas.innerHTML += cardHTML;
                         });
-                    });
-
+                        
+                        document.querySelectorAll('#listFinalizadas .btn-finalizada').forEach(button => {
+                            button.addEventListener('click', (e) => {
+                                e.preventDefault(); visualizarColetaFinalizada();
+                            });
+                        });
+                    }
+                    
 
                 } catch (error) {
                     console.error('Erro ao buscar coletas:', error);
-                    listPendentes.innerHTML = '<p>Erro ao carregar as coletas. Verifique a conexão com o servidor.</p>';
-                    listConcluidas.innerHTML = '';
+                    listARealizar.innerHTML = '<p>Erro ao carregar as coletas. Verifique a conexão com o servidor.</p>';
+                    listRealizadas.innerHTML = ''; listFinalizadas.innerHTML = '';
                 }
             }
             
-            // Lógica de envio do formulário (AJAX POST) - ATUALIZADO
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-
-                const nomeLogado = localStorage.getItem('usuarioNome');
-                const idLogado = localStorage.getItem('usuarioId');
-                const tipoLogado = localStorage.getItem('usuarioTipo'); 
-
-                if (!nomeLogado || !idLogado || tipoLogado !== 'empresa') {
-                    alert('Erro de autenticação: Você deve estar logado como empresa para solicitar uma coleta.');
-                    return; 
-                }
-
-                const formData = new FormData(form);
-                const data = Object.fromEntries(formData.entries());
-
-                // Converte a quantidade para número
-                data.quantidade = parseFloat(data.quantidade);
-
-                // Adiciona os dados do usuário logado à requisição
-                data.usuarioId = idLogado; 
-                data.usuarioNome = nomeLogado; 
-
-                try {
-                    const response = await fetch('http://localhost:4000/api/coletas', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(data)
-                    });
-
-                    const resultado = await response.json();
-
-                    if (response.ok) {
-                        alert('Coleta solicitada com sucesso!');
-                        closeModal();
-                        // Recarrega as coletas na tela
-                        carregarColetasEmpresa(); 
-                    } else if (response.status === 401) {
-                         alert(`Acesso negado: ${resultado.error}`);
-                    }
-                    else {
-                        alert(`Erro ao solicitar coleta: ${resultado.error}`);
-                    }
-                } catch (err) {
-                    alert('Erro de conexão com o servidor. Verifique se o backend está rodando.');
-                    console.error('Fetch error:', err);
-                }
-            });
-            
-            // Carrega as coletas ao iniciar a página
-            carregarColetasEmpresa(); 
+            carregarColetasColaborador(); 
 
         </script>
-    </body>
+    </div>
+</body>
 </html>
