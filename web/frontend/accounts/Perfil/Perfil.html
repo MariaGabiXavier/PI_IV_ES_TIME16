@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Perfil - GetGreen</title>
     <link rel="stylesheet" href="Perfil.css"> 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 </head>
 <body>
     <div class="main-wrapper">
@@ -12,8 +13,14 @@
         <div class="sidebar">
             <h3 id="saudacao-menu">Olá!</h3>
             <div class="sidebar-menu">
-                <a href="#" class="active">Meu Perfil</a>
-                <a href="#" id="link-logout">Sair</a> 
+                <a href="#" id="link-voltar" class="btn-voltar">
+                    <span class="material-icons-outlined">arrow_back</span>Voltar
+                </a>
+                
+                <hr class="sidebar-divider"> 
+                
+                <a href="#"><span class="material-icons-outlined">person</span>Meu Perfil</a>
+                <a href="#" id="link-logout"><span class="material-icons-outlined">logout</span>Sair da conta</a> 
             </div>
         </div>
 
@@ -70,6 +77,22 @@
         </div>
     </div>
     
+    <script>
+        document.getElementById('link-voltar').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.history.back(); 
+        });
+        
+        document.getElementById('link-logout').addEventListener('click', (e) => {
+            e.preventDefault(); 
+            localStorage.removeItem('usuarioNome');
+            localStorage.removeItem('usuarioTipo');
+            localStorage.removeItem('usuarioId'); 
+            
+            window.location.href = "/web/frontend/accounts/IndexGetGreen/index.html"; 
+        });
+        
+    </script>
     <script src="../../../backend/perfil.js"></script>
 </body>
 </html>

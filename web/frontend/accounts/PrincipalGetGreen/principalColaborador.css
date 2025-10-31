@@ -44,7 +44,7 @@ body {
     font-size: 28px;
     color: black; 
     margin-top: 0px;
-    margin-bottom: 20px;
+    margin-bottom: 40px; 
     text-decoration: none;
     font-family: var(--font-family);
     font-weight: bold;
@@ -58,7 +58,7 @@ body {
 .sidebar-nav h4 {
     font-size: 28px; 
     font-weight: bold;
-    margin-top: 5px;
+    margin-top: 25px;
     margin-bottom: 15px;
     color: #f0f0f0;
 }

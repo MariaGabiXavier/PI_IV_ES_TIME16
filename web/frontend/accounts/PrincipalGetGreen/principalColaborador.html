@@ -65,29 +65,24 @@
             </section>
         
         <script>
-            // Configuração inicial do usuário
             const nome = localStorage.getItem('usuarioNome');
             const tipo = localStorage.getItem('usuarioTipo');
 
             if (nome && tipo) {
                 document.getElementById('usuarioNome').textContent = nome;
-                // REMOVIDO: document.getElementById('boasVindas').textContent = `Bem-vindo(a), ${nome}!`; 
             } else {
                 document.getElementById('usuarioNome').textContent = 'Usuário';
-                // REMOVIDO: document.getElementById('boasVindas').textContent = 'Seja bem-vindo(a)!';
             }
 
-            // Função para buscar e renderizar as coletas
             async function carregarColetas() {
                 const feedColetas = document.getElementById('feedColetas');
                 feedColetas.innerHTML = '<p>Carregando coletas...</p>'; 
 
                 try {
-                    // *** ENDEREÇO CORRIGIDO para http://localhost:4000/api/coletas ***
                     const response = await fetch('http://localhost:4000/api/coletas');
                     const coletas = await response.json();
 
-                    feedColetas.innerHTML = ''; // Limpa a mensagem de carregamento
+                    feedColetas.innerHTML = ''; 
 
                     if (coletas.length === 0) {
                         feedColetas.innerHTML = '<p>Nenhuma coleta solicitada ainda.</p>';
@@ -127,24 +122,20 @@
                 }
             }
 
-            // Carrega as coletas ao iniciar a página
             carregarColetas();
             
-            // Lógica de Sair da Conta (Logout) - NOVO BLOCO
             const logoutLink = document.getElementById('logoutLink');
 
             function logout() {
-                // Remove todas as informações de sessão do usuário
                 localStorage.removeItem('usuarioNome');
                 localStorage.removeItem('usuarioTipo');
                 localStorage.removeItem('usuarioId'); 
                 
-                // Redireciona para a página inicial
                 window.location.href = "/web/frontend/accounts/IndexGetGreen/index.html"; 
             }
 
             logoutLink.addEventListener('click', (e) => {
-                e.preventDefault(); // Impede a navegação padrão do link
+                e.preventDefault(); 
                 logout();
             });
 
