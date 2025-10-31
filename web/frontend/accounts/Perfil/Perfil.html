@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil - GetGreen</title>
+    <link rel="stylesheet" href="Perfil.css"> 
+</head>
+<body>
+    <div class="main-wrapper">
+        
+        <div class="sidebar">
+            <h3 id="saudacao-menu">Olá!</h3>
+            <div class="sidebar-menu">
+                <a href="#" class="active">Meu Perfil</a>
+                <a href="#" id="link-logout">Sair</a> 
+            </div>
+        </div>
+
+        <div class="main-content">
+            
+            <div class="header-perfil">
+                <h1>
+                    Detalhes da Conta
+                </h1>
+                <img src="../IndexGetGreen/Logo_getgreenMeiaFundo.png" alt="Logo GetGreen" class="header-logo"> 
+                </div>
+            
+            <div id="loading-message" class="loading">Carregando dados do perfil...</div>
+
+            <div id="perfil-detalhes" style="display: none;">
+                
+                <h3 class="section-title">Informações Pessoais / Empresariais</h3>
+                <div class="perfil-grid">
+                    
+                    <div class="info-box">
+                        <strong id="label-nome">Nome / Razão Social</strong>
+                        <span id="nome-usuario"></span>
+                    </div>
+                    <div class="info-box">
+                        <strong>Email</strong>
+                        <span id="email-usuario"></span>
+                    </div>
+                    <div class="info-box">
+                        <strong>Tipo de Conta</strong>
+                        <span id="tipo-conta"></span>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Documento (CPF/CNPJ)</strong>
+                        <span id="documento-usuario"></span>
+                    </div>
+                    
+                    <div id="campo-segmento" class="info-box" style="display: none;">
+                        <strong>Segmento</strong>
+                        <span id="segmento-empresa"></span>
+                    </div>
+                    </div>
+
+                <h3 class="section-title">Endereço de Cadastro</h3>
+                <div class="perfil-grid">
+                    <div class="info-box endereco-section"> 
+                        <strong>Localização</strong>
+                        <span id="endereco-completo"></span>
+                    </div>
+                </div>
+
+                <button id="btn-edit" class="btn-edit" style="margin-top: 20px;">Editar Perfil</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../../../backend/perfil.js"></script>
+</body>
+</html>
