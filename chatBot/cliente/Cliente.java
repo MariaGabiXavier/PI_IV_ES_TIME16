@@ -30,8 +30,7 @@ public class Cliente {
     final String ANSI_RESET = "\u001B[0m";
     final String ANSI_CYAN = "\u001B[36m";
     final String ANSI_GREEN = "\u001B[32m";
-    final String ANSI_YELLOW = "\u001B[33m";
-
+    
         try {
             servidor = new Parceiro(conexao);
         } catch (Exception erro) {
