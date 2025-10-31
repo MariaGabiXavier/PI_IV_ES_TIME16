@@ -1,0 +1,164 @@
+:root{
+  --bg-accent: #0e2b1f; 
+  --modal-bg: #ffffff;
+  --border: #e6e6e6;
+  --input-border: #dcdcdc;
+  --btn-green: #dfff2a; 
+  --btn-green-text: #083500;
+  --text: #222;
+}
+
+*{
+  box-sizing:border-box
+}
+body{
+  font-family: 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; 
+  background: #f6f6f6;
+  color:var(--text); margin:0
+}
+
+.open-btn{
+  background:var(--btn-green);
+  color:var(--btn-green-text);
+  border:none;
+  padding:12px 20px;
+  border-radius:8px;
+  font-weight:600;
+  cursor:pointer
+}
+
+/* Chat UI */
+.chat-container{
+  display:flex;
+  flex-direction:column;
+  gap:12px
+}
+.chat-area{
+  max-height:320px;
+  overflow:auto;
+  padding:10px;
+  background:#fbfbfb;
+  border-radius:12px;
+  border:1px solid #eee
+}
+.msg{
+  margin:6px 0;
+  padding:10px 12px;
+  border-radius:12px;
+  max-width:85%;
+  word-wrap:break-word
+}
+.msg.server{
+  background:#f0fff0;
+  color:#083500;
+  border:1px solid #e6f7e6;
+  margin-left:0
+}
+.msg.user{
+  background:#e8f5ff;
+  color:#083544;
+  border:1px solid #dfeef9;
+  margin-left:auto
+}
+.options{
+  display:flex;
+  flex-direction:column;
+  gap:8px
+}
+.option-btn{
+  background:transparent;
+  border:1px solid var(--input-border);
+  padding:10px;
+  border-radius:10px;
+  cursor:pointer;
+  text-align:left
+}
+.inputRow{
+  display:flex;
+  gap:8px;
+  margin-top:6px
+}
+.inputRow input{
+  flex:1;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid var(--input-border)
+}
+
+/* Overlay */
+.overlay{
+  position:fixed;
+  inset:0;display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,0.35);
+  z-index:1000;
+  padding:20px
+}
+.modal{
+  width:100%;
+  max-width:540px;
+  background:var(--modal-bg);
+  border-radius:28px;
+  padding:28px 30px 22px 30px;
+  box-shadow:0 8px 30px rgba(0,0,0,0.25);
+  position:relative;
+}
+.modal h2{
+  font-family: 'Playfair Display', serif;
+  text-align:center;
+  margin:0 0 14px 0;
+  font-weight:400
+}
+.modal .close{
+  position:absolute;
+  right:14px;top:10px;
+  border:none;
+  background:transparent;
+  font-size:28px;
+  line-height:1;
+  cursor:pointer;
+  color:#888
+}
+
+.form input[type='text'], .form input[type='date'], .form textarea, .form input {
+  width:100%;
+  padding:12px 14px;
+  border-radius:12px;
+  border:1px solid var(--input-border);
+  margin-bottom:12px;
+  font-size:15px;
+  color:var(--text);
+  background:transparent
+}
+.form textarea{
+  resize:vertical
+}
+
+.row{
+  display:flex;gap:12px
+}
+.row .half{
+  flex:1
+}
+
+.submit-btn{
+  display:block;
+  width:100%;
+  padding:14px;
+  border-radius:14px;
+  background:var(--btn-green);
+  color:var(--btn-green-text);
+  border:none;font-weight:600;
+  font-size:16px;
+  cursor:pointer;
+  margin-top:6px
+}
+
+/* Styling touches from mock *
+.modal{border:1px solid var(--border)}
+
+@media (max-width:520px){
+  .modal{padding:20px;border-radius:18px}
+  .open-btn{width:100%}
+}
