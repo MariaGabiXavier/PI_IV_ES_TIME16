@@ -126,11 +126,12 @@ function criarTag(texto) {
 
       // Vincula ação ao botão
       const botaoConfirmar = document.getElementById("btn-confirmar");
-       if (coleta.status === "confirmada") {
+       if (coleta.status === "concluida") {
         botaoConfirmar.disabled = true;
         botaoConfirmar.textContent = "Coleta Confirmada";
         botaoConfirmar.style.backgroundColor = "#4CAF50";
         botaoConfirmar.style.color = "#fff";
+
       } else {
       botaoConfirmar.onclick = async () => {
         try {
@@ -145,6 +146,7 @@ function criarTag(texto) {
             botaoConfirmar.disabled = true;
             botaoConfirmar.textContent = "Coleta Confirmada";
             botaoConfirmar.style.backgroundColor = "#4CAF50";
+            window.location.href = "/web/frontend/accounts/PrincipalGetGreen/principalColaborador.html";
           } else {
             alert("Erro: " + (data.error || "Não foi possível confirmar."));
           }
@@ -160,6 +162,7 @@ function criarTag(texto) {
   }
 
   carregarDetalhesColeta();
+
 
     const logoutLink = document.getElementById('logoutLink');
 

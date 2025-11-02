@@ -303,7 +303,7 @@ app.post('/coletas/:id/confirmar', async (req, res) => {
     const coleta = await Coleta.findById(id);
     if (!coleta) return res.status(404).json({ error: 'Coleta não encontrada.' });
 
-    coleta.status = 'confirmada';
+    coleta.status = 'concluida';
     await coleta.save();
 
     res.json({ message: '✅ Coleta confirmada com sucesso!', coleta });
@@ -312,3 +312,4 @@ app.post('/coletas/:id/confirmar', async (req, res) => {
     res.status(500).json({ error: 'Erro ao confirmar coleta.' });
   }
 });
+
