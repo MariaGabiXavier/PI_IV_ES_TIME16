@@ -9,17 +9,17 @@ public class ChatbotRegras {
         perguntas = new LinkedHashMap<>();
         respostas = new HashMap<>();
 
-        perguntas.put(1, "O que é reciclagem?");
-        perguntas.put(2, "Como posso ajudar o meio ambiente?");
-        perguntas.put(3, "O que é o GetGreen?");
-        perguntas.put(4, "Onde posso descartar lixo eletrônico?");
+        perguntas.put(1, "O que é o GetGreen?");
+        perguntas.put(2, "Esqueci minha senha, o que faço?");
+        perguntas.put(3, "");
+        perguntas.put(4, "");
         perguntas.put(5, "Qual a importância da coleta seletiva?");
 
-        respostas.put(1, "Reciclagem é o processo de transformar materiais usados em novos produtos, reduzindo o desperdício.");
-        respostas.put(2, "Você pode ajudar reduzindo o consumo, reciclando, evitando plástico e economizando energia!");
-        respostas.put(3, "O GetGreen é um projeto que incentiva práticas sustentáveis e conscientização ambiental.");
-        respostas.put(4, "Procure pontos de coleta em sua cidade ou lojas que aceitam eletrônicos para descarte correto.");
-        respostas.put(5, "A coleta seletiva reduz a poluição e permite que materiais recicláveis sejam reaproveitados.");
+        respostas.put(1, "O GetGreen é um projeto que incentiva práticas sustentáveis e conscientização ambiental. Para mais informações, visite a pagina sobre o GetGreen.");
+        respostas.put(2, "Para mudar sua senha, vá para a página de login e clique em 'Esqueci minha senha'. Siga as instruções enviadas");
+        respostas.put(3, "");
+        respostas.put(4, "");
+        respostas.put(5, "A coleta seletiva é importante porque reduz o desperdício e permite a reciclagem de materiais.");
     }
 
     public String montarMenu() {

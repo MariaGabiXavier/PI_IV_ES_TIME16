@@ -3,7 +3,7 @@
   --modal-bg: #ffffff;
   --border: #e6e6e6;
   --input-border: #dcdcdc;
-  --btn-green: #dfff2a; 
+  --btn-green: #a9ff00; 
   --btn-green-text: #083500;
   --text: #222;
 }
@@ -155,10 +155,4 @@ body{
   margin-top:6px
 }
 
-/* Styling touches from mock *
-.modal{border:1px solid var(--border)}
 
-@media (max-width:520px){
-  .modal{padding:20px;border-radius:18px}
-  .open-btn{width:100%}
-}
