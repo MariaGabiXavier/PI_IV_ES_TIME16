@@ -313,3 +313,26 @@ app.post('/coletas/:id/confirmar', async (req, res) => {
   }
 });
 
+// Modelo de Denúncia 
+
+const denunciaSchema = new mongoose.Schema({
+  titulo: String,
+  descricao: String,
+  local: String,
+  dataOcorrencia: Date,
+  usuarioId: String,
+  usuarioNome: String,
+  dataCriacao: { type: Date, default: Date.now }
+});
+const Denuncia = mongoose.model('Denuncia', denunciaSchema);
+
+// Rota para criar denúncia
+app.post('/api/denuncias', async (req, res) => {
+  try {
+    const denuncia = new Denuncia(req.body);
+    await denuncia.save();
+    res.json({ mensagem: 'Denúncia registrada com sucesso!', denuncia });
+  } catch (err) {
+    res.status(500).json({ error: 'Erro ao registrar denúncia: ' + err.message });
+  }
+});
