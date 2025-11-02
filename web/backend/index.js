@@ -270,3 +270,44 @@ app.delete('/api/coletas/:id', async (req, res) => {
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`Servidor rodando em http://localhost:${PORT}`));
+
+
+// Coleta por ID 
+
+app.get('/coletas/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Se não for um ObjectId válido, procura como string comum
+    const coleta = mongoose.isValidObjectId(id)
+      ? await Coleta.findById(id)
+      : await Coleta.findOne({ _id: id });
+
+    if (!coleta) {
+      return res.status(404).send('Coleta não encontrada');
+    }
+
+    res.json(coleta);
+  } catch (err) {
+    console.error('Erro ao buscar coleta:', err);
+    res.status(500).send('Erro ao buscar coleta: ' + err.message);
+  }
+});
+
+//  Confirmar Coleta 
+app.post('/coletas/:id/confirmar', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const coleta = await Coleta.findById(id);
+    if (!coleta) return res.status(404).json({ error: 'Coleta não encontrada.' });
+
+    coleta.status = 'confirmada';
+    await coleta.save();
+
+    res.json({ message: '✅ Coleta confirmada com sucesso!', coleta });
+  } catch (err) {
+    console.error('Erro ao confirmar coleta:', err);
+    res.status(500).json({ error: 'Erro ao confirmar coleta.' });
+  }
+});
