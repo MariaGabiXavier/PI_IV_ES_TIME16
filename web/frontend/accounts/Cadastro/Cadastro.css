@@ -159,8 +159,10 @@ h2 {
   margin-bottom: 10px;
 }
 
+
 .input-row input,
 .input-row select {
+
   flex: 1;
   padding: 10px 15px;
   border: 1px solid #aaa;
@@ -168,6 +170,7 @@ h2 {
   outline: none;
   font-size: 14px;
   font-weight: 400;
+
   color: #4c4c4ce2;
   background-color: #fff;
   
@@ -215,7 +218,6 @@ h2 {
 .input-erro {
     border: 1.5px solid red !important;
 }
-
 .btn {
   background-color: #49643E;
   color: white;
