@@ -1,0 +1,127 @@
+body {
+  margin: 0;
+  font-family: 'Jomolhari', serif;
+  background: #f6f7f6;
+  color: #222;
+}
+
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* SIDEBAR */
+.dashboard-sidebar {
+  background: #2e5b35;
+  color: white;
+  padding: 20px;
+  width: 250px;
+}
+
+.logo-getgreen {
+  font-size: 1.8em;
+  text-decoration: none;
+  color: #fff;
+  display: block;
+  margin-bottom: 30px;
+}
+
+.sidebar-nav h4 {
+  margin-top: 25px;
+  font-size: 1.1em;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  padding-bottom: 5px;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+.sidebar-nav a {
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.sidebar-nav a:hover,
+.sidebar-nav a.active {
+  color: #a8ff9c;
+}
+
+.material-icons-outlined {
+  margin-right: 8px;
+}
+
+/* MAIN */
+.dashboard-main {
+  flex: 1;
+  padding: 20px 40px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.user-profile {
+  color: #2e5b35;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* FORMULÁRIO */
+.denuncia-section {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.denuncia-section h1 {
+  margin-bottom: 10px;
+  color: #2e5b35;
+}
+
+.denuncia-section p {
+  margin-bottom: 25px;
+}
+
+.form-row {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input, textarea {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
+.btn-submit {
+  background: #a8ff9c;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #2e5b35;
+}
+
+.btn-submit:hover {
+  background: #93f089;
+}
