@@ -295,6 +295,7 @@ app.get('/coletas/:id', async (req, res) => {
 });
 
 //  Confirmar Coleta 
+
 app.post('/coletas/:id/confirmar', async (req, res) => {
   try {
     const { id } = req.params;
