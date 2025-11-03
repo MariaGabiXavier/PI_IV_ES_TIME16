@@ -69,7 +69,7 @@ reduzindo a burocracia e **conectando empresas a coletores parceiros**, garantin
 | Gestão | GIT Project |
 
 ---
-## 💻 Servidor Java
+##  🖥️ Servidor Java
 
 O Servidor Java foi implementado conforme orientações do professor André Carvalho.
 Optamos por implementar o modelo de servidor java demonstrado nas aulas de Paradigmas e Programação Orientada a Objetos.
@@ -78,10 +78,36 @@ O processo de negócio do MVP escolhido para ser implementado no servidor é o c
 **Rotas do servidor**
 
 1. Aceitar conexões - o servidor deve constantemente aceitar conexões de clientes. Conferir se os parâmetros fornecidos pelos clientes estão de acordo com o requisitos necessários para estabelecer uma conexão entre ambos.
-
 2. Supervisionar conexões - o servidor deve instanciar uma supervisora de conexão para cada cliente conectado, garantindo o monitoramento dos eventos que ocorrem em cada conexão.
----
+  
+3. Receber pedidos -  o servidor deve receber pedidos dos clientes e identificar o que deve ser feito.
 
+4. Retornar resposta - o servidor deve retornar uma resposta ao cliente de acordo com a sua solicitação.
+  
+5. Encerrar conexão - o servidor em caso de desativamento deve avisar todos os clientes conectados sobre o seu desligamento.
+---
+##  🖥️ Banco de Dados MongoDB
+
+O MongoDB será o único banco de dados utilizado no projeto.
+O banco de dados MongoDB será o único banco de dados utilizado no projeto
+integrados. Ele será organizado em três coleções:
+
+● Coletores: armazenará os dados dos coletores parceiros. Cada documento
+terá os seguintes campos: nome, cpf, email, senha e endereço (Uf, cidade,
+cep, bairro, logradouro e número).
+
+● Empresas: armazenará os dados das empresas parceiras. Cada documento
+terá os seguintes campos: cnpj, razão social,segmento, email, senha,
+endereço (Uf, cidade, cep, bairro, logradouro e numero) e status (se a
+empresa está aguardando aprovação da parceria ou se já é parceira).
+
+● Coletas: armazenará os dados das coletas. Cada documento terá os
+seguintes campos: nome do funcionários responsável pela coleta, os
+materiais a serem coletados, a quantidade de material, e a unidade de
+medida da quantidade (g, Kg), data da solicitação, data preferencial para
+realizar a coleta, descrição da coleta, e observações se houver necessidade.
+
+---
 ## 👥 Equipe de Desenvolvimento
 
 - **Anna Clara Olbi** 
