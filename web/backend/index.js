@@ -65,6 +65,19 @@ const userEmpresa = mongoose.model('User Empresa', UserEmpresaModel);
 const userColaborador = mongoose.model('User Colaborador', UserColaboradorModel);
 const Coleta = mongoose.model('Coleta', ColetaSchema); 
 
+// Feedbacks
+const FeedbackSchema = new mongoose.Schema({
+  clienteId: { type: String, required: true },
+  clienteNome: { type: String, required: true },
+  destinatario: { type: String, enum: ['coletor', 'empresa'], required: true },
+  rating: { type: Number, min: 1, max: 5, required: true },
+  titulo: { type: String, required: true },
+  comentario: { type: String, required: true },
+  coletaId: { type: String, default: null },
+  dataCriacao: { type: Date, default: Date.now }
+});
+const Feedback = mongoose.model('Feedback', FeedbackSchema);
+
 app.get('/', (req, res) => {
   res.send('Servidor e MongoDB estão funcionando!');
 });
@@ -244,6 +257,36 @@ app.get('/api/coletas', async (req, res) => {
     res.json(coletas);
   } catch (err) {
     res.status(500).json({ error: 'Erro ao buscar coletas' });
+  }
+});
+
+// Feedbacks API
+app.get('/api/feedbacks', async (req, res) => {
+  try {
+    const { clienteId, destinatario } = req.query;
+    const filtro = {};
+    if (clienteId) filtro.clienteId = clienteId;
+    if (destinatario) filtro.destinatario = destinatario;
+    const feedbacks = await Feedback.find(filtro).sort({ dataCriacao: -1 });
+    res.json(feedbacks);
+  } catch (err) {
+    res.status(500).json({ error: 'Erro ao buscar feedbacks: ' + err.message });
+  }
+});
+
+app.post('/api/feedbacks', async (req, res) => {
+  try {
+    const { clienteId, clienteNome, destinatario, rating, titulo, comentario } = req.body;
+    if (!clienteId || !clienteNome) return res.status(400).json({ error: 'clienteId e clienteNome são obrigatórios.' });
+    if (!['coletor', 'empresa'].includes(destinatario)) return res.status(400).json({ error: 'destinatario inválido.' });
+    if (!rating || rating < 1 || rating > 5) return res.status(400).json({ error: 'rating deve ser 1-5.' });
+    if (!titulo || !comentario) return res.status(400).json({ error: 'titulo e comentario são obrigatórios.' });
+
+    const novo = new Feedback(req.body);
+    await novo.save();
+    res.status(201).json(novo);
+  } catch (err) {
+    res.status(400).json({ error: 'Erro ao salvar feedback: ' + err.message });
   }
 });
 

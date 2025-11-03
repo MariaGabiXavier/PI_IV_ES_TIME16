@@ -47,7 +47,13 @@
             </header>
 
             <div class="title-row">
-                <h2>Feedback</h2>
+                <div style="display:flex; gap:12px; align-items:center;">
+                    <label for="filtroTipo" style="font-size:14px;color:#777;">Filtrar para:</label>
+                    <select id="filtroTipo" style="border:1px solid #ddd;border-radius:10px;padding:8px 10px;font-family: 'Jomolhari', serif;">
+                        <option value="coletor">Colaborador</option>
+                        <option value="empresa">Empresa</option>
+                    </select>
+                </div>
                 <button type="button" class="btn-nova-coleta" id="btnAdicionarFeedback">adicionar feedback</button>
             </div>
 
@@ -106,7 +112,7 @@
             </section>
 
             <section class="requests-section">
-                <h4 class="requests-title">Meus Feedbacks</h4>
+                <h4 class="requests-title">Feedbacks</h4>
                 <div class="requests-list" id="listFeedbacks">
                     <p>Carregando feedbacks...</p>
                 </div>
@@ -139,6 +145,8 @@
         const feedbackWrapper = document.getElementById('feedbackWrapper');
         const btnAdicionarFeedback = document.getElementById('btnAdicionarFeedback');
         const btnCancelarFeedback = document.getElementById('btnCancelarFeedback');
+        const filtroTipo = document.getElementById('filtroTipo');
+        const destinatarioSelect = document.getElementById('destinatario');
         const listFeedbacks = document.getElementById('listFeedbacks');
 
         btnAdicionarFeedback.addEventListener('click', () => {
@@ -162,28 +170,56 @@
                 return;
             }
 
-            // TODO: conectar ao backend quando a rota estiver disponível
-            // Ex.: await fetch('http://localhost:4000/api/feedbacks', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data) })
+            try {
+                const clienteId = sessionStorage.getItem('usuarioId') || 'client4';
+                const clienteNome = sessionStorage.getItem('usuarioNome') || 'Cliente 4';
+                const payload = { ...data, clienteId, clienteNome };
+                const resp = await fetch('http://localhost:4000/api/feedbacks', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!resp.ok) {
+                    const r = await resp.json().catch(() => ({}));
+                    throw new Error(r.error || 'Falha ao salvar feedback');
+                }
+                alert('Obrigado! Seu feedback foi registrado.');
+            } catch (err) {
+                console.warn('Falha ao salvar no backend, exibindo localmente:', err);
+            }
 
-            console.log('Feedback enviado (mock):', data);
-            alert('Obrigado! Seu feedback foi registrado.');
             form.reset();
             setRating(0);
             feedbackWrapper.style.display = 'none';
             carregarFeedbacks();
         });
 
+        // Filtro de destinatário (colaborador/empresa) controla o select do formulário
+        function syncFiltroParaSelect() {
+            const val = filtroTipo.value;
+            destinatarioSelect.value = val === 'coletor' ? 'coletor' : 'empresa';
+        }
+        function syncSelectParaFiltro() {
+            const val = destinatarioSelect.value;
+            filtroTipo.value = val === 'coletor' ? 'coletor' : 'empresa';
+        }
+        filtroTipo.addEventListener('change', syncFiltroParaSelect);
+        destinatarioSelect.addEventListener('change', syncSelectParaFiltro);
+        // Inicializa filtro a partir do select existente
+        syncSelectParaFiltro();
+
         function renderFeedbackCard(item) {
             const dataTexto = item.dataCriacao
                 ? new Date(item.dataCriacao).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
                 : '';
-            const card = `
+            const stars = '★'.repeat(item.rating || 0) + '☆'.repeat(Math.max(0, 5 - (item.rating || 0)));
+            return `
                 <article class="request-card is-finalized">
                     <div class="request-main">
                         <div class="request-title">id:${item._id || '—'}</div>
                         <div class="request-sub">Cliente: ${item.clienteNome || '—'} | Destinatário: ${item.destinatario || '—'}</div>
                         <div class="request-status-details">
-                            <span class="status-text">${'★'.repeat(item.rating || 0)}${'☆'.repeat(Math.max(0, 5 - (item.rating || 0)))} — ${item.titulo || ''}</span>
+                            <span class="status-text">${stars} — ${item.titulo || ''}</span>
                         </div>
                         <div class="request-sub">${item.comentario || ''}</div>
                     </div>
@@ -192,33 +228,34 @@
                     </div>
                 </article>
             `;
-            return card;
         }
 
         async function carregarFeedbacks() {
-            const clienteId = 'client4'; // solicitado: filtrar pelo id do cliente "client4"
+            const destino = filtroTipo.value;
             listFeedbacks.innerHTML = '<p>Carregando feedbacks...</p>';
             try {
-                const resp = await fetch(`http://localhost:4000/api/feedbacks?clienteId=${encodeURIComponent(clienteId)}`);
-                if (!resp.ok) throw new Error('Resposta não OK do servidor');
+                const url = `http://localhost:4000/api/feedbacks?destinatario=${encodeURIComponent(destino)}`;
+                const resp = await fetch(url);
+                if (!resp.ok) throw new Error('Resposta não OK');
                 const itens = await resp.json();
-                if (!Array.isArray(itens) || itens.length === 0) {
+                const arr = Array.isArray(itens) ? itens : [];
+                if (arr.length === 0) {
                     listFeedbacks.innerHTML = '<p>Nenhum feedback encontrado.</p>';
                     return;
                 }
                 listFeedbacks.innerHTML = '';
-                itens.forEach(f => { listFeedbacks.innerHTML += renderFeedbackCard(f); });
+                arr.forEach(f => { listFeedbacks.innerHTML += renderFeedbackCard(f); });
             } catch (e) {
-                console.warn('Falha ao carregar feedbacks, usando mock:', e);
+                console.warn('Erro ao buscar feedbacks, usando mock:', e);
                 const mock = [
-                    { _id: 'fb1', clienteNome: 'Cliente 4', destinatario: 'empresa', rating: 5, titulo: 'Ótima experiência', comentario: 'Coleta rápida e organizada.', dataCriacao: new Date().toISOString() },
-                    { _id: 'fb2', clienteNome: 'Cliente 4', destinatario: 'coletor', rating: 4, titulo: 'Bom serviço', comentario: 'Tudo certo, apenas pequeno atraso.', dataCriacao: new Date().toISOString() }
+                    { _id: 'fb1', clienteNome: 'Cliente 4', destinatario: destino, rating: 5, titulo: 'Ótima experiência', comentario: 'Coleta rápida e organizada.', dataCriacao: new Date().toISOString() }
                 ];
                 listFeedbacks.innerHTML = '';
                 mock.forEach(f => { listFeedbacks.innerHTML += renderFeedbackCard(f); });
             }
         }
 
+        filtroTipo.addEventListener('change', carregarFeedbacks);
         carregarFeedbacks();
     </script>
 </body>
