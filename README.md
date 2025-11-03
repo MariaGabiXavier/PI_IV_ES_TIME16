@@ -69,6 +69,16 @@ reduzindo a burocracia e **conectando empresas a coletores parceiros**, garantin
 | Gestão | GIT Project |
 
 ---
+## 💻 Servidor Java
+
+O Servidor Java foi implementado conforme orientações do professor André Carvalho.
+Optamos por implementar o modelo de servidor java demonstrado nas aulas de Paradigmas e Programação Orientada a Objetos.
+O processo de negócio do MVP escolhido para ser implementado no servidor é o chatbot de Suporte e Dúvidas dos usuários.
+
+**Rotas do servidor**
+**1. Aceitar conexões** - o servidor deve constantemente aceitar conexões de clientes. Conferir se os parâmetros fornecidos pelos clientes estão de acordo com o requisitos necessários para estabelecer uma conexão entre ambos.
+**2. Supervisionar conexões** - o servidor deve instanciar uma supervisora de conexão para cada cliente conectado, garantindo o monitoramento dos eventos que ocorrem em cada conexão.
+---
 
 ## 👥 Equipe de Desenvolvimento
 
