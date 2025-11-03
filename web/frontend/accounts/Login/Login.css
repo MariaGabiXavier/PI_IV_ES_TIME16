@@ -77,6 +77,13 @@ label {
   margin-top: 15px; 
 }
 
+.input-container {
+  position: relative;
+  display: flex; 
+  align-items: center;
+  margin-bottom: 0px; 
+}
+
 input {
   flex: 1;
   padding: 10px 15px;
@@ -88,10 +95,25 @@ input {
   font-weight: 400;
   color: #1d1d1d;
   transition: border 0.2s ease;
+  padding-right: 40px; 
+  width: 100%; 
 }
 
 input:focus {
   border: 1.5px solid #C6FE31;
+}
+
+.toggle-senha {
+  position: absolute;
+  right: 15px;
+  cursor: pointer;
+  color: #888;
+  font-size: 18px; 
+  z-index: 10;
+}
+
+.toggle-senha:hover {
+  color: #C6FE31;
 }
 
 .forgot {
@@ -146,6 +168,10 @@ button:hover {
 }
 
 .input-erro {
+    border: 1.5px solid red !important;
+}
+
+.input-container input.input-erro {
     border: 1.5px solid red !important;
 }
 
@@ -208,6 +234,12 @@ button:hover {
 
   input {
     font-size: 13px;
+    padding-right: 35px; 
+  }
+
+  .toggle-senha {
+    right: 10px; 
+    font-size: 16px;
   }
 
   button {

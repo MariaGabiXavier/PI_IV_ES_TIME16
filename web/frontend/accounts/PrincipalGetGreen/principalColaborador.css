@@ -43,7 +43,6 @@ body {
 .dashboard-sidebar .logo-getgreen {
     font-size: 28px;
     color: black; 
-    margin-top: 0px;
     margin-bottom: 40px; 
     text-decoration: none;
     font-family: var(--font-family);
@@ -137,7 +136,6 @@ body {
     font-size: 18px;
     color: var(--color-text);
     text-decoration: none;
-    
 }
 
 .user-profile .material-icons-outlined {
@@ -147,7 +145,7 @@ body {
 }
 
 .search-section {
-    margin-bottom: 50px;
+    display: none;
 }
 
 .search-bar {
@@ -208,7 +206,7 @@ body {
     font-size: 22px; 
     margin-top: 0;
     margin-bottom: 15px;
-    font-family: var(--font-family);
+    font-family: var(--font-family); 
     font-weight: bold; 
     color: var(--color-text);
 }
@@ -218,6 +216,7 @@ body {
     line-height: 1.6;
     margin: 5px 0;
     color: #777;
+    font-family: var(--font-family); 
 }
 
 .card-content p strong {
@@ -226,6 +225,7 @@ body {
     font-size: 17px; 
     line-height: 1.6;
     margin: 5px 0;
+    font-family: var(--font-family); 
 }
 
 .card-actions {
@@ -242,6 +242,7 @@ body {
     color: #777;
     margin-bottom: 30px;
     font-weight: bold;
+    font-family: var(--font-family); 
 }
 
 .button-vermais {
@@ -251,7 +252,7 @@ body {
     padding: 12px 35px;
     text-decoration: none;
     border-radius: 8px;
-    font-family: var(--font-family);
+    font-family: var(--font-family); 
     font-weight: lighter;
     font-size: 17px;
     border: none;
@@ -285,33 +286,6 @@ body {
         margin-left: 35px;
     }
 
-    .about-getgreen {
-        padding: 40px 20px;
-    }
-    .about-content-wrapper {
-        flex-direction: column-reverse;
-    }
-    .about-text-side {
-        text-align: center;
-    }
-
-    .social-getgreen {
-        padding: 40px 20px;
-    }
-    .social-gallery {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    .social-gallery img {
-        height: 200px;
-    }
-
-    .footer-getgreen {
-        padding: 40px 20px;
-    }
-    .footer-grid {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
 }
 
 
@@ -375,19 +349,4 @@ body {
         --content-padding-x: 20px;
     }
 
-    .button-secondary {
-        padding: 12px 30px;
-        font-size: 16px;
-    }
-
-    .about-text-side h2, .social-getgreen h2 {
-        font-size: 32px;
-    }
-    .about-text-side p {
-        font-size: 18px;
-    }
-    .social-gallery img {
-        height: 150px;
-    }
 }
-

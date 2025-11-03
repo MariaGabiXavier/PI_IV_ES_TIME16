@@ -31,7 +31,7 @@
                 <ul>
                     <li><a href="/web/frontend/accounts/ColetasColaborador/ColetasColaborador.html"><span class="material-icons-outlined">recycling</span>minhas coletas</a></li> 
                     <li><a href="#"><span class="material-icons-outlined">feedback</span>visualizar feedbacks</a></li>
-                    <li><a href="#"><span class="material-icons-outlined">report</span>realizar denúncia</a></li>
+                    <li><a href="/web/frontend/accounts/Denuncia/denuncia.html"><span class="material-icons-outlined">report</span>realizar denúncia</a></li>
                     <li><a href="#"><span class="material-icons-outlined">support_agent</span>solicitar suporte</a></li>
                     <li><a href="#" id="logoutLink"><span class="material-icons-outlined">logout</span>sair da conta</a></li> 
                 </ul>
@@ -55,14 +55,14 @@
             </div>
             
             <section class="requests-section">
-                <h4 class="requests-title">Pendentes</h4>
+                <h4 class="requests-title">Pendentes (Coletas Confirmadas)</h4>
                 <div class="requests-list" id="listARealizar">
                     <p>Carregando coletas...</p>
                 </div>
             </section>
 
             <section class="requests-section">
-                <h4 class="requests-title">Concluídas</h4>
+                <h4 class="requests-title">Concluídas (Aguardando Finalização)</h4>
                 <div class="requests-list" id="listRealizadas">
                     <p>Carregando coletas...</p>
                 </div>
@@ -80,20 +80,22 @@
         <script>
             const logoutLink = document.getElementById('logoutLink');
             function logout() {
-                localStorage.removeItem('usuarioNome');
-                localStorage.removeItem('usuarioTipo');
-                localStorage.removeItem('usuarioId'); 
+                sessionStorage.removeItem('usuarioNome');
+                sessionStorage.removeItem('usuarioTipo');
+                sessionStorage.removeItem('usuarioId'); 
                 
                 window.location.href = "/web/frontend/accounts/IndexGetGreen/index.html"; 
             }
             logoutLink.addEventListener('click', (e) => {
                 e.preventDefault(); 
-                logout();
+                if (confirm('Tem certeza que deseja sair da conta?')) { 
+                    logout();
+                }
             });
         
-            const nome = localStorage.getItem('usuarioNome');
-            const tipo = localStorage.getItem('usuarioTipo');
-            const id = localStorage.getItem('usuarioId'); 
+            const nome = sessionStorage.getItem('usuarioNome');
+            const tipo = sessionStorage.getItem('usuarioTipo');
+            const id = sessionStorage.getItem('usuarioId'); 
 
             const profileLink = document.getElementById('profileLink');
             const listARealizar = document.getElementById('listARealizar'); 
@@ -113,11 +115,11 @@
 
             
             async function cancelarColeta(coletaId) {
-                if (!confirm('Tem certeza que deseja cancelar esta coleta que você aceitou?')) return;
+                if (!confirm('Tem certeza que deseja cancelar esta coleta que você aceitou? Ela voltará para a lista de coletas disponíveis.')) return;
                 try {
-                    const response = await fetch(`http://localhost:4000/api/coletas/${coletaId}/cancelar-coletor`, {
+                    const response = await fetch(`http://localhost:4000/api/coletas/${coletaId}`, {
                         method: 'PUT', headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ coletorId: null, status: 'disponivel' }) 
+                        body: JSON.stringify({ coletorId: null, coletorNome: null, status: 'pendente' }) 
                     });
                     const resultado = await response.json();
                     if (response.ok) {
@@ -159,9 +161,9 @@
 
 
             async function carregarColetasColaborador() {
-                const coletorId = localStorage.getItem('usuarioId');
+                const coletorId = sessionStorage.getItem('usuarioId');
                 
-                if (!coletorId || localStorage.getItem('usuarioTipo') !== 'colaborador') {
+                if (!coletorId || sessionStorage.getItem('usuarioTipo') !== 'colaborador') {
                     listARealizar.innerHTML = '<p>Faça login como Colaborador para visualizar suas coletas.</p>';
                     listRealizadas.innerHTML = ''; listFinalizadas.innerHTML = ''; return; 
                 }
@@ -183,7 +185,7 @@
 
                         const isFinalizada = coleta.status === 'concluida'; 
                         const isRealizada = coleta.status === 'realizada'; 
-                        const isPendente = !isRealizada && !isFinalizada; 
+                        const isPendente = coleta.status === 'confirmada'; 
 
                         let statusText = coleta.status || 'Agendada com o Colaborador';
                         let actionButton = '';
@@ -192,7 +194,7 @@
                         let requestSideClass = 'request-side'; 
 
                         if (isPendente) {
-                            statusText = 'Aceita/A Realizar';
+                            statusText = 'Coleta Confirmada'; 
                             cardClass = 'is-pending';
                             requestSideClass = 'request-side request-side-pending-actions'; 
                             actionButton = `
@@ -214,7 +216,7 @@
                         return { ...coleta, dataCriacaoFormatada: dataCriacao, destinatarioNome: destinatarioNome, statusDetail: statusText, actionButton: actionButton, isPendente: isPendente, isRealizada: isRealizada, isFinalizada: isFinalizada, cardClass: cardClass, requestSideClass: requestSideClass };
                     });
 
-                    const aRealizar = coletasMapeadas.filter(c => c.isPendente);
+                    const aRealizar = coletasMapeadas.filter(c => c.isPendente); 
                     const realizadas = coletasMapeadas.filter(c => c.isRealizada);
                     const finalizadas = coletasMapeadas.filter(c => c.isFinalizada);
                     

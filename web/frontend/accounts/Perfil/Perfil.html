@@ -31,39 +31,38 @@
                     Detalhes da Conta
                 </h1>
                 <img src="../IndexGetGreen/Logo_getgreenMeiaFundo.png" alt="Logo GetGreen" class="header-logo"> 
-                </div>
-            
-            <p id="loading-message" class="loading">Carregando dados...</p>
+            </div>
 
-            <div id="perfil-detalhes" style="display: none;">
-                <h3 class="section-title">Dados Pessoais/Empresariais</h3>
+            <div class="perfil-info-container">
+                <h3 class="section-title">Dados de Accesso</h3>
+
+                <div class="loading-overlay" id="loading-message">Carregando...</div> 
                 
-                <div class="perfil-grid">
-                    <div class="info-box">
-                        <strong id="label-nome">Nome/Razão Social</strong>
-                        <span id="nome-usuario"></span>
-                    </div>
+                <div class="perfil-grid" id="perfil-detalhes" style="display: none;"> 
                     
                     <div class="info-box">
-                        <strong>E-mail</strong>
+                        <strong>Email</strong>
                         <span id="email-usuario"></span>
+                    </div>
+                </div>
+
+                <h3 class="section-title">Dados Cadastrais</h3>
+                <div class="perfil-grid" id="perfil-detalhes-pessoais" style="display: none;">
+                    <div class="info-box">
+                        <strong id="label-nome">Nome Completo</strong>
+                        <span id="nome-usuario"></span>
                     </div>
 
                     <div class="info-box">
-                        <strong>CPF/CNPJ</strong>
+                        <strong><span id="label-documento">CPF</span></strong>
                         <span id="documento-usuario"></span>
                     </div>
                     
-                    <div class="info-box">
-                        <strong>Tipo de Conta</strong>
-                        <span id="tipo-conta"></span>
-                    </div>
-                    
-                    <div id="campo-segmento" class="info-box" style="display: none;">
+                    <div class="info-box" id="campo-segmento" style="display: none;">
                         <strong>Segmento</strong>
                         <span id="segmento-empresa"></span>
                     </div>
-                    </div>
+                </div>
 
                 <h3 class="section-title">Endereço de Cadastro</h3>
                 <div class="perfil-grid">
@@ -86,13 +85,11 @@
         
         document.getElementById('link-logout').addEventListener('click', (e) => {
             e.preventDefault(); 
-            // ** Modificação: Adiciona a confirmação aqui **
             if (confirm('Tem certeza que deseja sair da conta?')) { 
-                localStorage.removeItem('usuarioNome');
-                localStorage.removeItem('usuarioTipo');
-                localStorage.removeItem('usuarioId'); 
+                sessionStorage.removeItem('usuarioNome');
+                sessionStorage.removeItem('usuarioTipo');
+                sessionStorage.removeItem('usuarioId'); 
                 
-                // O caminho para o index.html
                 window.location.href = "/web/frontend/accounts/IndexGetGreen/index.html"; 
             }
         });

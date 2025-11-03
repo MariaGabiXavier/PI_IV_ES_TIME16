@@ -8,7 +8,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Conectar MongoDB
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -16,7 +15,6 @@ mongoose.connect(process.env.MONGODB_URI, {
 .then(() => console.log('MongoDB conectado!'))
 .catch((err) => console.error('Erro ao conectar MongoDB:', err));
 
-// Criar modelo de usuário da Empresa
 const UserEmpresaModel = new mongoose.Schema({
   cnpj: String,
   razaoSocial: String,
@@ -32,7 +30,6 @@ const UserEmpresaModel = new mongoose.Schema({
   numero: Number  
 });
 
-// Criar modelo de usuário do Colaborador
 const UserColaboradorModel = new mongoose.Schema({
   nome: String,
   cpf: String,
@@ -48,7 +45,6 @@ const UserColaboradorModel = new mongoose.Schema({
   numero: Number  
 });
 
-// Criar modelo de Coleta 
 const ColetaSchema = new mongoose.Schema({
   responsavel: { type: String, required: true },
   material: { type: String, required: true },
@@ -60,7 +56,9 @@ const ColetaSchema = new mongoose.Schema({
   dataCriacao: { type: Date, default: Date.now },
   status: { type: String, default: 'pendente' },
   usuarioId: { type: String, required: true }, 
-  usuarioNome: { type: String, required: true } 
+  usuarioNome: { type: String, required: true },
+  coletorId: { type: String, default: null }, 
+  coletorNome: { type: String, default: null } 
 });
 
 const userEmpresa = mongoose.model('User Empresa', UserEmpresaModel);
@@ -73,7 +71,6 @@ app.get('/', (req, res) => {
 
 const MIN_PASSWORD_LENGTH = 6; 
 
-//Criar usuário Empresa
 app.post('/api/userEmpresa', async (req, res) => {
   try {
     const { email, senha, confirmarSenha } = req.body;
@@ -109,7 +106,6 @@ app.post('/api/userEmpresa', async (req, res) => {
   }
 });
 
-// Criar usuário Colaborador
 app.post('/api/userColaborador', async (req, res) => {
   try {
     const { email, senha } = req.body; 
@@ -140,19 +136,16 @@ app.post('/api/userColaborador', async (req, res) => {
   }
 });
 
-// Listar usuários Empresa
 app.get('/api/usersEmpresa', async (req, res) => {
   const users = await userEmpresa.find();
   res.json(users);
 });
 
-// Listar usuários Colaborador
 app.get('/api/usersColaborador', async (req, res) => {
   const users = await userColaborador.find();
   res.json(users);
 });
 
-// Login 
 app.post('/api/login', async (req, res) => {
   const { email, senha } = req.body;
 
@@ -189,7 +182,6 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-// Buscar perfil por Id e Tipo
 app.get('/api/perfil/:tipo/:id', async (req, res) => {
     const { tipo, id } = req.params;
     let usuario = null;
@@ -220,7 +212,6 @@ app.get('/api/perfil/:tipo/:id', async (req, res) => {
     }
 });
 
-// Criar nova Coleta 
 app.post('/api/coletas', async (req, res) => {
   const { usuarioId, usuarioNome } = req.body;
   
@@ -237,15 +228,18 @@ app.post('/api/coletas', async (req, res) => {
   }
 });
 
-// Listar Coletas 
 app.get('/api/coletas', async (req, res) => {
   try {
     let filtro = {};
     if (req.query.usuarioId) {
         filtro = { usuarioId: req.query.usuarioId };
     }
+    
+    if (req.query.coletorId) {
+        filtro = { coletorId: req.query.coletorId };
+    }
 
-    // Buscar as coletas
+
     const coletas = await Coleta.find(filtro).sort({ dataCriacao: -1 }); 
     res.json(coletas);
   } catch (err) {
@@ -253,7 +247,27 @@ app.get('/api/coletas', async (req, res) => {
   }
 });
 
-// Excluir Coleta por ID
+app.put('/api/coletas/:id', async (req, res) => {
+  try {
+    const coletaId = req.params.id;
+    const updates = req.body; 
+    
+    const options = { new: true, runValidators: true }; 
+    
+    const resultado = await Coleta.findByIdAndUpdate(coletaId, updates, options); 
+
+    if (!resultado) {
+      return res.status(404).json({ error: 'Coleta não encontrada' });
+    }
+      
+    res.json(resultado);
+  } catch (err) {
+    console.error('Erro ao atualizar coleta:', err);
+    res.status(500).json({ error: 'Erro ao atualizar coleta: ' + err.message });
+  }
+});
+
+
 app.delete('/api/coletas/:id', async (req, res) => {
   try {
     const coletaId = req.params.id;
@@ -272,13 +286,11 @@ const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`Servidor rodando em http://localhost:${PORT}`));
 
 
-// Coleta por ID 
 
 app.get('/coletas/:id', async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Se não for um ObjectId válido, procura como string comum
     const coleta = mongoose.isValidObjectId(id)
       ? await Coleta.findById(id)
       : await Coleta.findOne({ _id: id });
@@ -294,26 +306,28 @@ app.get('/coletas/:id', async (req, res) => {
   }
 });
 
-//  Confirmar Coleta 
 
 app.post('/coletas/:id/confirmar', async (req, res) => {
   try {
     const { id } = req.params;
+    const { coletorId, coletorNome } = req.body; 
 
     const coleta = await Coleta.findById(id);
     if (!coleta) return res.status(404).json({ error: 'Coleta não encontrada.' });
 
-    coleta.status = 'concluida';
+    coleta.status = 'confirmada'; 
+    coleta.coletorId = coletorId;
+    coleta.coletorNome = coletorNome;
+    
     await coleta.save();
 
-    res.json({ message: '✅ Coleta confirmada com sucesso!', coleta });
+    res.json({ message: 'Coleta confirmada com sucesso! Agora ela está na sua lista de Pendentes.', coleta });
   } catch (err) {
-    console.error('Erro ao confirmar coleta:', err);
-    res.status(500).json({ error: 'Erro ao confirmar coleta.' });
+    console.error('Erro ao aceitar coleta:', err);
+    res.status(500).json({ error: 'Erro ao aceitar coleta.' });
   }
 });
 
-// Modelo de Denúncia 
 
 const denunciaSchema = new mongoose.Schema({
   titulo: String,
@@ -326,7 +340,6 @@ const denunciaSchema = new mongoose.Schema({
 });
 const Denuncia = mongoose.model('Denuncia', denunciaSchema);
 
-// Rota para criar denúncia
 app.post('/api/denuncias', async (req, res) => {
   try {
     const denuncia = new Denuncia(req.body);

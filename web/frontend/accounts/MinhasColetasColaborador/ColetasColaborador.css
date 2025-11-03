@@ -43,7 +43,8 @@ body {
 .dashboard-sidebar .logo-getgreen {
     font-size: 28px;
     color: black; 
-    margin-bottom: 40px;
+    margin-top: 0px;
+    margin-bottom: 40px; 
     text-decoration: none;
     font-family: var(--font-family);
     font-weight: bold;
@@ -156,11 +157,34 @@ body {
 }
 .title-row h2 {
     margin: 0;
+    font-family: var(--font-family);
+    font-size: 22px; 
 }
+
+.btn-nova-coleta {
+    background-color: var(--color-primary);
+    color: var(--color-text);
+    border: none;
+    border-radius: 8px; 
+    padding: 12px 35px; 
+    font-family: var(--font-family);
+    font-size: 17px; 
+    font-weight: lighter; 
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+.btn-nova-coleta:hover { background-color: #92e000; }
+.btn-nova-coleta:active { transform: translateY(1px); }
 
 
 .requests-section { margin-top: 20px; }
-.requests-title { margin: 0 0 8px 0; font-weight: 600; }
+.requests-title { 
+    margin: 0 0 8px 0; 
+    font-weight: 600; 
+    font-size: 18px; 
+    font-family: var(--font-family);
+}
 .requests-list { display: flex; flex-direction: column; gap: 12px; }
 
 .request-card {
@@ -175,21 +199,15 @@ body {
 }
 
 .request-card.is-pending { border-left: 5px solid #ff9800; } 
-.request-card.is-done { border-left: 5px solid #2BB673; } 
-.request-card.is-finalized { border-left: 5px solid #49643E; } 
-
+.request-card.is-done { border-left: 5px solid #2BB673; }
+.request-card.is-finalized { border-left: 5px solid #49643E; }
 
 .request-main { display: grid; gap: 6px; }
 .request-title { font-weight: 600; font-size: 14px; }
 .request-sub { color: #666; font-size: 13px; }
-.request-status-details { margin-top: 2px; }
+.request-status-details { margin-top: 2px; } 
 
-.request-side { 
-    display: grid; 
-    gap: 8px; 
-    justify-items: end; 
-}
-
+.request-side { display: grid; gap: 8px; justify-items: end; }
 .request-date { color: #888; font-size: 12px; }
 
 .btn-action {
@@ -205,14 +223,12 @@ body {
     font-family: var(--font-family);
     font-size: 16px;
     transition: opacity 0.2s;
-    width: 100%; 
-    box-sizing: border-box;
 }
 
 .btn-action:hover { opacity: 0.9; }
 
-.btn-cancel { background: #ED544E; } 
-.btn-finish { background: #2BB673; } 
+.btn-cancel { background: #ED544E; }
+.btn-finish { background: #2BB673; }
 .btn-action .material-icons-outlined { font-size: 18px; }
 
 .request-side-pending-actions {
@@ -237,6 +253,81 @@ body {
     background-color: var(--color-primary); 
     color: var(--color-text);
 }
+
+
+
+.modal-overlay[aria-hidden="true"] { display: none; }
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 1000;
+}
+.modal {
+    background: #fff;
+    width: 100%;
+    max-width: 620px;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    padding: 28px;
+    position: relative;
+}
+.modal h3 {
+    margin: 0 0 18px 0;
+    text-align: center;
+    font-weight: 600;
+    font-family: var(--font-family);
+    font-size: 22px; 
+}
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+.form-nova-coleta .form-row { margin-bottom: 12px; }
+.form-nova-coleta .two-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+.form-nova-coleta input,
+.form-nova-coleta textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: var(--font-family);
+    font-size: 16px;
+    outline: none;
+}
+.form-nova-coleta input:focus,
+.form-nova-coleta textarea:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(169,255,0,0.15);
+}
+.form-actions { margin-top: 18px; }
+.btn-submit-nova-coleta {
+    width: 100%;
+    background-color: var(--color-primary);
+    color: var(--color-text);
+    border: none;
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 16px;
+    font-family: var(--font-family);
+    cursor: pointer;
+}
+.btn-submit-nova-coleta:hover { background-color: #92e000; }
+
+
 
 
 @media (max-width: 1360px) {
@@ -306,22 +397,36 @@ body {
         align-items: center;
         flex-direction: row;
         gap: 15px;
+        width: 100%; 
+        justify-content: space-between; 
+    }
+    
+    .request-side .btn-action {
+        flex-grow: 1;
+        text-align: center;
+        justify-content: center;
+        min-width: 100px; 
+        font-size: 14px;
     }
     
     .request-side-pending-actions {
+        margin-top: 10px;
+        justify-items: start;
+        align-items: center;
         flex-direction: column;
-        align-items: flex-start;
+        gap: 15px;
+        width: 100%;
+        justify-content: space-between;
     }
-    
     .request-side-pending-actions .action-buttons-group {
         width: 100%;
-        flex-direction: column; 
-        gap: 5px;
+        flex-direction: row;
+        gap: 8px; 
     }
-    
     .request-side-pending-actions .btn-action {
-        flex-grow: 1; 
-        min-width: unset;
+        flex-grow: 1;
+        min-width: 100px;
+        font-size: 14px;
     }
 }
 

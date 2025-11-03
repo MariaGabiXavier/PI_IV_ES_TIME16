@@ -33,10 +33,8 @@ document.getElementById('cadastroEmpresa').addEventListener('submit', async func
     erroSpanConfirmar.classList.add('visivel');
     confirmarInput.classList.add('input-erro');
     confirmarInput.focus();
-    return; 
+    return;
   }
-
-  confirmarInput.classList.remove('input-erro');
 
   const dados = {
     cnpj: form.cnpj.value,
@@ -65,11 +63,11 @@ document.getElementById('cadastroEmpresa').addEventListener('submit', async func
     if (resposta.ok) {
       const nome = resultado.usuario.razaoSocial;
 
-      localStorage.setItem('usuarioNome', nome);
-      localStorage.setItem('usuarioTipo', resultado.tipo);
-      localStorage.setItem('usuarioId', resultado.usuarioId); 
+      sessionStorage.setItem('usuarioNome', nome);
+      sessionStorage.setItem('usuarioTipo', resultado.tipo);
+      sessionStorage.setItem('usuarioId', resultado.usuarioId); 
 
-      window.location.href = "../PrincipalGetGreen/principalEmpresa.html"; 
+      window.location.href = "../PrincipalGetGreen/principalEmpresas.html"; 
 
     } else {
       const errorMessage = resultado.error || 'Erro desconhecido ao cadastrar.';
@@ -85,7 +83,31 @@ document.getElementById('cadastroEmpresa').addEventListener('submit', async func
       }
     }
   } catch (erro) {
-    console.error('Erro ao conectar com o servidor:', erro);
-    exibirErroGeral('Erro ao conectar com o servidor. Verifique sua conexão.');
+    exibirErroGeral('Erro de conexão com o servidor. Tente novamente mais tarde.');
+    console.error('Erro de requisição:', erro);
   }
+});
+
+
+const toggleButtons = document.querySelectorAll('.toggle-senha');
+
+toggleButtons.forEach(button => {
+    button.addEventListener('click', function () {
+        const targetId = this.getAttribute('data-target'); 
+        const input = document.getElementById(targetId);
+        const icon = this.querySelector('i');
+
+        if (input && icon) {
+            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+            input.setAttribute('type', type);
+            
+            if (type === 'text') {
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            } else {
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            }
+        }
+    });
 });

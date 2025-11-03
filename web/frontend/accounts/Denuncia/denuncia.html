@@ -7,13 +7,12 @@
 
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Jomolhari&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="denuncia.css">
+  <link rel="stylesheet" href="/web/frontend/accounts/Denuncia/denuncia.css"> 
 </head>
 <body>
 
   <div class="dashboard-container">
 
-    <!-- SIDEBAR -->
     <aside class="dashboard-sidebar">
       <a href="/web/frontend/accounts/PrincipalGetGreen/principalColaborador.html" class="logo-getgreen">GetGreen</a>
 
@@ -36,11 +35,10 @@
       </nav>
     </aside>
 
-    <!-- CONTEÚDO PRINCIPAL -->
     <main class="dashboard-main">
       <header class="dashboard-header">
         <nav class="main-nav">
-          <a href="/web/frontend/accounts/PrincipalGetGreen/principalColaborador.html">Home</a>
+          <a href="#" id="homeLink">Home</a> 
         </nav>
         <a href="#" class="user-profile">
           <span class="material-icons-outlined">account_circle</span>
@@ -49,7 +47,10 @@
       </header>
 
       <section class="denuncia-section">
-        <h1>Realizar Denúncia</h1>
+        <div class="title-row"> 
+            <h1>Realizar Denúncia</h1>
+        </div>
+        
         <p>Use este formulário para relatar problemas relacionados à coleta, descumprimentos ou comportamentos inadequados.</p>
 
         <form id="formDenuncia" class="denuncia-form">
@@ -74,7 +75,7 @@
           </div>
 
           <div class="form-actions">
-            <button type="submit" class="btn-submit">enviar denúncia</button>
+            <button type="submit" class="btn-submit-nova-coleta">enviar denúncia</button> 
           </div>
         </form>
       </section>
@@ -82,21 +83,43 @@
   </div>
 
   <script>
-    // Mostrar nome do usuário logado
-    const nome = localStorage.getItem('usuarioNome');
+    const nome = sessionStorage.getItem('usuarioNome');
+    const tipo = sessionStorage.getItem('usuarioTipo'); 
+    const idLogado = sessionStorage.getItem('usuarioId'); 
+    
+    const homeLink = document.getElementById('homeLink');
+    const logoutLink = document.getElementById('logoutLink');
+    const form = document.getElementById('formDenuncia');
+
+
     document.getElementById('usuarioNome').textContent = nome || 'Usuário';
 
-    const form = document.getElementById('formDenuncia');
+    homeLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (tipo === 'empresa') {
+            window.location.href = "/web/frontend/accounts/PrincipalGetGreen/principalEmpresas.html";
+        } else if (tipo === 'colaborador') {
+            window.location.href = "/web/frontend/accounts/PrincipalGetGreen/principalColaborador.html";
+        } else {
+            window.location.href = "/web/frontend/accounts/IndexGetGreen/index.html";
+        }
+    });
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+
+      if (!idLogado) {
+           alert('Erro de autenticação: ID de usuário não encontrado.');
+           return; 
+      }
 
       const data = {
         titulo: form.titulo.value.trim(),
         descricao: form.descricao.value.trim(),
         local: form.local.value.trim(),
         dataOcorrencia: form.dataOcorrencia.value,
-        usuarioId: localStorage.getItem('usuarioId'),
-        usuarioNome: localStorage.getItem('usuarioNome'),
+        usuarioId: idLogado,
+        usuarioNome: nome,
       };
 
       try {
@@ -120,10 +143,8 @@
       }
     });
 
-    // Logout
-    const logoutLink = document.getElementById('logoutLink');
     logoutLink.addEventListener('click', () => {
-      localStorage.clear();
+      sessionStorage.clear();
       window.location.href = "/web/frontend/accounts/IndexGetGreen/index.html";
     });
   </script>

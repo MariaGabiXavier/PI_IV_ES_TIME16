@@ -6,11 +6,12 @@ document.getElementById('login').addEventListener('submit', async function(e) {
   const form = e.target;
   
   const erroSpan = document.getElementById('erro-login');
+  
   const exibirErro = (mensagem) => {
     erroSpan.textContent = mensagem;
     erroSpan.classList.add('visivel');
     form.email.classList.add('input-erro');
-    form.senha.classList.add('input-erro');
+    form.senha.classList.add('input-erro'); 
   };
   
   const limparErro = () => {
@@ -34,12 +35,12 @@ document.getElementById('login').addEventListener('submit', async function(e) {
     if (resposta.ok && resultado.usuario) {
       const nome = resultado.usuario.razaoSocial || resultado.usuario.nome;
       
-      localStorage.setItem('usuarioNome', nome);
-      localStorage.setItem('usuarioTipo', resultado.tipo);
-      localStorage.setItem('usuarioId', resultado.usuarioId); 
+      sessionStorage.setItem('usuarioNome', nome);
+      sessionStorage.setItem('usuarioTipo', resultado.tipo);
+      sessionStorage.setItem('usuarioId', resultado.usuarioId); 
 
       if (resultado.tipo === 'empresa') {
-        window.location.href = "../PrincipalGetGreen/principalEmpresa.html"; 
+        window.location.href = "../PrincipalGetGreen/principalEmpresas.html"; 
       } else if (resultado.tipo === 'colaborador') {
         window.location.href = "../PrincipalGetGreen/principalColaborador.html"; 
       } else {
@@ -48,10 +49,32 @@ document.getElementById('login').addEventListener('submit', async function(e) {
       }
 
     } else {
-      exibirErro('Usuário ou Senha incorretos. Tente novamente.');
+      exibirErro(resultado.error || 'Email ou senha inválidos. Por favor, verifique.');
     }
+
   } catch (erro) {
-    console.error('Erro ao conectar com o servidor:', erro);
-    exibirErro('Erro de conexão. Verifique se o servidor backend está rodando.');
+    exibirErro('Erro de conexão com o servidor. Tente novamente mais tarde.');
+    console.error('Erro de requisição:', erro);
   }
 });
+
+
+const toggleSenhaSpan = document.getElementById('toggleSenha');
+const senhaInput = document.getElementById('senha');
+const toggleIcon = toggleSenhaSpan ? toggleSenhaSpan.querySelector('i') : null; 
+
+if (toggleSenhaSpan && senhaInput && toggleIcon) {
+    toggleSenhaSpan.addEventListener('click', function () {
+        
+        const type = senhaInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        senhaInput.setAttribute('type', type);
+        
+        if (type === 'text') {
+            toggleIcon.classList.remove('fa-eye-slash');
+            toggleIcon.classList.add('fa-eye');
+        } else {
+            toggleIcon.classList.remove('fa-eye');
+            toggleIcon.classList.add('fa-eye-slash');
+        }
+    });
+}

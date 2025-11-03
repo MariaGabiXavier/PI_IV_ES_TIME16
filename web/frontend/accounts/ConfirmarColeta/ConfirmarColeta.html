@@ -67,119 +67,122 @@
   </div>
 
   <script>
+    const nome = sessionStorage.getItem('usuarioNome'); 
+    const tipo = sessionStorage.getItem('usuarioTipo');
 
-    const nome = localStorage.getItem('usuarioNome');
-     const tipo = localStorage.getItem('usuarioTipo');
-
-            if (nome && tipo) {
-                document.getElementById('usuarioNome').textContent = nome;
-            } else {
-                document.getElementById('usuarioNome').textContent = 'Usuário';
-            }
-function criarTag(texto) {
-    const span = document.createElement("span");
-    span.classList.add("tag");
-    span.textContent = texto.trim();
-    return span;
-  }
-
-  function formatarData(dataISO) {
-    if (!dataISO) return "Data não informada";
-    const data = new Date(dataISO);
-    return data.toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" });
-  }
-
-  async function carregarDetalhesColeta() {
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get("id");
-    if (!id) return;
-
-    try {
-      const response = await fetch(`http://localhost:4000/coletas/${id}`);
-      if (!response.ok) throw new Error("Erro: " + response.status);
-      const coleta = await response.json();
-
-      document.getElementById("titulo").textContent = coleta.responsavel || "Sem responsável";
-
-      // MATERIAL
-      const materialContainer = document.getElementById("material-tags");
-      materialContainer.innerHTML = "";
-      const materiais = (coleta.material || "").split(",").map(m => m.trim()).filter(Boolean);
-      if (materiais.length > 0) {
-        materiais.forEach(m => materialContainer.appendChild(criarTag(m)));
-      } else {
-        materialContainer.textContent = "Sem material informado";
-      }
-
-      // QUANTIDADE
-      document.getElementById("quantidade").textContent = 
-        coleta.quantidade ? `${coleta.quantidade} ${coleta.unidadeMedida || ""}` : "Não informada";
-
-      // DATA
-      document.getElementById("data-preferencial").textContent = formatarData(coleta.dataPreferencial);
-
-      // DESCRIÇÃO
-      document.getElementById("descricao").textContent = coleta.descricao || "Sem descrição.";
-
-      // OBSERVAÇÕES
-      document.getElementById("observacoes").textContent = coleta.observacoes || "Sem observações registradas.";
-
-      // Vincula ação ao botão
-      const botaoConfirmar = document.getElementById("btn-confirmar");
-       if (coleta.status === "concluida") {
-        botaoConfirmar.disabled = true;
-        botaoConfirmar.textContent = "Coleta Confirmada";
-        botaoConfirmar.style.backgroundColor = "#4CAF50";
-        botaoConfirmar.style.color = "#fff";
-
-      } else {
-      botaoConfirmar.onclick = async () => {
-        try {
-          const res = await fetch(`http://localhost:4000/coletas/${id}/confirmar`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" }
-          });
-          const data = await res.json();
-
-          if (res.ok) {
-            alert("✅ Coleta confirmada com sucesso!");
-            botaoConfirmar.disabled = true;
-            botaoConfirmar.textContent = "Coleta Confirmada";
-            botaoConfirmar.style.backgroundColor = "#4CAF50";
-            window.location.href = "/web/frontend/accounts/PrincipalGetGreen/principalColaborador.html";
-          } else {
-            alert("Erro: " + (data.error || "Não foi possível confirmar."));
-          }
-        } catch (err) {
-          alert("Erro ao confirmar coleta.");
-          console.error(err);
-        }
-      };
-    }} catch (error) {
-      console.error("Erro ao carregar coleta:", error);
-      document.getElementById("titulo").textContent = "Erro ao carregar coleta";
+    if (nome && tipo) {
+        document.getElementById('usuarioNome').textContent = nome;
+    } else {
+        document.getElementById('usuarioNome').textContent = 'Usuário';
     }
-  }
 
-  carregarDetalhesColeta();
+    function criarTag(texto) {
+        const span = document.createElement("span");
+        span.classList.add("tag");
+        span.textContent = texto.trim();
+        return span;
+    }
 
-  
+    function formatarData(dataISO) {
+        if (!dataISO) return "Data não informada";
+        const data = new Date(dataISO);
+        return data.toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" });
+    }
+
+    async function carregarDetalhesColeta() {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get("id");
+        if (!id) return;
+
+        try {
+            const response = await fetch(`http://localhost:4000/coletas/${id}`);
+            if (!response.ok) throw new Error("Erro: " + response.status);
+            const coleta = await response.json();
+
+            document.getElementById("titulo").textContent = coleta.responsavel || "Sem responsável";
+
+            const materialContainer = document.getElementById("material-tags");
+            materialContainer.innerHTML = "";
+            const materiais = (coleta.material || "").split(",").map(m => m.trim()).filter(Boolean);
+            if (materiais.length > 0) {
+                materiais.forEach(m => materialContainer.appendChild(criarTag(m)));
+            } else {
+                materialContainer.textContent = "Sem material informado";
+            }
+
+            document.getElementById("quantidade").textContent = 
+                coleta.quantidade ? `${coleta.quantidade} ${coleta.unidadeMedida || ""}` : "Não informada";
+
+            document.getElementById("data-preferencial").textContent = formatarData(coleta.dataPreferencial);
+
+            document.getElementById("descricao").textContent = coleta.descricao || "Sem descrição.";
+
+            document.getElementById("observacoes").textContent = coleta.observacoes || "Sem observações registradas.";
+
+            const botaoConfirmar = document.getElementById("btn-confirmar");
+            
+            if (coleta.status === "concluida" || coleta.status === "confirmada") {
+                botaoConfirmar.disabled = true;
+                botaoConfirmar.textContent = "Coleta Confirmada";
+                botaoConfirmar.style.backgroundColor = "#4CAF50";
+                botaoConfirmar.style.color = "#fff";
+
+            } else {
+                botaoConfirmar.onclick = async () => {
+                    const coletorId = sessionStorage.getItem('usuarioId'); 
+                    const coletorNome = sessionStorage.getItem('usuarioNome'); 
+                    
+                    if (!coletorId || !coletorNome) {
+                        alert("Erro: Dados do colaborador não encontrados. Faça login novamente.");
+                        return;
+                    }
+
+                    try {
+                        const res = await fetch(`http://localhost:4000/coletas/${id}/confirmar`, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ coletorId: coletorId, coletorNome: coletorNome }) 
+                        });
+                        const data = await res.json();
+
+                        if (res.ok) {
+                            alert("Coleta confirmada com sucesso! Ela está na sua lista 'Pendentes'.");
+                            botaoConfirmar.disabled = true;
+                            botaoConfirmar.textContent = "Coleta Confirmada";
+                            botaoConfirmar.style.backgroundColor = "#4CAF50";
+                            window.location.href = "/web/frontend/accounts/MinhasColetasColaborador/ColetasColaborador.html"; 
+                        } else {
+                            alert("Erro: " + (data.error || "Não foi possível confirmar."));
+                        }
+                    } catch (err) {
+                        alert("Erro ao confirmar coleta.");
+                        console.error(err);
+                    }
+                };
+            }
+        } catch (error) {
+            console.error("Erro ao carregar coleta:", error);
+            document.getElementById("titulo").textContent = "Erro ao carregar coleta";
+        }
+    }
+
+    carregarDetalhesColeta();
+
+    
     const logoutLink = document.getElementById('logoutLink');
 
-            function logout() {
-                localStorage.removeItem('usuarioNome');
-                localStorage.removeItem('usuarioTipo');
-                localStorage.removeItem('usuarioId'); 
-                
-                window.location.href = "/web/frontend/accounts/IndexGetGreen/index.html"; 
-            }
+    function logout() {
+        sessionStorage.removeItem('usuarioNome');
+        sessionStorage.removeItem('usuarioTipo');
+        sessionStorage.removeItem('usuarioId'); 
+        
+        window.location.href = "/web/frontend/accounts/IndexGetGreen/index.html"; 
+    }
 
-            logoutLink.addEventListener('click', (e) => {
-                e.preventDefault(); 
-                if (confirm('Tem certeza que deseja sair da conta?')) { // Adiciona a confirmação
-                    logout();
-                }
-            });
-  </script>
-</body>
-</html>
+    logoutLink.addEventListener('click', (e) => {
+        e.preventDefault(); 
+        if (confirm('Tem certeza que deseja sair da conta?')) { 
+            logout();
+        }
+    });
+</script>

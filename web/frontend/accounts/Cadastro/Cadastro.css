@@ -159,9 +159,16 @@ h2 {
   margin-bottom: 10px;
 }
 
+.password-container {
+  flex: 1; 
+  position: relative;
+  display: flex;
+  align-items: center;
+}
 
 .input-row input,
-.input-row select {
+.input-row select,
+.password-container input { 
 
   flex: 1;
   padding: 10px 15px;
@@ -176,11 +183,30 @@ h2 {
   
 }
 
+.password-container input {
+  padding-right: 40px; 
+}
+
 .input-row input:focus,
-.input-row select:focus {
+.input-row select:focus,
+.password-container input:focus {
   border: 1.5px solid #C6FE31;
   transition: border 0.2s ease, box-shadow 0.2s ease;
 }
+
+.toggle-senha {
+  position: absolute;
+  right: 15px;
+  cursor: pointer;
+  color: #888;
+  font-size: 14px; 
+  z-index: 10;
+}
+
+.toggle-senha:hover {
+  color: #C6FE31;
+}
+
 
 .mensagem-erro {
   color: #ff0000; 
@@ -218,6 +244,11 @@ h2 {
 .input-erro {
     border: 1.5px solid red !important;
 }
+
+.password-container input.input-erro {
+    border: 1.5px solid red !important;
+}
+
 .btn {
   background-color: #49643E;
   color: white;
@@ -320,6 +351,15 @@ h2 {
   }
 
   .input-row input {
+    font-size: 13px;
+  }
+
+  .password-container input {
+    padding-right: 35px;
+  }
+  
+  .toggle-senha {
+    right: 10px;
     font-size: 13px;
   }
 
