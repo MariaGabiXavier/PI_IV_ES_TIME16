@@ -26,8 +26,8 @@
 
         <h4>Minhas atividades</h4>
         <ul>
-          <li><a href="#"><span class="material-icons-outlined">recycling</span>minhas coletas</a></li>
-          <li><a href="#"><span class="material-icons-outlined">feedback</span>visualizar feedbacks</a></li>
+          <li><a id="linkColetas" href="#"><span class="material-icons-outlined">recycling</span>minhas coletas</a></li>
+          <li><a id="linkFeedback" href="/web/frontend/accounts/feedback/feedback.html"><span class="material-icons-outlined">feedback</span>visualizar feedbacks</a></li>
           <li><a href="#" class="active"><span class="material-icons-outlined">report</span>realizar denúncia</a></li>
           <li><a href="#"><span class="material-icons-outlined">support_agent</span>solicitar suporte</a></li>
           <li><a href="#" id="logoutLink"><span class="material-icons-outlined">logout</span>sair da conta</a></li>
@@ -90,9 +90,22 @@
     const homeLink = document.getElementById('homeLink');
     const logoutLink = document.getElementById('logoutLink');
     const form = document.getElementById('formDenuncia');
+  const linkColetas = document.getElementById('linkColetas');
+  const linkFeedback = document.getElementById('linkFeedback');
 
 
     document.getElementById('usuarioNome').textContent = nome || 'Usuário';
+
+  // Ajusta links de navegação conforme o tipo logado
+  if (tipo === 'colaborador') {
+      linkColetas.href = "/web/frontend/accounts/MinhasColetasColaborador/ColetasColaborador.html";
+  } else if (tipo === 'empresa') {
+      // Para empresa, direciona para a página principal de empresas (onde cria/gerencia coletas)
+      linkColetas.href = "/web/frontend/accounts/PrincipalGetGreen/principalEmpresas.html";
+  } else {
+      linkColetas.href = "/web/frontend/accounts/IndexGetGreen/index.html";
+  }
+  linkFeedback.href = "/web/frontend/accounts/feedback/feedback.html";
 
     homeLink.addEventListener('click', (e) => {
         e.preventDefault();
