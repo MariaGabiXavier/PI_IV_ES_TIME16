@@ -141,13 +141,8 @@ body {
     color: #49643E; 
 }
 
-/* * A seção original de denúncia foi removida do HTML
- * e substituída pelo conteúdo principal da página.
- * As classes de título e de section que estavam aqui
- * foram removidas ou movidas para o novo modal.
- */
 
-.title-row { /* Mantido para ser reutilizado dentro do modal e no conteúdo principal */
+.title-row { 
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -155,7 +150,6 @@ body {
     margin-bottom: 20px;
 }
 
-/* Estilos de formulário (mantidos, pois são usados dentro do modal) */
 .form-row {
   margin-bottom: 12px; 
   display: flex;
@@ -206,7 +200,6 @@ textarea:focus {
     transform: translateY(1px);
 }
 
-/* Media Queries (Mantidas) */
 @media (max-width: 992px) {
     .dashboard-main { padding: 30px; }
     .dashboard-header {

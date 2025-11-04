@@ -6,7 +6,6 @@
     --color-background: #fff;
     --font-family: 'Jomolhari', serif;
     --content-padding-x: 80px;
-    /* Adicionado: Muted color para labels */
     --muted: #777;
 }
 
@@ -270,7 +269,6 @@ body {
 }
 
 
-/* --- Estilos do Modal (Copiados de principalEmpresas.css e adaptados para feedback.css) --- */
 .modal-overlay[aria-hidden="true"] { display: none; }
 .modal-overlay {
     position: fixed;
@@ -312,18 +310,13 @@ body {
     cursor: pointer;
 }
 
-/* ---------------------------------------------------- */
-/* REGRAS DE ESTILO DO FORMULÁRIO DE FEEDBACK/DENÚNCIA */
-/* ---------------------------------------------------- */
 
-/* Regra principal do formulário (Embora aqui esteja sem borda, é bom ter o seletor) */
 .feedback-form {
-    border: none; /* A borda foi removida no HTML in-line, mas mantemos a classe */
+    border: none; 
     padding: 0;
 }
 .form-row { margin-bottom: 14px; }
 
-/* Estilo para a label que estava faltando */
 .label { 
     display: block; 
     margin-bottom: 6px; 
@@ -331,7 +324,6 @@ body {
     font-size: 14px; 
 }
 
-/* Estilos dos inputs/textareas que estavam faltando */
 .feedback-form input[type="text"], 
 .feedback-form textarea, 
 .feedback-form input[type="date"] { 
@@ -345,14 +337,12 @@ body {
     outline: none; 
 }
 
-/* Foco nos inputs */
 .feedback-form input:focus, 
 .feedback-form textarea:focus { 
     border-color: var(--color-primary); 
     box-shadow: 0 0 0 3px rgba(169,255,0,0.15); 
 }
 
-/* Estilo do botão de submissão padronizado */
 .form-actions { margin-top: 18px; }
 .btn-submit {
     width: 100%;
@@ -367,11 +357,10 @@ body {
 }
 .btn-submit:hover { background-color: #92e000; }
 
-/* Estilo do modal de denúncia (Específico para labels, mas mantido se for útil em outros modais) */
 .denuncia-modal {
     max-width: 500px;
 }
-/* Garante que o input de data seja estilizado corretamente dentro do modal de denúncia */
+
 .feedback-form input[type="date"] {
     appearance: none; 
     -webkit-appearance: none;
@@ -379,7 +368,46 @@ body {
     background-color: var(--color-background);
 }
 
-/* --- FIM Estilos do Modal --- */
+/* --- NOVOS ESTILOS PARA ALINHAR PESQUISA E FILTRO --- */
+
+.search-and-filter-row {
+    display: flex; /* Habilita o Flexbox */
+    align-items: center; /* Centraliza verticalmente */
+    gap: 20px; /* Espaço entre a barra de pesquisa e o filtro */
+}
+
+.search-bar {
+    flex-grow: 1; /* Permite que a barra de pesquisa ocupe o máximo de espaço disponível */
+    max-width: none; /* Remove a limitação de 1000px definida anteriormente */
+}
+
+.status-filter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0; /* Impede que o filtro encolha */
+    width: 250px; /* Define uma largura fixa para o filtro para melhor controle */
+}
+
+.filter-label { 
+    display: block; 
+    font-size: 17px; 
+    font-weight: 500;
+    color: var(--color-text);
+    white-space: nowrap; /* Impede que o texto "Status:" quebre a linha */
+}
+
+.filter-select {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: var(--font-family);
+    outline: none;
+    cursor: pointer;
+}
+/* --- FIM DOS ESTILOS DE ALINHAMENTO --- */
 
 
 @media (max-width: 1360px) {
@@ -403,6 +431,25 @@ body {
         margin-left: 35px;
     }
 
+    /* Ajustes para telas menores */
+    .search-and-filter-row {
+        flex-direction: column; /* Em telas menores, volta a empilhar */
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .search-bar {
+        width: 100%;
+    }
+    
+    .status-filter {
+        width: 100%; /* Ocupa a largura total abaixo da barra de pesquisa */
+        justify-content: flex-start;
+    }
+
+    .filter-select {
+        flex-grow: 1; /* Permite que o select se expanda */
+    }
 }
 
 

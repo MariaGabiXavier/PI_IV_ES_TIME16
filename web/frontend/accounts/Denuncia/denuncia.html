@@ -11,8 +11,6 @@
   <link rel="stylesheet" href="../../chatbot/modal.css">
   
   <style>
-    /* Adaptação do estilo da seção de denúncia para o modal, 
-       mantendo a consistência visual com o formulário original. */
     .denuncia-modal-content {
         padding: 20px;
         background: #fff;
@@ -32,9 +30,8 @@
         font-size: 16px;
     }
     
-    /* Garantir que o modal seja largo o suficiente para o formulário */
     .modal.denuncia-modal {
-        max-width: 600px; /* Ajuste o tamanho conforme necessário */
+        max-width: 600px; 
         width: 90%;
         padding: 30px;
     }
@@ -166,13 +163,11 @@
     const usuarioNomeElement = document.getElementById('usuarioNome');
     const menuAtividadesColaborador = document.getElementById('menuAtividadesColaborador');
 
-    // **Elementos do NOVO Modal de Denúncia**
     const btnOpenDenunciaSide = document.getElementById('openDenunciaModal');
     const btnOpenDenunciaMain = document.getElementById('openDenunciaMainButton');
     const overlayDenuncia = document.getElementById('denunciaModalOverlay');
     const closeDenuncia = document.getElementById('closeDenunciaModal');
     
-    // **Funções do Modal de Denúncia**
     function showDenunciaModal() {
         overlayDenuncia.style.display = 'flex';
         overlayDenuncia.setAttribute('aria-hidden', 'false');
@@ -182,10 +177,9 @@
         overlayDenuncia.style.display = 'none';
         overlayDenuncia.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
-        form.reset(); // Limpa o formulário ao fechar
+        form.reset(); 
     }
 
-    // **Ouvintes de Evento do Modal de Denúncia**
     if (btnOpenDenunciaSide) btnOpenDenunciaSide.addEventListener('click', function(e){ e.preventDefault(); showDenunciaModal(); });
     if (btnOpenDenunciaMain) btnOpenDenunciaMain.addEventListener('click', function(e){ e.preventDefault(); showDenunciaModal(); });
     if (closeDenuncia) closeDenuncia.addEventListener('click', hideDenunciaModal);
@@ -244,7 +238,7 @@
 
         if (response.ok) {
           alert('Denúncia enviada com sucesso!');
-          hideDenunciaModal(); // Fecha o modal após o sucesso
+          hideDenunciaModal(); 
         } else {
           alert('Erro ao enviar denúncia: ' + resultado.error);
         }
@@ -269,7 +263,6 @@
         });
     }
 
-    // Código do Chatbot (EXISTENTE)
     const btnChat = document.getElementById('openChatbot');
     const overlayChat = document.getElementById('modalOverlay');
     const closeChat = document.getElementById('closeModal');

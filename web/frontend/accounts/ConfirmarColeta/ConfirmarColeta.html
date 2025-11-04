@@ -7,6 +7,8 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Jomolhari&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="confirmarColeta.css">
+  <link rel="stylesheet" href="../../chatbot/modal.css"> 
+  <link rel="stylesheet" href="../feedback/feedback.css"> 
 </head>
 <body>
   <div class="dashboard-container">
@@ -24,10 +26,12 @@
         </ul>
 
         <h4>Minhas atividades</h4>
+        <ul id="menuAtividadesColaborador">
+        </ul>
+
         <ul>
-          <li><a href="/web/frontend/accounts/MinhasColetasColaborador/ColetasColaborador.html"><span class="material-icons-outlined">recycling</span>minhas coletas</a></li>
-          <li><a href="#"><span class="material-icons-outlined">feedback</span>visualizar feedbacks</a></li>
-          <li><a href="#"><span class="material-icons-outlined">report</span>realizar denúncia</a></li>
+          <li><a href="/web/frontend/accounts/feedback/feedback.html"><span class="material-icons-outlined">feedback</span>visualizar feedbacks</a></li>
+          <li><a href="#" id="openDenuncia"><span class="material-icons-outlined">report</span>realizar denúncia</a></li>
           <li><a href="#" id="openChatbot"><span class="material-icons-outlined">support_agent</span>solicitar suporte</a></li>
           <li><a href="#" id="logoutLink"><span class="material-icons-outlined">logout</span>sair da conta</a></li>
         </ul>
@@ -38,9 +42,7 @@
 
       <header class="dashboard-header">
         <nav class="main-nav">
-          <a href="/web/frontend/accounts/PrincipalGetGreen/principalColaborador.html">Home</a>
-          <a href="/web/frontend/accounts/IndexGetGreen/index.html#sobre">Sobre</a>
-          <a href="/web/frontend/accounts/IndexGetGreen/index.html#contato">Contato</a>
+          <a href="/web/frontend/accounts/PrincipalGetGreen/principalColaborador.html" id="homeLink">Home</a>
         </nav>
         <a href="#" class="user-profile">
           <span class="material-icons-outlined">account_circle</span>
@@ -66,15 +68,92 @@
     </main>
   </div>
 
-  <script>
+  <div id="denunciaModalOverlay" class="modal-overlay" aria-hidden="true" style="display:none;">
+        <div class="modal denuncia-modal" role="dialog" aria-modal="true" aria-labelledby="denunciaModalTitle">
+            <button class="modal-close" id="closeDenunciaModal" aria-label="Fechar">
+                <span class="material-icons-outlined">close</span>
+            </button>
+            
+            <div class="denuncia-modal-content">
+                <div class="title-row"> 
+                    <h3 id="denunciaModalTitle" style="text-align: center;">Realizar Denúncia</h3>
+                </div>
+                
+                <p style="text-align: center; margin-bottom: 25px;">Use este formulário para relatar problemas relacionados à coleta, descumprimentos ou comportamentos inadequados.</p>
+
+                <form id="formDenuncia" class="feedback-form" style="border:none; box-shadow:none; padding: 0;"> 
+                  <div class="form-row">
+                    <label for="tituloDenuncia" class="label">Título da denúncia</label>
+                    <input type="text" id="tituloDenuncia" name="titulo" placeholder="Ex: Falta de coleta agendada" required>
+                  </div>
+
+                  <div class="form-row">
+                    <label for="descricaoDenuncia" class="label">Descrição detalhada</label>
+                    <textarea id="descricaoDenuncia" name="descricao" rows="4" placeholder="Descreva o ocorrido..." required></textarea>
+                  </div>
+
+                  <div class="form-row">
+                    <label for="local" class="label">Local do ocorrido</label>
+                    <input type="text" id="local" name="local" placeholder="Ex: Rua das Flores, 120 - Paulínia">
+                  </div>
+
+                  <div class="form-row">
+                    <label for="dataOcorrencia" class="label">Data do ocorrido</label>
+                    <input type="date" id="dataOcorrencia" name="dataOcorrencia" required>
+                  </div>
+
+                  <div class="form-actions">
+                    <button type="submit" class="btn-submit">enviar denúncia</button> 
+                  </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="modalOverlay" class="overlay" aria-hidden="true" style="display:none;">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+            <button class="close" id="closeModal" aria-label="Fechar">×</button>
+            <h2 id="modalTitle">Chatbot GetGreen</h2>
+
+            <div id="chatContainer" class="chat-container">
+                <div id="chatArea" class="chat-area" aria-live="polite"></div>
+
+                <div id="optionsContainer" class="options"></div>
+
+                <div class="inputRow">
+                    <input id="manualInput" placeholder="Enviar mensagem (opcional)" autocomplete="off" />
+                    <button id="sendManual" class="submit-btn" style="width:120px;margin-left:8px">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    // Variáveis e lógica de menu (Início do código de feedback.html)
     const nome = sessionStorage.getItem('usuarioNome'); 
     const tipo = sessionStorage.getItem('usuarioTipo');
+    const idLogado = sessionStorage.getItem('usuarioId'); 
+    const usuarioNomeElement = document.getElementById('usuarioNome');
+    const menuAtividadesColaborador = document.getElementById('menuAtividadesColaborador');
+    const homeLink = document.getElementById('homeLink');
+    const logoutLink = document.getElementById('logoutLink');
 
-    if (nome && tipo) {
-        document.getElementById('usuarioNome').textContent = nome;
+    if (nome) {
+        usuarioNomeElement.textContent = nome;
     } else {
-        document.getElementById('usuarioNome').textContent = 'Usuário';
+        usuarioNomeElement.textContent = 'Usuário';
     }
+
+    // Lógica de menu condicional (Colaborador/Empresa)
+    if (tipo === 'colaborador') {
+        menuAtividadesColaborador.innerHTML = `
+            <li><a href="/web/frontend/accounts/MinhasColetasColaborador/ColetasColaborador.html"><span class="material-icons-outlined">recycling</span>minhas coletas</a></li>
+        `;
+        if(homeLink) homeLink.href = "/web/frontend/accounts/PrincipalGetGreen/principalColaborador.html";
+    } else if (tipo === 'empresa') {
+        menuAtividadesColaborador.innerHTML = '';
+        if(homeLink) homeLink.href = "/web/frontend/accounts/PrincipalGetGreen/principalEmpresas.html";
+    }
+
+    // Fim da lógica de menu
 
     function criarTag(texto) {
         const span = document.createElement("span");
@@ -86,7 +165,8 @@
     function formatarData(dataISO) {
         if (!dataISO) return "Data não informada";
         const data = new Date(dataISO);
-        return data.toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" });
+        const dataAjustada = new Date(data.getTime() + data.getTimezoneOffset() * 60000);
+        return dataAjustada.toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" });
     }
 
     async function carregarDetalhesColeta() {
@@ -169,8 +249,6 @@
     carregarDetalhesColeta();
 
     
-    const logoutLink = document.getElementById('logoutLink');
-
     function logout() {
         sessionStorage.removeItem('usuarioNome');
         sessionStorage.removeItem('usuarioTipo');
@@ -185,4 +263,144 @@
             logout();
         }
     });
+
+    const linkOpenDenuncia = document.getElementById('openDenuncia');
+    const overlayDenuncia = document.getElementById('denunciaModalOverlay');
+    const closeDenuncia = document.getElementById('closeDenunciaModal');
+    const formDenuncia = document.getElementById('formDenuncia');
+
+    function showDenunciaModal() {
+        overlayDenuncia.style.display = 'flex';
+        overlayDenuncia.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        document.getElementById('tituloDenuncia').focus();
+    }
+    function hideDenunciaModal() {
+        overlayDenuncia.style.display = 'none';
+        overlayDenuncia.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        formDenuncia.reset(); 
+    }
+
+    if (linkOpenDenuncia) linkOpenDenuncia.addEventListener('click', function(e){ e.preventDefault(); showDenunciaModal(); });
+    if (closeDenuncia) closeDenuncia.addEventListener('click', hideDenunciaModal);
+    if (overlayDenuncia) overlayDenuncia.addEventListener('click', function(e){ if (e.target === overlayDenuncia) hideDenunciaModal(); });
+
+
+    formDenuncia.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const nomeUsuario = sessionStorage.getItem('usuarioNome');
+
+        if (!idLogado) {
+             alert('Erro de autenticação: ID de usuário não encontrado.');
+             return; 
+        }
+
+        const data = {
+          titulo: formDenuncia.titulo.value.trim(),
+          descricao: formDenuncia.descricao.value.trim(),
+          local: formDenuncia.local.value.trim(),
+          dataOcorrencia: formDenuncia.dataOcorrencia.value,
+          usuarioId: idLogado,
+          usuarioNome: nomeUsuario,
+        };
+
+        try {
+          const response = await fetch('http://localhost:4000/api/denuncias', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          });
+
+          const resultado = await response.json();
+
+          if (response.ok) {
+            alert('Denúncia enviada com sucesso!');
+            hideDenunciaModal(); 
+          } else {
+            alert('Erro ao enviar denúncia: ' + (resultado.error || 'Verifique a conexão.'));
+          }
+        } catch (err) {
+          alert('Erro de conexão com o servidor.');
+          console.error(err);
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const btn = document.getElementById('openChatbot');
+        const overlay = document.getElementById('modalOverlay');
+        const close = document.getElementById('closeModal');
+        const chatArea = document.getElementById('chatArea');
+        const opts = document.getElementById('optionsContainer');
+        const manualInput = document.getElementById('manualInput');
+        const sendManual = document.getElementById('sendManual');
+
+        function showModal() {
+            overlay.style.display = 'flex';
+            overlay.setAttribute('aria-hidden','false');
+            document.body.style.overflow = 'hidden';
+        }
+        function hideModal(){
+            overlay.style.display = 'none';
+            overlay.setAttribute('aria-hidden','true');
+            document.body.style.overflow = '';
+        }
+
+        btn.addEventListener('click', function(e){ e.preventDefault(); showModal(); });
+        close.addEventListener('click', hideModal);
+        overlay.addEventListener('click', function(e){ if (e.target === overlay) hideModal(); });
+
+        const WS_URL = 'ws://localhost:8080';
+        let ws = null;
+        let reconnectTimer = null;
+
+        function appendMessage(text, who) {
+            const el = document.createElement('div');
+            el.className = 'msg ' + (who === 'user' ? 'user' : 'server');
+            el.textContent = text;
+            chatArea.appendChild(el);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function connectWS() {
+            if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) return;
+            ws = new WebSocket(WS_URL);
+            ws.addEventListener('open', () => { appendMessage('Conectado ao adaptador.', 'user'); });
+            ws.addEventListener('message', (evt) => {
+                let obj = null; try { obj = JSON.parse(evt.data); } catch (e) { return; }
+                if (obj.type === 'RESP' || obj.type === 'MSG') {
+                    const text = obj.payload || '';
+                    if (text.toLowerCase().includes('bem-vindo') || text.toLowerCase().includes('0 - sair')) { renderOptions(text); }
+                    else appendMessage(text, 'server');
+                } else if (obj.type === 'DES') appendMessage('Servidor está desligando.', 'server');
+                else if (obj.type === 'ERROR') appendMessage('Erro: ' + obj.payload, 'server');
+            });
+            ws.addEventListener('close', () => { appendMessage('Conexão com adaptador fechada.', 'user'); if (!reconnectTimer) reconnectTimer = setTimeout(()=>{ reconnectTimer=null; connectWS(); },2000); });
+            ws.addEventListener('error', (e)=>{ console.error('WS error', e); });
+        }
+
+        function renderOptions(menuText){
+            opts.innerHTML = ''; const lines = menuText.split('\n');
+            for (const line of lines){ const m = line.match(/^\s*(\d+)\s*-\s*(.+)$/); if (m){ const btn = document.createElement('button'); btn.textContent = m[1] + ' — ' + m[2]; btn.className='option-btn'; btn.addEventListener('click', ()=>{ if (!ws||ws.readyState!==WebSocket.OPEN){ appendMessage('Adaptador indisponível','user'); return; } ws.send(JSON.stringify({type:'PED', payload: m[1]})); appendMessage('Você: '+m[2],'user'); }); opts.appendChild(btn);} }
+        }
+
+        sendManual.addEventListener('click', ()=>{ 
+            const txt = manualInput.value.trim(); 
+            if (!txt) return; 
+
+            appendMessage('Você: ' + txt, 'user');
+            appendMessage(
+                'No momento, só posso responder perguntas do menu. ' +
+                'Caso queira fazer outra pergunta, entre em contato nas redes sociais e email.',
+                'server'
+            );
+            manualInput.value = '';
+        });
+
+        let connectedOnce = false;
+        btn.addEventListener('click', ()=>{ if(!connectedOnce){ connectWS(); connectedOnce=true; } });
+    });
+
 </script>
+</body>
+</html>

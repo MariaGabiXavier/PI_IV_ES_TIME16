@@ -72,12 +72,10 @@ body { margin: 0; padding: 0; min-height: 100vh; font-family: 'Jomolhari', serif
 .btn-submit { background: var(--color-primary); color: var(--color-text); border: none; border-radius: 10px; padding: 14px 18px; font-size: 16px; cursor: pointer; width: 100%; }
 .btn-submit:hover { background: #92e000; }
 
-/* Adicionado para o Modal de Denúncia */
 .denuncia-modal {
     max-width: 500px; 
 }
 
-/* Garante que o input de data seja estilizado corretamente dentro do modal de denúncia (que usa feedback-form) */
 .feedback-form input[type="date"] {
     appearance: none; 
     -webkit-appearance: none;
@@ -96,5 +94,5 @@ body { margin: 0; padding: 0; min-height: 100vh; font-family: 'Jomolhari', serif
   .dashboard-main { padding: 30px 20px; }
   .dashboard-header { margin: -30px -20px 20px; padding: 20px; flex-direction: column; align-items: flex-start; gap: 10px; }
   .feedback-wrapper { grid-template-columns: 1fr; }
-  .denuncia-modal { max-width: 90%; } /* Ajuste responsivo */
+  .denuncia-modal { max-width: 90%; } 
 }

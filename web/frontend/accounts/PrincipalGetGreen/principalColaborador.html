@@ -55,11 +55,23 @@
             </header>
 
             <section class="search-section" style="display: block; margin-bottom: 30px;">
-                <form class="search-bar">
-                    <input type="search" id="searchInput" placeholder="Pesquisar por responsável (ex: Nome da Empresa)">
-                    <button type="submit"><span class="material-icons-outlined">search</span></button>
-                </form>
-            </section>
+                <div class="search-and-filter-row">
+                    <form class="search-bar">
+                        <input type="search" id="searchInput" placeholder="Pesquisar por responsável (ex: Nome da Empresa)">
+                        <button type="submit"><span class="material-icons-outlined">search</span></button>
+                    </form>
+                    
+                    <div class="status-filter">
+                        <label for="statusFilter" class="filter-label">Filtrar:</label>
+                        <select id="statusFilter" class="filter-select">
+                            <option value="todos">Todos</option>
+                            <option value="pendente">Pendente</option>
+                            <option value="realizada">Realizada</option>
+                            <option value="concluida">Concluída</option>
+                        </select>
+                    </div>
+                </div>
+                </section>
 
             <section class="content-feed" id="feedColetas">
                 <p>Carregando coletas...</p>
@@ -126,7 +138,6 @@
         </div>
 
         <script>
-            // ** VARIÁVEIS DE SESSÃO **
             const nome = sessionStorage.getItem('usuarioNome');
             const tipo = sessionStorage.getItem('usuarioTipo');
             const idLogado = sessionStorage.getItem('usuarioId'); 
@@ -137,11 +148,11 @@
                 document.getElementById('usuarioNome').textContent = 'Usuário';
             }
 
-            // ** LÓGICA DE COLETA (EXISTENTE) **
             let todasAsColetas = [];
             
             const feedColetas = document.getElementById('feedColetas');
             const searchInput = document.getElementById('searchInput'); 
+            const statusFilter = document.getElementById('statusFilter'); 
 
             function renderizarColetas(coletasParaExibir) {
                 feedColetas.innerHTML = ''; 
@@ -191,6 +202,7 @@
                     if (coletas.length === 0) {
                         feedColetas.innerHTML = '<p>Nenhuma coleta solicitada ainda.</p>';
                     } else {
+                        // Ao carregar, renderiza todas as coletas.
                         renderizarColetas(todasAsColetas);
                     }
 
@@ -202,15 +214,24 @@
 
             function filtrarColetas() {
                 const termoPesquisa = searchInput.value.toLowerCase().trim(); 
+                const statusSelecionado = statusFilter.value.toLowerCase(); 
 
                 const coletasFiltradas = todasAsColetas.filter(coleta => {
-                    return coleta.responsavel.toLowerCase().includes(termoPesquisa);
+                    // Filtro 1: Por Responsável
+                    const matchPesquisa = coleta.responsavel.toLowerCase().includes(termoPesquisa);
+                    
+                    // Filtro 2: Por Status (Se 'todos' for selecionado, passa, caso contrário verifica o status)
+                    const matchStatus = statusSelecionado === 'todos' || coleta.status.toLowerCase() === statusSelecionado;
+
+                    // Retorna true se ambos os filtros passarem
+                    return matchPesquisa && matchStatus;
                 });
 
                 renderizarColetas(coletasFiltradas);
             }
 
             searchInput.addEventListener('keyup', filtrarColetas);
+            statusFilter.addEventListener('change', filtrarColetas);
 
             document.querySelector('.search-bar').addEventListener('submit', (e) => {
                 e.preventDefault(); 
@@ -220,7 +241,6 @@
 
             carregarColetas();
             
-            // ** LÓGICA DE LOGOUT (EXISTENTE) **
             const logoutLink = document.getElementById('logoutLink');
 
             function logout() {
@@ -238,7 +258,6 @@
                 }
             });
             
-            // ** LÓGICA DO MODAL DE DENÚNCIA **
             document.addEventListener('DOMContentLoaded', function () {
                 const linkOpenDenuncia = document.getElementById('openDenuncia');
                 const overlayDenuncia = document.getElementById('denunciaModalOverlay');
@@ -269,7 +288,6 @@
                          return; 
                     }
 
-                    // Acessa os valores dos campos pelos IDs alterados
                     const data = {
                       titulo: document.getElementById('titulo').value.trim(),
                       descricao: document.getElementById('descricao').value.trim(),
@@ -300,7 +318,6 @@
                     }
                 });
 
-                // ** LÓGICA DO CHATBOT (EXISTENTE) **
                 const btn = document.getElementById('openChatbot');
                 const overlay = document.getElementById('modalOverlay');
                 const close = document.getElementById('closeModal');

@@ -180,15 +180,12 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // ** VARIÁVEIS DE SESSÃO **
             const nome = sessionStorage.getItem('usuarioNome');
             const idLogado = sessionStorage.getItem('usuarioId'); 
             
-            // ** 1. Configuração do Nome do Usuário **
             const usuarioNomeElement = document.getElementById('usuarioNome');
             if (usuarioNomeElement) usuarioNomeElement.textContent = nome || 'Usuário';
             
-            // ** 2. Lógica de Logout **
             const logoutLink = document.getElementById('logoutLink');
             if (logoutLink) {
                 logoutLink.addEventListener('click', (e) => {
@@ -202,7 +199,6 @@
                 });
             }
 
-            // ** 3. Lógica do Modal de Denúncia **
             const linkOpenDenuncia = document.getElementById('openDenuncia');
             const overlayDenuncia = document.getElementById('denunciaModalOverlay');
             const closeDenuncia = document.getElementById('closeDenunciaModal');
@@ -225,7 +221,6 @@
             if (overlayDenuncia) overlayDenuncia.addEventListener('click', function(e){ if (e.target === overlayDenuncia) hideDenunciaModal(); });
 
 
-            // ** 4. Submissão do Formulário de Denúncia **
             formDenuncia.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
@@ -265,7 +260,6 @@
             });
 
 
-            // ** 5. Lógica do Chatbot (EXISTENTE) **
             const btnChat = document.getElementById('openChatbot');
             const overlayChat = document.getElementById('modalOverlay');
             const closeChat = document.getElementById('closeModal');

@@ -225,7 +225,6 @@
             });
         }
         
-        // ** Lógica do Modal de Feedback **
         const feedbackModal = document.getElementById('feedbackModal');
         const btnAdicionarFeedback = document.getElementById('btnAdicionarFeedback');
         const closeFeedbackModal = document.getElementById('closeFeedbackModal');
@@ -389,7 +388,6 @@
         
         carregarFeedbacks();
         
-        // ** Lógica do Modal de Denúncia **
         const linkOpenDenuncia = document.getElementById('openDenuncia');
         const overlayDenuncia = document.getElementById('denunciaModalOverlay');
         const closeDenuncia = document.getElementById('closeDenunciaModal');
@@ -413,7 +411,6 @@
         if (overlayDenuncia) overlayDenuncia.addEventListener('click', function(e){ if (e.target === overlayDenuncia) hideDenunciaModal(); });
 
 
-        // ** Submissão do Formulário de Denúncia **
         formDenuncia.addEventListener('submit', async (e) => {
             e.preventDefault();
             const nomeUsuario = sessionStorage.getItem('usuarioNome');
@@ -455,7 +452,6 @@
 
 
         document.addEventListener('DOMContentLoaded', function () {
-            // ** Lógica do Chatbot **
             const btn = document.getElementById('openChatbot');
             const overlay = document.getElementById('modalOverlay');
             const close = document.getElementById('closeModal');
