@@ -60,7 +60,7 @@ body { margin: 0; padding: 0; min-height: 100vh; font-family: 'Jomolhari', serif
 }
 .form-row { margin-bottom: 14px; }
 .label { display: block; margin-bottom: 6px; color: var(--muted); font-size: 14px; }
-.feedback-form input[type="text"], .feedback-form select, .feedback-form textarea { width: 100%; box-sizing: border-box; border: 1px solid #ddd; border-radius: 10px; padding: 12px 14px; font-family: 'Jomolhari', serif; font-size: 16px; outline: none; }
+.feedback-form input[type="text"], .feedback-form select, .feedback-form textarea, .feedback-form input[type="date"] { width: 100%; box-sizing: border-box; border: 1px solid #ddd; border-radius: 10px; padding: 12px 14px; font-family: 'Jomolhari', serif; font-size: 16px; outline: none; }
 .feedback-form input:focus, .feedback-form select:focus, .feedback-form textarea:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(169,255,0,0.15); }
 .two-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
@@ -71,6 +71,19 @@ body { margin: 0; padding: 0; min-height: 100vh; font-family: 'Jomolhari', serif
 .form-actions { margin-top: 18px; }
 .btn-submit { background: var(--color-primary); color: var(--color-text); border: none; border-radius: 10px; padding: 14px 18px; font-size: 16px; cursor: pointer; width: 100%; }
 .btn-submit:hover { background: #92e000; }
+
+/* Adicionado para o Modal de Denúncia */
+.denuncia-modal {
+    max-width: 500px; 
+}
+
+/* Garante que o input de data seja estilizado corretamente dentro do modal de denúncia (que usa feedback-form) */
+.feedback-form input[type="date"] {
+    appearance: none; 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: var(--color-background);
+}
 
 
 @media (max-width: 992px) {
@@ -83,4 +96,5 @@ body { margin: 0; padding: 0; min-height: 100vh; font-family: 'Jomolhari', serif
   .dashboard-main { padding: 30px 20px; }
   .dashboard-header { margin: -30px -20px 20px; padding: 20px; flex-direction: column; align-items: flex-start; gap: 10px; }
   .feedback-wrapper { grid-template-columns: 1fr; }
+  .denuncia-modal { max-width: 90%; } /* Ajuste responsivo */
 }

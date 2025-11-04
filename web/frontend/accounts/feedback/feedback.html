@@ -33,7 +33,7 @@
                 
                 <ul>
                     <li><a href="/web/frontend/accounts/feedback/feedback.html" class="active"><span class="material-icons-outlined">feedback</span>visualizar feedbacks</a></li>
-                    <li><a href="/web/frontend/accounts/Denuncia/denuncia.html"><span class="material-icons-outlined">report</span>realizar denúncia</a></li>
+                    <li><a href="#" id="openDenuncia"><span class="material-icons-outlined">report</span>realizar denúncia</a></li>
                     <li><a href="#" id="openChatbot"><span class="material-icons-outlined">support_agent</span>solicitar suporte</a></li>
                     <li><a href="#" id="logoutLinkFeedback"><span class="material-icons-outlined">logout</span>sair da conta</a></li>
                 </ul>
@@ -124,6 +124,47 @@
                 </div>
             </div>
 
+            <div id="denunciaModalOverlay" class="modal-overlay" aria-hidden="true" style="display:none;">
+                <div class="modal denuncia-modal" role="dialog" aria-modal="true" aria-labelledby="denunciaModalTitle">
+                    <button class="modal-close" id="closeDenunciaModal" aria-label="Fechar">
+                        <span class="material-icons-outlined">close</span>
+                    </button>
+                    
+                    <div class="denuncia-modal-content">
+                        <div class="title-row"> 
+                            <h3 id="denunciaModalTitle" style="text-align: center;">Realizar Denúncia</h3>
+                        </div>
+                        
+                        <p style="text-align: center; margin-bottom: 25px;">Use este formulário para relatar problemas relacionados à coleta, descumprimentos ou comportamentos inadequados.</p>
+
+                        <form id="formDenuncia" class="feedback-form" style="border:none; box-shadow:none; padding: 0;"> 
+                          <div class="form-row">
+                            <label for="tituloDenuncia" class="label">Título da denúncia</label>
+                            <input type="text" id="tituloDenuncia" name="titulo" placeholder="Ex: Falta de coleta agendada" required>
+                          </div>
+
+                          <div class="form-row">
+                            <label for="descricaoDenuncia" class="label">Descrição detalhada</label>
+                            <textarea id="descricaoDenuncia" name="descricao" rows="4" placeholder="Descreva o ocorrido..." required></textarea>
+                          </div>
+
+                          <div class="form-row">
+                            <label for="local" class="label">Local do ocorrido</label>
+                            <input type="text" id="local" name="local" placeholder="Ex: Rua das Flores, 120 - Paulínia">
+                          </div>
+
+                          <div class="form-row">
+                            <label for="dataOcorrencia" class="label">Data do ocorrido</label>
+                            <input type="date" id="dataOcorrencia" name="dataOcorrencia" required>
+                          </div>
+
+                          <div class="form-actions">
+                            <button type="submit" class="btn-submit">enviar denúncia</button> 
+                          </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
             <div id="modalOverlay" class="overlay" aria-hidden="true" style="display:none;">
                 <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
                     <button class="close" id="closeModal" aria-label="Fechar">×</button>
@@ -151,6 +192,7 @@
         const menuAtividadesColaborador = document.getElementById('menuAtividadesColaborador');
         const logoutLinkFeedback = document.getElementById('logoutLinkFeedback');
         const homeLink = document.getElementById('homeLink');
+        const idLogado = sessionStorage.getItem('usuarioId'); 
 
         if (nome) {
             usuarioNomeElement.textContent = nome;
@@ -183,11 +225,12 @@
             });
         }
         
+        // ** Lógica do Modal de Feedback **
         const feedbackModal = document.getElementById('feedbackModal');
         const btnAdicionarFeedback = document.getElementById('btnAdicionarFeedback');
         const closeFeedbackModal = document.getElementById('closeFeedbackModal');
         const btnCancelarFeedbackModal = document.getElementById('btnCancelarFeedbackModal');
-        const form = document.getElementById('feedbackForm'); 
+        const formFeedback = document.getElementById('feedbackForm'); 
 
         function openFeedbackModal() {
             feedbackModal.setAttribute('aria-hidden', 'false');
@@ -200,7 +243,7 @@
             feedbackModal.setAttribute('aria-hidden', 'true');
             feedbackModal.style.display = 'none';
             document.body.style.overflow = '';
-            form.reset(); 
+            formFeedback.reset(); 
             setRating(0);
         }
 
@@ -245,9 +288,9 @@
             filtroTipo.value = val === 'coletor' ? 'coletor' : 'empresa';
         }
 
-        form.addEventListener('submit', async (e) => {
+        formFeedback.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const data = Object.fromEntries(new FormData(form).entries());
+            const data = Object.fromEntries(new FormData(formFeedback).entries());
             data.rating = Number(data.rating || 0);
 
             if (!data.rating || data.rating < 1) {
@@ -345,8 +388,74 @@
         filtroTipo.addEventListener('change', carregarFeedbacks);
         
         carregarFeedbacks();
+        
+        // ** Lógica do Modal de Denúncia **
+        const linkOpenDenuncia = document.getElementById('openDenuncia');
+        const overlayDenuncia = document.getElementById('denunciaModalOverlay');
+        const closeDenuncia = document.getElementById('closeDenunciaModal');
+        const formDenuncia = document.getElementById('formDenuncia');
+
+        function showDenunciaModal() {
+            overlayDenuncia.style.display = 'flex';
+            overlayDenuncia.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+            document.getElementById('tituloDenuncia').focus();
+        }
+        function hideDenunciaModal() {
+            overlayDenuncia.style.display = 'none';
+            overlayDenuncia.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+            formDenuncia.reset(); 
+        }
+
+        if (linkOpenDenuncia) linkOpenDenuncia.addEventListener('click', function(e){ e.preventDefault(); showDenunciaModal(); });
+        if (closeDenuncia) closeDenuncia.addEventListener('click', hideDenunciaModal);
+        if (overlayDenuncia) overlayDenuncia.addEventListener('click', function(e){ if (e.target === overlayDenuncia) hideDenunciaModal(); });
+
+
+        // ** Submissão do Formulário de Denúncia **
+        formDenuncia.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const nomeUsuario = sessionStorage.getItem('usuarioNome');
+
+            if (!idLogado) {
+                 alert('Erro de autenticação: ID de usuário não encontrado.');
+                 return; 
+            }
+
+            const data = {
+              titulo: formDenuncia.titulo.value.trim(),
+              descricao: formDenuncia.descricao.value.trim(),
+              local: formDenuncia.local.value.trim(),
+              dataOcorrencia: formDenuncia.dataOcorrencia.value,
+              usuarioId: idLogado,
+              usuarioNome: nomeUsuario,
+            };
+
+            try {
+              const response = await fetch('http://localhost:4000/api/denuncias', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+              });
+
+              const resultado = await response.json();
+
+              if (response.ok) {
+                alert('Denúncia enviada com sucesso!');
+                hideDenunciaModal(); 
+              } else {
+                alert('Erro ao enviar denúncia: ' + (resultado.error || 'Verifique a conexão.'));
+              }
+            } catch (err) {
+              alert('Erro de conexão com o servidor.');
+              console.error(err);
+            }
+        });
+
 
         document.addEventListener('DOMContentLoaded', function () {
+            // ** Lógica do Chatbot **
             const btn = document.getElementById('openChatbot');
             const overlay = document.getElementById('modalOverlay');
             const close = document.getElementById('closeModal');

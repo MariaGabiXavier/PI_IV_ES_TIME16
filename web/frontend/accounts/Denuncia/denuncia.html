@@ -9,6 +9,37 @@
   <link href="https://fonts.googleapis.com/css2?family=Jomolhari&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/web/frontend/accounts/Denuncia/denuncia.css"> 
   <link rel="stylesheet" href="../../chatbot/modal.css">
+  
+  <style>
+    /* Adaptação do estilo da seção de denúncia para o modal, 
+       mantendo a consistência visual com o formulário original. */
+    .denuncia-modal-content {
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px; 
+    }
+    .denuncia-modal-content h1 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-family: var(--font-family);
+        font-weight: 700;
+        color: var(--color-text);
+        font-size: 30px;
+    }
+    .denuncia-modal-content p {
+        margin-bottom: 25px;
+        color: #444;
+        font-size: 16px;
+    }
+    
+    /* Garantir que o modal seja largo o suficiente para o formulário */
+    .modal.denuncia-modal {
+        max-width: 600px; /* Ajuste o tamanho conforme necessário */
+        width: 90%;
+        padding: 30px;
+    }
+    
+  </style>
 </head>
 <body>
 
@@ -33,7 +64,9 @@
         
         <ul>
             <li><a href="/web/frontend/accounts/feedback/feedback.html"><span class="material-icons-outlined">feedback</span>visualizar feedbacks</a></li>
-            <li><a href="/web/frontend/accounts/Denuncia/denuncia.html"><span class="material-icons-outlined">report</span>realizar denúncia</a></li>
+            
+            <li><a href="#" id="openDenunciaModal"><span class="material-icons-outlined">report</span>realizar denúncia</a></li>
+            
             <li><a href="#" id="openChatbot"><span class="material-icons-outlined">support_agent</span>solicitar suporte</a></li> 
             <li><a href="#" id="logoutLinkFeedback"><span class="material-icons-outlined">logout</span>sair da conta</a></li>
         </ul>
@@ -53,41 +86,54 @@
           <span id="usuarioNome">Usuário</span>
         </a>
       </header>
-
-      <section class="denuncia-section">
-        <div class="title-row"> 
-            <h1>Realizar Denúncia</h1>
-        </div>
-        
-        <p>Use este formulário para relatar problemas relacionados à coleta, descumprimentos ou comportamentos inadequados.</p>
-
-        <form id="formDenuncia" class="denuncia-form">
-          <div class="form-row">
-            <label for="titulo">Título da denúncia</label>
-            <input type="text" id="titulo" name="titulo" placeholder="Ex: Falta de coleta agendada" required>
-          </div>
-
-          <div class="form-row">
-            <label for="descricao">Descrição detalhada</label>
-            <textarea id="descricao" name="descricao" rows="4" placeholder="Descreva o ocorrido..." required></textarea>
-          </div>
-
-          <div class="form-row">
-            <label for="local">Local do ocorrido</label>
-            <input type="text" id="local" name="local" placeholder="Ex: Rua das Flores, 120 - Paulínia">
-          </div>
-
-          <div class="form-row">
-            <label for="dataOcorrencia">Data do ocorrido</label>
-            <input type="date" id="dataOcorrencia" name="dataOcorrencia" required>
-          </div>
-
-          <div class="form-actions">
-            <button type="submit" class="btn-submit-nova-coleta">enviar denúncia</button> 
-          </div>
-        </form>
+      
+      <section class="page-content">
+          <h1>Bem-vindo(a) à Área de Atividades</h1>
+          <p>Selecione uma opção no menu lateral ou clique no botão abaixo para registrar uma nova denúncia.</p>
+          
+          <button id="openDenunciaMainButton" class="btn-submit-nova-coleta" style="width: 250px;">
+              Realizar Nova Denúncia
+          </button>
       </section>
+      <div id="denunciaModalOverlay" class="overlay" aria-hidden="true" style="display:none;">
+          <div class="modal denuncia-modal" role="dialog" aria-modal="true" aria-labelledby="denunciaModalTitle">
+              <button class="close" id="closeDenunciaModal" aria-label="Fechar">×</button>
+              
+              <div class="denuncia-modal-content">
+                <div class="title-row"> 
+                    <h1 id="denunciaModalTitle">Realizar Denúncia</h1>
+                </div>
+                
+                <p>Use este formulário para relatar problemas relacionados à coleta, descumprimentos ou comportamentos inadequados.</p>
 
+                <form id="formDenuncia" class="denuncia-form">
+                  <div class="form-row">
+                    <label for="titulo">Título da denúncia</label>
+                    <input type="text" id="titulo" name="titulo" placeholder="Ex: Falta de coleta agendada" required>
+                  </div>
+
+                  <div class="form-row">
+                    <label for="descricao">Descrição detalhada</label>
+                    <textarea id="descricao" name="descricao" rows="4" placeholder="Descreva o ocorrido..." required></textarea>
+                  </div>
+
+                  <div class="form-row">
+                    <label for="local">Local do ocorrido</label>
+                    <input type="text" id="local" name="local" placeholder="Ex: Rua das Flores, 120 - Paulínia">
+                  </div>
+
+                  <div class="form-row">
+                    <label for="dataOcorrencia">Data do ocorrido</label>
+                    <input type="date" id="dataOcorrencia" name="dataOcorrencia" required>
+                  </div>
+
+                  <div class="form-actions">
+                    <button type="submit" class="btn-submit-nova-coleta">enviar denúncia</button> 
+                  </div>
+                </form>
+              </div>
+          </div>
+      </div>
       <div id="modalOverlay" class="overlay" aria-hidden="true" style="display:none;">
           <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
               <button class="close" id="closeModal" aria-label="Fechar">×</button>
@@ -119,6 +165,32 @@
 
     const usuarioNomeElement = document.getElementById('usuarioNome');
     const menuAtividadesColaborador = document.getElementById('menuAtividadesColaborador');
+
+    // **Elementos do NOVO Modal de Denúncia**
+    const btnOpenDenunciaSide = document.getElementById('openDenunciaModal');
+    const btnOpenDenunciaMain = document.getElementById('openDenunciaMainButton');
+    const overlayDenuncia = document.getElementById('denunciaModalOverlay');
+    const closeDenuncia = document.getElementById('closeDenunciaModal');
+    
+    // **Funções do Modal de Denúncia**
+    function showDenunciaModal() {
+        overlayDenuncia.style.display = 'flex';
+        overlayDenuncia.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+    function hideDenunciaModal() {
+        overlayDenuncia.style.display = 'none';
+        overlayDenuncia.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        form.reset(); // Limpa o formulário ao fechar
+    }
+
+    // **Ouvintes de Evento do Modal de Denúncia**
+    if (btnOpenDenunciaSide) btnOpenDenunciaSide.addEventListener('click', function(e){ e.preventDefault(); showDenunciaModal(); });
+    if (btnOpenDenunciaMain) btnOpenDenunciaMain.addEventListener('click', function(e){ e.preventDefault(); showDenunciaModal(); });
+    if (closeDenuncia) closeDenuncia.addEventListener('click', hideDenunciaModal);
+    if (overlayDenuncia) overlayDenuncia.addEventListener('click', function(e){ if (e.target === overlayDenuncia) hideDenunciaModal(); });
+
 
     usuarioNomeElement.textContent = nome || 'Usuário';
 
@@ -172,7 +244,7 @@
 
         if (response.ok) {
           alert('Denúncia enviada com sucesso!');
-          form.reset();
+          hideDenunciaModal(); // Fecha o modal após o sucesso
         } else {
           alert('Erro ao enviar denúncia: ' + resultado.error);
         }
@@ -197,6 +269,7 @@
         });
     }
 
+    // Código do Chatbot (EXISTENTE)
     const btnChat = document.getElementById('openChatbot');
     const overlayChat = document.getElementById('modalOverlay');
     const closeChat = document.getElementById('closeModal');

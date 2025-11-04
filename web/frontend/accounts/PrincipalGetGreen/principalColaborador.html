@@ -35,7 +35,7 @@
                 <ul>
                     <li><a href="/web/frontend/accounts/MinhasColetasColaborador/ColetasColaborador.html"><span class="material-icons-outlined">recycling</span>minhas coletas</a></li>
                     <li><a href="/web/frontend/accounts/feedback/feedback.html"><span class="material-icons-outlined">feedback</span>visualizar feedbacks</a></li>
-                    <li><a href="/web/frontend/accounts/Denuncia/denuncia.html"><span class="material-icons-outlined">report</span>realizar denúncia</a></li>
+                    <li><a href="#" id="openDenuncia"><span class="material-icons-outlined">report</span>realizar denúncia</a></li>
                     <li><a href="#" id="openChatbot"><span class="material-icons-outlined">support_agent</span>solicitar suporte</a></li>
                     <li><a href="#" id="logoutLink"><span class="material-icons-outlined">logout</span>sair da conta</a></li>
                 </ul>
@@ -83,9 +83,53 @@
             </div>
         </div>
 
+        <div id="denunciaModalOverlay" class="modal-overlay" aria-hidden="true" style="display:none;">
+            <div class="modal denuncia-modal" role="dialog" aria-modal="true" aria-labelledby="denunciaModalTitle">
+                <button class="modal-close" id="closeDenunciaModal" aria-label="Fechar">
+                    <span class="material-icons-outlined">close</span>
+                </button>
+                
+                <div class="denuncia-modal-content">
+                    <div class="title-row"> 
+                        <h3 id="denunciaModalTitle" style="text-align: center;">Realizar Denúncia</h3>
+                    </div>
+                    
+                    <p style="text-align: center; margin-bottom: 25px;">Use este formulário para relatar problemas relacionados à coleta, descumprimentos ou comportamentos inadequados.</p>
+
+                    <form id="formDenuncia" class="feedback-form" style="border:none; box-shadow:none; padding: 0;"> 
+                      <div class="form-row">
+                        <label for="titulo" class="label">Título da denúncia</label>
+                        <input type="text" id="titulo" name="titulo" placeholder="Ex: Falta de coleta agendada" required>
+                      </div>
+
+                      <div class="form-row">
+                        <label for="descricao" class="label">Descrição detalhada</label>
+                        <textarea id="descricao" name="descricao" rows="4" placeholder="Descreva o ocorrido..." required></textarea>
+                      </div>
+
+                      <div class="form-row">
+                        <label for="local" class="label">Local do ocorrido</label>
+                        <input type="text" id="local" name="local" placeholder="Ex: Rua das Flores, 120 - Paulínia">
+                      </div>
+
+                      <div class="form-row">
+                        <label for="dataOcorrencia" class="label">Data do ocorrido</label>
+                        <input type="date" id="dataOcorrencia" name="dataOcorrencia" required>
+                      </div>
+
+                      <div class="form-actions">
+                        <button type="submit" class="btn-submit">enviar denúncia</button> 
+                      </div>
+                    </form>
+                    </div>
+            </div>
+        </div>
+
         <script>
+            // ** VARIÁVEIS DE SESSÃO **
             const nome = sessionStorage.getItem('usuarioNome');
             const tipo = sessionStorage.getItem('usuarioTipo');
+            const idLogado = sessionStorage.getItem('usuarioId'); 
 
             if (nome && tipo) {
                 document.getElementById('usuarioNome').textContent = nome;
@@ -93,6 +137,7 @@
                 document.getElementById('usuarioNome').textContent = 'Usuário';
             }
 
+            // ** LÓGICA DE COLETA (EXISTENTE) **
             let todasAsColetas = [];
             
             const feedColetas = document.getElementById('feedColetas');
@@ -175,7 +220,7 @@
 
             carregarColetas();
             
-            
+            // ** LÓGICA DE LOGOUT (EXISTENTE) **
             const logoutLink = document.getElementById('logoutLink');
 
             function logout() {
@@ -193,8 +238,69 @@
                 }
             });
             
-
+            // ** LÓGICA DO MODAL DE DENÚNCIA **
             document.addEventListener('DOMContentLoaded', function () {
+                const linkOpenDenuncia = document.getElementById('openDenuncia');
+                const overlayDenuncia = document.getElementById('denunciaModalOverlay');
+                const closeDenuncia = document.getElementById('closeDenunciaModal');
+                const formDenuncia = document.getElementById('formDenuncia');
+
+                function showDenunciaModal() {
+                    overlayDenuncia.style.display = 'flex';
+                    overlayDenuncia.setAttribute('aria-hidden', 'false');
+                    document.body.style.overflow = 'hidden';
+                }
+                function hideDenunciaModal() {
+                    overlayDenuncia.style.display = 'none';
+                    overlayDenuncia.setAttribute('aria-hidden', 'true');
+                    document.body.style.overflow = '';
+                    formDenuncia.reset(); 
+                }
+
+                if (linkOpenDenuncia) linkOpenDenuncia.addEventListener('click', function(e){ e.preventDefault(); showDenunciaModal(); });
+                if (closeDenuncia) closeDenuncia.addEventListener('click', hideDenunciaModal);
+                if (overlayDenuncia) overlayDenuncia.addEventListener('click', function(e){ if (e.target === overlayDenuncia) hideDenunciaModal(); });
+
+                formDenuncia.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+
+                    if (!idLogado) {
+                         alert('Erro de autenticação: ID de usuário não encontrado.');
+                         return; 
+                    }
+
+                    // Acessa os valores dos campos pelos IDs alterados
+                    const data = {
+                      titulo: document.getElementById('titulo').value.trim(),
+                      descricao: document.getElementById('descricao').value.trim(),
+                      local: document.getElementById('local').value.trim(),
+                      dataOcorrencia: document.getElementById('dataOcorrencia').value,
+                      usuarioId: idLogado,
+                      usuarioNome: nome,
+                    };
+
+                    try {
+                      const response = await fetch('http://localhost:4000/api/denuncias', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                      });
+
+                      const resultado = await response.json();
+
+                      if (response.ok) {
+                        alert('Denúncia enviada com sucesso!');
+                        hideDenunciaModal(); 
+                      } else {
+                        alert('Erro ao enviar denúncia: ' + (resultado.error || 'Verifique a conexão.'));
+                      }
+                    } catch (err) {
+                      alert('Erro de conexão com o servidor.');
+                      console.error(err);
+                    }
+                });
+
+                // ** LÓGICA DO CHATBOT (EXISTENTE) **
                 const btn = document.getElementById('openChatbot');
                 const overlay = document.getElementById('modalOverlay');
                 const close = document.getElementById('closeModal');

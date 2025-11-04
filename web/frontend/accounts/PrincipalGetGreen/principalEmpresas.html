@@ -34,7 +34,7 @@
                 <h4>Minhas atividades</h4>
                 <ul>
                     <li><a href="/web/frontend/accounts/feedback/feedback.html"><span class="material-icons-outlined">feedback</span>visualizar feedbacks</a></li>
-                    <li><a href="/web/frontend/accounts/Denuncia/denuncia.html"><span class="material-icons-outlined">report</span>realizar denúncia</a></li>
+                    <li><a href="#" id="openDenuncia"><span class="material-icons-outlined">report</span>realizar denúncia</a></li>
                     <li><a href="#" id="openChatbot"><span class="material-icons-outlined">support_agent</span>solicitar suporte</a></li>
                     <li><a href="#" id="logoutLink"><span class="material-icons-outlined">logout</span>sair da conta</a></li>
                 </ul>
@@ -45,7 +45,7 @@
             
             <header class="dashboard-header">
                 <nav class="main-nav">
-                    <a href="/web/frontend/accounts/PrincipalGetGreen/principalEmpresas.html">Home</a>
+                    <a href="/web/frontend/accounts/PrincipalGetGreen/principalEmpresas.html" aria-current="page">Home</a>
                 </nav>
                 <a href="#" class="user-profile" id="profileLink">
                     <span class="material-icons-outlined">account_circle</span>
@@ -114,7 +114,7 @@
                 </div>
             </div>
 
-            <div id="modalOverlay" class="overlay" aria-hidden="true" style="display:none;">
+            <div id="modalOverlay" class="modal-overlay" aria-hidden="true" style="display:none;">
                 <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
                     <button class="close" id="closeModal" aria-label="Fechar">×</button>
                     <h2 id="modalTitle">Chatbot GetGreen</h2>
@@ -131,84 +131,213 @@
                     </div>
                 </div>
             </div>
-       </main>
 
-        <script src="/web/backend/principalEmpresas.js"></script>
+            <div id="denunciaModalOverlay" class="modal-overlay" aria-hidden="true" style="display:none;">
+                <div class="modal denuncia-modal" role="dialog" aria-modal="true" aria-labelledby="denunciaModalTitle">
+                    <button class="modal-close" id="closeDenunciaModal" aria-label="Fechar">
+                        <span class="material-icons-outlined">close</span>
+                    </button>
+                    
+                    <div class="denuncia-modal-content">
+                        <div class="title-row"> 
+                            <h3 id="denunciaModalTitle" style="text-align: center;">Realizar Denúncia</h3>
+                        </div>
+                        
+                        <p style="text-align: center; margin-bottom: 25px;">Use este formulário para relatar problemas relacionados à coleta, descumprimentos ou comportamentos inadequados.</p>
 
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const btn = document.getElementById('openChatbot');
-                const overlay = document.getElementById('modalOverlay');
-                const close = document.getElementById('closeModal');
-                const chatArea = document.getElementById('chatArea');
-                const opts = document.getElementById('optionsContainer');
-                const manualInput = document.getElementById('manualInput');
-                const sendManual = document.getElementById('sendManual');
+                        <form id="formDenuncia" class="form-nova-coleta"> 
+                          <div class="form-row">
+                            <label for="titulo">Título da denúncia</label>
+                            <input type="text" id="titulo" name="titulo" placeholder="Ex: Falta de coleta agendada" required>
+                          </div>
 
-                function showModal() {
-                    overlay.style.display = 'flex';
-                    overlay.setAttribute('aria-hidden','false');
-                }
-                function hideModal(){
-                    overlay.style.display = 'none';
-                    overlay.setAttribute('aria-hidden','true');
-                }
+                          <div class="form-row">
+                            <label for="descricao">Descrição detalhada</label>
+                            <textarea id="descricao" name="descricao" rows="4" placeholder="Descreva o ocorrido..." required></textarea>
+                          </div>
 
-                btn.addEventListener('click', function(e){ e.preventDefault(); showModal(); });
-                close.addEventListener('click', hideModal);
-                overlay.addEventListener('click', function(e){ if (e.target === overlay) hideModal(); });
+                          <div class="form-row">
+                            <label for="local">Local do ocorrido</label>
+                            <input type="text" id="local" name="local" placeholder="Ex: Rua das Flores, 120 - Paulínia">
+                          </div>
 
-                const WS_URL = 'ws://localhost:8080';
-                let ws = null;
-                let reconnectTimer = null;
+                          <div class="form-row">
+                            <label for="dataOcorrencia">Data do ocorrido</label>
+                            <input type="date" id="dataOcorrencia" name="dataOcorrencia" required>
+                          </div>
 
-                function appendMessage(text, who) {
-                    const el = document.createElement('div');
-                    el.className = 'msg ' + (who === 'user' ? 'user' : 'server');
-                    el.textContent = text;
-                    chatArea.appendChild(el);
-                    chatArea.scrollTop = chatArea.scrollHeight;
-                }
+                          <div class="form-actions">
+                            <button type="submit" class="btn-submit-nova-coleta">enviar denúncia</button> 
+                          </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            </main>
+    </div>
 
-                function connectWS() {
-                    if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) return;
-                    ws = new WebSocket(WS_URL);
-                    ws.addEventListener('open', () => { appendMessage('Conectado ao adaptador.', 'user'); });
-                    ws.addEventListener('message', (evt) => {
-                        let obj = null; try { obj = JSON.parse(evt.data); } catch (e) { return; }
-                        if (obj.type === 'RESP' || obj.type === 'MSG') {
-                            const text = obj.payload || '';
-                            if (text.toLowerCase().includes('bem-vindo') || text.toLowerCase().includes('0 - sair')) { renderOptions(text); }
-                            else appendMessage(text, 'server');
-                        } else if (obj.type === 'DES') appendMessage('Servidor está desligando.', 'server');
-                        else if (obj.type === 'ERROR') appendMessage('Erro: ' + obj.payload, 'server');
-                    });
-                    ws.addEventListener('close', () => { appendMessage('Conexão com adaptador fechada.', 'user'); if (!reconnectTimer) reconnectTimer = setTimeout(()=>{ reconnectTimer=null; connectWS(); },2000); });
-                    ws.addEventListener('error', (e)=>{ console.error('WS error', e); });
-                }
+    <script src="/web/backend/principalEmpresas.js"></script>
 
-                function renderOptions(menuText){
-                    opts.innerHTML = ''; const lines = menuText.split('\n');
-                    for (const line of lines){ const m = line.match(/^\s*(\d+)\s*-\s*(.+)$/); if (m){ const btn = document.createElement('button'); btn.textContent = m[1] + ' — ' + m[2]; btn.className='option-btn'; btn.addEventListener('click', ()=>{ if (!ws||ws.readyState!==WebSocket.OPEN){ appendMessage('Adaptador indisponível','user'); return; } ws.send(JSON.stringify({type:'PED', payload: m[1]})); appendMessage('Você: '+m[2],'user'); }); opts.appendChild(btn);} }
-                }
-
-                sendManual.addEventListener('click', ()=>{ 
-                    const txt = manualInput.value.trim(); 
-                    if (!txt) return; 
-
-                    appendMessage('Você: ' + txt, 'user');
-                    appendMessage(
-                        'No momento, só posso responder perguntas do menu. ' +
-                        'Caso queira fazer outra pergunta, entre em contato nas redes sociais e email.',
-                        'server'
-                    );
-                    manualInput.value = '';
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // ** VARIÁVEIS DE SESSÃO **
+            const nome = sessionStorage.getItem('usuarioNome');
+            const idLogado = sessionStorage.getItem('usuarioId'); 
+            
+            // ** 1. Configuração do Nome do Usuário **
+            const usuarioNomeElement = document.getElementById('usuarioNome');
+            if (usuarioNomeElement) usuarioNomeElement.textContent = nome || 'Usuário';
+            
+            // ** 2. Lógica de Logout **
+            const logoutLink = document.getElementById('logoutLink');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (confirm('Tem certeza que deseja sair da conta?')) {
+                        sessionStorage.removeItem('usuarioNome');
+                        sessionStorage.removeItem('usuarioTipo');
+                        sessionStorage.removeItem('usuarioId'); 
+                        window.location.href = "/web/frontend/accounts/IndexGetGreen/index.html"; 
+                    }
                 });
+            }
 
-                let connectedOnce = false;
-                btn.addEventListener('click', ()=>{ if(!connectedOnce){ connectWS(); connectedOnce=true; } });
+            // ** 3. Lógica do Modal de Denúncia **
+            const linkOpenDenuncia = document.getElementById('openDenuncia');
+            const overlayDenuncia = document.getElementById('denunciaModalOverlay');
+            const closeDenuncia = document.getElementById('closeDenunciaModal');
+            const formDenuncia = document.getElementById('formDenuncia');
+
+            function showDenunciaModal() {
+                overlayDenuncia.style.display = 'flex';
+                overlayDenuncia.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+            }
+            function hideDenunciaModal() {
+                overlayDenuncia.style.display = 'none';
+                overlayDenuncia.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+                formDenuncia.reset(); 
+            }
+
+            if (linkOpenDenuncia) linkOpenDenuncia.addEventListener('click', function(e){ e.preventDefault(); showDenunciaModal(); });
+            if (closeDenuncia) closeDenuncia.addEventListener('click', hideDenunciaModal);
+            if (overlayDenuncia) overlayDenuncia.addEventListener('click', function(e){ if (e.target === overlayDenuncia) hideDenunciaModal(); });
+
+
+            // ** 4. Submissão do Formulário de Denúncia **
+            formDenuncia.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                if (!idLogado) {
+                     alert('Erro de autenticação: ID de usuário não encontrado.');
+                     return; 
+                }
+
+                const data = {
+                  titulo: formDenuncia.titulo.value.trim(),
+                  descricao: formDenuncia.descricao.value.trim(),
+                  local: formDenuncia.local.value.trim(),
+                  dataOcorrencia: formDenuncia.dataOcorrencia.value,
+                  usuarioId: idLogado,
+                  usuarioNome: nome,
+                };
+
+                try {
+                  const response = await fetch('http://localhost:4000/api/denuncias', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                  });
+
+                  const resultado = await response.json();
+
+                  if (response.ok) {
+                    alert('Denúncia enviada com sucesso!');
+                    hideDenunciaModal(); 
+                  } else {
+                    alert('Erro ao enviar denúncia: ' + (resultado.error || 'Verifique a conexão.'));
+                  }
+                } catch (err) {
+                  alert('Erro de conexão com o servidor.');
+                  console.error(err);
+                }
             });
 
-        </script>
-    </body>
+
+            // ** 5. Lógica do Chatbot (EXISTENTE) **
+            const btnChat = document.getElementById('openChatbot');
+            const overlayChat = document.getElementById('modalOverlay');
+            const closeChat = document.getElementById('closeModal');
+            const chatArea = document.getElementById('chatArea');
+            const opts = document.getElementById('optionsContainer');
+            const manualInput = document.getElementById('manualInput');
+            const sendManual = document.getElementById('sendManual');
+
+            function showModalChat() {
+                overlayChat.style.display = 'flex';
+                overlayChat.setAttribute('aria-hidden','false');
+            }
+            function hideModalChat(){
+                overlayChat.style.display = 'none';
+                overlayChat.setAttribute('aria-hidden','true');
+            }
+
+            if (btnChat) btnChat.addEventListener('click', function(e){ e.preventDefault(); showModalChat(); });
+            if (closeChat) closeChat.addEventListener('click', hideModalChat);
+            if (overlayChat) overlayChat.addEventListener('click', function(e){ if (e.target === overlayChat) hideModalChat(); });
+
+            const WS_URL = 'ws://localhost:8080';
+            let ws = null;
+            let reconnectTimer = null;
+
+            function appendMessage(text, who) {
+                const el = document.createElement('div');
+                el.className = 'msg ' + (who === 'user' ? 'user' : 'server');
+                el.textContent = text;
+                chatArea.appendChild(el);
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }
+
+            function connectWS() {
+                if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) return;
+                ws = new WebSocket(WS_URL);
+                ws.addEventListener('open', () => { appendMessage('Conectado ao adaptador.', 'user'); });
+                ws.addEventListener('message', (evt) => {
+                    let obj = null; try { obj = JSON.parse(evt.data); } catch (e) { return; }
+                    if (obj.type === 'RESP' || obj.type === 'MSG') {
+                        const text = obj.payload || '';
+                        if (text.toLowerCase().includes('bem-vindo') || text.toLowerCase().includes('0 - sair')) { renderOptions(text); }
+                        else appendMessage(text, 'server');
+                    } else if (obj.type === 'DES') appendMessage('Servidor está desligando.', 'server');
+                    else if (obj.type === 'ERROR') appendMessage('Erro: ' + obj.payload, 'server');
+                });
+                ws.addEventListener('close', () => { appendMessage('Conexão com adaptador fechada.', 'user'); if (!reconnectTimer) reconnectTimer = setTimeout(()=>{ reconnectTimer=null; connectWS(); },2000); });
+                ws.addEventListener('error', (e)=>{ console.error('WS error', e); });
+            }
+
+            function renderOptions(menuText){
+                opts.innerHTML = ''; const lines = menuText.split('\n');
+                for (const line of lines){ const m = line.match(/^\s*(\d+)\s*-\s*(.+)$/); if (m){ const btn = document.createElement('button'); btn.textContent = m[1] + ' — ' + m[2]; btn.className='option-btn'; btn.addEventListener('click', ()=>{ if (!ws||ws.readyState!==WebSocket.OPEN){ appendMessage('Adaptador indisponível','user'); return; } ws.send(JSON.stringify({type:'PED', payload: m[1]})); appendMessage('Você: '+m[2],'user'); }); opts.appendChild(btn);} }
+            }
+
+            sendManual.addEventListener('click', ()=>{ 
+                const txt = manualInput.value.trim(); 
+                if (!txt) return; 
+
+                appendMessage('Você: ' + txt, 'user');
+                appendMessage(
+                    'No momento, só posso responder perguntas do menu. ' +
+                    'Caso queira fazer outra pergunta, entre em contato nas redes sociais e email.',
+                    'server'
+                );
+                manualInput.value = '';
+            });
+
+            let connectedOnce = false;
+            if (btnChat) btnChat.addEventListener('click', ()=>{ if(!connectedOnce){ connectWS(); connectedOnce=true; } }); 
+        });
+
+    </script>
+</body>
 </html>

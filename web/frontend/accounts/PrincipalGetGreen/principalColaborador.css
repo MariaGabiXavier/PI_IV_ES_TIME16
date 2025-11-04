@@ -6,6 +6,8 @@
     --color-background: #fff;
     --font-family: 'Jomolhari', serif;
     --content-padding-x: 80px;
+    /* Adicionado: Muted color para labels */
+    --muted: #777;
 }
 
 html {
@@ -268,6 +270,118 @@ body {
 }
 
 
+/* --- Estilos do Modal (Copiados de principalEmpresas.css e adaptados para feedback.css) --- */
+.modal-overlay[aria-hidden="true"] { display: none; }
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 1000;
+}
+.modal {
+    background: #fff;
+    width: 100%;
+    max-width: 480px; 
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    padding: 28px;
+    position: relative;
+    max-height: 90vh; 
+    overflow-y: auto;
+    display: flex; 
+    flex-direction: column; 
+}
+.modal h3 {
+     display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+    
+}
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+/* ---------------------------------------------------- */
+/* REGRAS DE ESTILO DO FORMULÁRIO DE FEEDBACK/DENÚNCIA */
+/* ---------------------------------------------------- */
+
+/* Regra principal do formulário (Embora aqui esteja sem borda, é bom ter o seletor) */
+.feedback-form {
+    border: none; /* A borda foi removida no HTML in-line, mas mantemos a classe */
+    padding: 0;
+}
+.form-row { margin-bottom: 14px; }
+
+/* Estilo para a label que estava faltando */
+.label { 
+    display: block; 
+    margin-bottom: 6px; 
+    color: var(--muted); 
+    font-size: 14px; 
+}
+
+/* Estilos dos inputs/textareas que estavam faltando */
+.feedback-form input[type="text"], 
+.feedback-form textarea, 
+.feedback-form input[type="date"] { 
+    width: 100%; 
+    box-sizing: border-box; 
+    border: 1px solid #ddd; 
+    border-radius: 10px; 
+    padding: 12px 14px; 
+    font-family: var(--font-family); 
+    font-size: 16px; 
+    outline: none; 
+}
+
+/* Foco nos inputs */
+.feedback-form input:focus, 
+.feedback-form textarea:focus { 
+    border-color: var(--color-primary); 
+    box-shadow: 0 0 0 3px rgba(169,255,0,0.15); 
+}
+
+/* Estilo do botão de submissão padronizado */
+.form-actions { margin-top: 18px; }
+.btn-submit {
+    width: 100%;
+    background-color: var(--color-primary);
+    color: var(--color-text);
+    border: none;
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 16px;
+    font-family: var(--font-family);
+    cursor: pointer;
+}
+.btn-submit:hover { background-color: #92e000; }
+
+/* Estilo do modal de denúncia (Específico para labels, mas mantido se for útil em outros modais) */
+.denuncia-modal {
+    max-width: 500px;
+}
+/* Garante que o input de data seja estilizado corretamente dentro do modal de denúncia */
+.feedback-form input[type="date"] {
+    appearance: none; 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: var(--color-background);
+}
+
+/* --- FIM Estilos do Modal --- */
+
+
 @media (max-width: 1360px) {
 }
 
@@ -345,6 +459,10 @@ body {
 
     .search-bar {
         max-width: 100%;
+    }
+    
+    .modal {
+        max-width: 95%; 
     }
 }
 
