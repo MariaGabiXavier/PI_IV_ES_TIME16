@@ -1,3 +1,17 @@
+const mostrarModalSucesso = (mensagem) => {
+    const modal = document.getElementById('modal-sucesso');
+    const modalMensagem = document.getElementById('modal-mensagem');
+    
+    if (modal && modalMensagem) {
+        modalMensagem.textContent = mensagem;
+        modal.style.display = 'flex'; 
+
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 2000);
+    }
+};
+
 document.getElementById('cadastroColaborador').addEventListener('submit', async function(e) {
   e.preventDefault();
 
@@ -10,7 +24,26 @@ document.getElementById('cadastroColaborador').addEventListener('submit', async 
   const confirmarInput = form.confirmarSenha;
   const senhaInput = form.senha;
   const emailInput = form.email;
+  const cpfInput = form.cpf;
+  const cepInput = form.cep;
 
+  const validarEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const validarCep = (cep) => {
+    const cepLimpo = cep.replace(/\D/g, ''); 
+    return cepLimpo.length === 8;
+  };
+
+  const validarCpf = (cpf) => {
+    const cpfLimpo = cpf.replace(/\D/g, '');
+    if (cpfLimpo.length !== 11 || /^(\d)\1{10}$/.test(cpfLimpo)) {
+      return false;
+    }
+    return true;
+  };
+  
   const limparFeedbacks = () => {
     erroSpanConfirmar.textContent = '';
     erroSpanConfirmar.classList.remove('visivel');
@@ -19,6 +52,8 @@ document.getElementById('cadastroColaborador').addEventListener('submit', async 
     confirmarInput.classList.remove('input-erro');
     senhaInput.classList.remove('input-erro');
     emailInput.classList.remove('input-erro');
+    cpfInput.classList.remove('input-erro');
+    cepInput.classList.remove('input-erro');
   };
 
   const exibirErroGeral = (mensagem) => {
@@ -27,6 +62,31 @@ document.getElementById('cadastroColaborador').addEventListener('submit', async 
   };
   
   limparFeedbacks(); 
+
+  const cpf = form.cpf.value;
+  const email = form.email.value;
+  const cep = form.cep.value;
+
+  if (!validarCpf(cpf)) {
+    exibirErroGeral('CPF inválido. Verifique o formato e os dígitos.');
+    cpfInput.classList.add('input-erro');
+    cpfInput.focus();
+    return;
+  }
+
+  if (!validarEmail(email)) {
+    exibirErroGeral('E-mail inválido. Coloque um que seja válido!');
+    emailInput.classList.add('input-erro');
+    emailInput.focus();
+    return;
+  }
+
+  if (!validarCep(cep)) {
+    exibirErroGeral('CEP inválido. Deve conter 8 dígitos.');
+    cepInput.classList.add('input-erro');
+    cepInput.focus();
+    return;
+  }
 
   if (senha !== confirmarSenha) {
     erroSpanConfirmar.textContent = 'As senhas não coincidem. Por favor, verifique.';
@@ -38,14 +98,14 @@ document.getElementById('cadastroColaborador').addEventListener('submit', async 
 
   const dados = {
     nome: form.nome.value,
-    cpf: form.cpf.value,
+    cpf: cpf,
     data: form.data.value,
-    email: form.email.value,
+    email: email,
     senha: senha,
     confirmarSenha: confirmarSenha,
     uf: form.uf.value,
     cidade: form.cidade.value,
-    cep: form.cep.value,
+    cep: cep,
     bairro: form.bairro.value,
     logradouro: form.logradouro.value,
     numero: form.numero.value
@@ -61,13 +121,18 @@ document.getElementById('cadastroColaborador').addEventListener('submit', async 
     const resultado = await resposta.json();
     
     if (resposta.ok) {
+
+      mostrarModalSucesso('Colaborador cadastrado com sucesso!');
       
       const nome = resultado.usuario.nome;
       
       sessionStorage.setItem('usuarioNome', nome);
       sessionStorage.setItem('usuarioTipo', resultado.tipo);
       sessionStorage.setItem('usuarioId', resultado.usuarioId); 
-      window.location.href = "../PrincipalGetGreen/principalColaborador.html"; 
+
+      setTimeout(() => {
+          window.location.href = "../PrincipalGetGreen/principalColaborador.html"; 
+      }, 2000);
 
     } else {
       const errorMessage = resultado.error || 'Erro desconhecido ao cadastrar.';
@@ -87,7 +152,6 @@ document.getElementById('cadastroColaborador').addEventListener('submit', async 
     console.error('Erro de requisição:', erro);
   }
 });
-
 
 const toggleButtons = document.querySelectorAll('.toggle-senha');
 

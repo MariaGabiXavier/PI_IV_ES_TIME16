@@ -1,3 +1,17 @@
+const mostrarModalSucesso = (mensagem) => {
+    const modal = document.getElementById('modal-sucesso');
+    const modalMensagem = document.getElementById('modal-mensagem');
+    
+    if (modal && modalMensagem) {
+        modalMensagem.textContent = mensagem;
+        modal.style.display = 'flex'; 
+
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 2000);
+    }
+};
+
 document.getElementById('cadastroEmpresa').addEventListener('submit', async function(e) {
   e.preventDefault();
 
@@ -10,6 +24,25 @@ document.getElementById('cadastroEmpresa').addEventListener('submit', async func
   const confirmarInput = form.confirmarSenha;
   const senhaInput = form.senha;
   const emailInput = form.email;
+  const cnpjInput = form.cnpj;
+  const cepInput = form.cep;
+
+  const validarEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const validarCep = (cep) => {
+    const cepLimpo = cep.replace(/\D/g, ''); 
+    return cepLimpo.length === 8;
+  };
+
+  const validarCnpj = (cnpj) => {
+    const cnpjLimpo = cnpj.replace(/\D/g, '');
+    if (cnpjLimpo.length !== 14 || /^(\d)\1{13}$/.test(cnpjLimpo)) {
+      return false;
+    }
+    return true;
+  };
 
   const limparFeedbacks = () => {
     erroSpanConfirmar.textContent = '';
@@ -19,6 +52,8 @@ document.getElementById('cadastroEmpresa').addEventListener('submit', async func
     confirmarInput.classList.remove('input-erro');
     senhaInput.classList.remove('input-erro');
     emailInput.classList.remove('input-erro');
+    cnpjInput.classList.remove('input-erro');
+    cepInput.classList.remove('input-erro');
   };
 
   const exibirErroGeral = (mensagem) => {
@@ -27,6 +62,31 @@ document.getElementById('cadastroEmpresa').addEventListener('submit', async func
   };
   
   limparFeedbacks(); 
+
+  const cnpj = form.cnpj.value;
+  const email = form.email.value;
+  const cep = form.cep.value;
+
+  if (!validarCnpj(cnpj)) {
+    exibirErroGeral('CNPJ inválido. Deve conter 14 dígitos.');
+    cnpjInput.classList.add('input-erro');
+    cnpjInput.focus();
+    return;
+  }
+
+  if (!validarEmail(email)) {
+    exibirErroGeral('E-mail inválido. Certifique-se de incluir um "@" e um domínio.');
+    emailInput.classList.add('input-erro');
+    emailInput.focus();
+    return;
+  }
+
+  if (!validarCep(cep)) {
+    exibirErroGeral('CEP inválido. Deve conter 8 dígitos.');
+    cepInput.classList.add('input-erro');
+    cepInput.focus();
+    return;
+  }
 
   if (senha !== confirmarSenha) {
     erroSpanConfirmar.textContent = 'As senhas não coincidem. Por favor, verifique.';
@@ -37,15 +97,15 @@ document.getElementById('cadastroEmpresa').addEventListener('submit', async func
   }
 
   const dados = {
-    cnpj: form.cnpj.value,
+    cnpj: cnpj,
     razaoSocial: form.razaoSocial.value,
     segmento: form.segmento.value,
-    email: form.email.value,
+    email: email,
     senha: senha,
     confirmarSenha: confirmarSenha,
     uf: form.uf.value,
     cidade: form.cidade.value,
-    cep: form.cep.value,
+    cep: cep,
     bairro: form.bairro.value,
     logradouro: form.logradouro.value,
     numero: form.numero.value
@@ -61,13 +121,17 @@ document.getElementById('cadastroEmpresa').addEventListener('submit', async func
     const resultado = await resposta.json();
     
     if (resposta.ok) {
+      mostrarModalSucesso('Empresa cadastrada com sucesso!'); 
+
       const nome = resultado.usuario.razaoSocial;
 
       sessionStorage.setItem('usuarioNome', nome);
       sessionStorage.setItem('usuarioTipo', resultado.tipo);
       sessionStorage.setItem('usuarioId', resultado.usuarioId); 
 
-      window.location.href = "../PrincipalGetGreen/principalEmpresas.html"; 
+       setTimeout(() => {
+          window.location.href = "../PrincipalGetGreen/principalEmpresas.html"; 
+      }, 2000); 
 
     } else {
       const errorMessage = resultado.error || 'Erro desconhecido ao cadastrar.';
@@ -87,7 +151,6 @@ document.getElementById('cadastroEmpresa').addEventListener('submit', async func
     console.error('Erro de requisição:', erro);
   }
 });
-
 
 const toggleButtons = document.querySelectorAll('.toggle-senha');
 

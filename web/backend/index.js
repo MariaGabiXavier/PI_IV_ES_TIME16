@@ -27,7 +27,7 @@ const UserEmpresaModel = new mongoose.Schema({
   cep: String,
   bairro: String,
   logradouro: String,
-  numero: Number  
+  numero: Number 
 });
 
 const UserColaboradorModel = new mongoose.Schema({
@@ -42,7 +42,7 @@ const UserColaboradorModel = new mongoose.Schema({
   cep: String,
   bairro: String,
   logradouro: String,
-  numero: Number  
+  numero: Number 
 });
 
 const ColetaSchema = new mongoose.Schema({
@@ -92,7 +92,7 @@ app.post('/api/userEmpresa', async (req, res) => {
       return res.status(400).json({ error: `A senha deve ter no mínimo ${MIN_PASSWORD_LENGTH} caracteres.` });
     }
     if (senha !== confirmarSenha) {
-        return res.status(400).json({ error: 'As senhas não coincidem (erro interno).' });
+      return res.status(400).json({ error: 'As senhas não coincidem (erro interno).' });
     }
 
     const empresaExistente = await userEmpresa.findOne({ email });
@@ -132,7 +132,7 @@ app.post('/api/userColaborador', async (req, res) => {
       return res.status(400).json({ error: `A senha deve ter no mínimo ${MIN_PASSWORD_LENGTH} caracteres.` });
     }
     if (senha !== req.body.confirmarSenha) {
-        return res.status(400).json({ error: 'As senhas não coincidem.' });
+      return res.status(400).json({ error: 'As senhas não coincidem.' });
     }
     
     const novoUserColaborador = new userColaborador(req.body);
@@ -225,11 +225,75 @@ app.get('/api/perfil/:tipo/:id', async (req, res) => {
     }
 });
 
+app.put('/api/perfil/:tipo/:id', async (req, res) => {
+    const { tipo, id } = req.params;
+    const dadosAtualizados = req.body;
+    let Modelo;
+    
+    try {
+        if (tipo === 'empresa') {
+            Modelo = userEmpresa;
+        } else if (tipo === 'colaborador') {
+            Modelo = userColaborador;
+        } else {
+            return res.status(400).json({ error: 'Tipo de usuário inválido.' });
+        }
+
+        // Validação de senha (Se a senha for enviada, ela deve ser atualizada)
+        if (dadosAtualizados.senha) {
+            if (dadosAtualizados.senha.length < MIN_PASSWORD_LENGTH) {
+                return res.status(400).json({ error: `A nova senha deve ter no mínimo ${MIN_PASSWORD_LENGTH} caracteres.` });
+            }
+            delete dadosAtualizados.confirmarSenha;
+        } else {
+            delete dadosAtualizados.senha;
+            delete dadosAtualizados.confirmarSenha;
+        }
+        
+        // Antes de atualizar o email, verifique se o email já está em uso por outro usuário
+        if (dadosAtualizados.email) {
+            // Primeiro, buscamos o usuário atual para obter o email antigo
+            const usuarioAtual = await Modelo.findById(id);
+
+            // Verificamos se o email foi realmente alterado
+            if (usuarioAtual && usuarioAtual.email !== dadosAtualizados.email) {
+                
+                // Se foi alterado, verificamos se o novo email já existe em ambas as coleções
+                const empresaExistente = await userEmpresa.findOne({ email: dadosAtualizados.email });
+                const colaboradorExistente = await userColaborador.findOne({ email: dadosAtualizados.email });
+                
+                // Se o email existir E o ID for diferente do usuário que está editando (para evitar conflito consigo mesmo)
+                const isConflict = (empresaExistente && empresaExistente._id.toString() !== id) || 
+                                   (colaboradorExistente && colaboradorExistente._id.toString() !== id);
+
+                if (isConflict) {
+                    return res.status(409).json({ error: 'Este email já está em uso por outro cadastro.' });
+                }
+            }
+        }
+
+        const options = { new: true, runValidators: true }; 
+        
+        // Atualiza o documento
+        const resultado = await Modelo.findByIdAndUpdate(id, dadosAtualizados, options); 
+
+        if (!resultado) {
+            return res.status(404).json({ error: 'Usuário não encontrado para atualização.' });
+        }
+        
+        res.status(200).json({ message: 'Perfil atualizado com sucesso!', usuario: resultado });
+
+    } catch (err) {
+        console.error('Erro ao atualizar perfil:', err);
+        res.status(500).json({ error: 'Erro no servidor ao atualizar perfil: ' + err.message });
+    }
+});
+
 app.post('/api/coletas', async (req, res) => {
   const { usuarioId, usuarioNome } = req.body;
   
   if (!usuarioId || !usuarioNome) {
-      return res.status(401).json({ error: 'Dados de autenticação (ID/Nome) ausentes. A coleta deve ser solicitada por um usuário logado.' });
+    return res.status(401).json({ error: 'Dados de autenticação (ID/Nome) ausentes. A coleta deve ser solicitada por um usuário logado.' });
   }
 
   try {
@@ -245,11 +309,11 @@ app.get('/api/coletas', async (req, res) => {
   try {
     let filtro = {};
     if (req.query.usuarioId) {
-        filtro = { usuarioId: req.query.usuarioId };
+      filtro = { usuarioId: req.query.usuarioId };
     }
     
     if (req.query.coletorId) {
-        filtro = { coletorId: req.query.coletorId };
+      filtro = { coletorId: req.query.coletorId };
     }
 
 
@@ -305,7 +369,7 @@ app.put('/api/coletas/:id', async (req, res) => {
     if (!resultado) {
       return res.status(404).json({ error: 'Coleta não encontrada' });
     }
-      
+    
     res.json(resultado);
   } catch (err) {
     console.error('Erro ao atualizar coleta:', err);
