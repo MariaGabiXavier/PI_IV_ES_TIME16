@@ -61,9 +61,9 @@ body {
     padding-left: 15px;
 }
 .sidebar-menu a.ativo {
-    background-color: #5d7e50; /* Fundo destacado */
-    border-left: 5px solid #C6FE31; /* Borda de destaque */
-    color: #ffffff; /* Garante que a cor do texto seja clara */
+    background-color: #5d7e50; 
+    border-left: 5px solid #C6FE31; 
+    color: #ffffff; 
 }
 
 .sidebar-divider {
@@ -155,9 +155,9 @@ body {
 }
 
 .modal-custom-fundo {
-    display: none; /* Controlado pelo JavaScript */
+    display: none; 
     position: fixed;
-    z-index: 1000; /* Garante que fique acima de tudo */
+    z-index: 1000; 
     left: 0;
     top: 0;
     width: 100%;
@@ -178,7 +178,7 @@ body {
     animation: fadeIn 0.3s ease-out; 
     box-sizing: border-box;
     padding-bottom: 40px;
-    max-height: 90vh; /* Define a altura máxima como 90% da altura da tela */
+    max-height: 90vh; 
     overflow-y: auto;
 }
 
@@ -217,7 +217,7 @@ body {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
-    margin-top: 25px; /* Adiciona margem superior para separar dos campos */
+    margin-top: 25px; 
 }
 
 @keyframes fadeIn {
@@ -284,9 +284,8 @@ body {
         background-color: #5d7e50;
     }
     .modal-edicao-conteudo {
-        /* Permite que o modal ocupe mais espaço na tela do tablet/celular */
         width: 95%; 
-        max-width: none; /* Remove a largura máxima rígida em telas menores */
+        max-width: none; 
         margin: 20px auto;
     }
 }

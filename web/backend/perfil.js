@@ -122,7 +122,6 @@ const lidarEnvioEdicao = async (e) => {
 
     const idUsuario = sessionStorage.getItem('usuarioId');
     const tipo = sessionStorage.getItem('usuarioTipo');
-    // Rota unificada: Usa o mesmo padrão da rota GET que funciona
     const endpoint = `http://localhost:4000/api/perfil/${tipo}/${idUsuario}`; 
 
     const novaSenha = formEdicao.senha.value;

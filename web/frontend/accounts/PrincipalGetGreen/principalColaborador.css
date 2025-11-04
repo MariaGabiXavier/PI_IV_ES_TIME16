@@ -238,13 +238,14 @@ body {
     align-items: flex-end;
     flex-shrink: 0;
     padding-left: 20px;
-    justify-content: space-between;
+    justify-content: flex-start; 
+    padding-top: 40px; 
 }
 
 .card-actions span {
     font-size: 17px;
     color: #777;
-    margin-bottom: 0px; 
+    margin-bottom: 5px; 
     font-weight: bold;
     font-family: var(--font-family); 
 }
@@ -368,25 +369,23 @@ body {
     background-color: var(--color-background);
 }
 
-/* --- NOVOS ESTILOS PARA ALINHAR PESQUISA E FILTRO --- */
-
 .search-and-filter-row {
-    display: flex; /* Habilita o Flexbox */
-    align-items: center; /* Centraliza verticalmente */
-    gap: 20px; /* Espaço entre a barra de pesquisa e o filtro */
+    display: flex; 
+    align-items: center; 
+    gap: 20px;
 }
 
 .search-bar {
-    flex-grow: 1; /* Permite que a barra de pesquisa ocupe o máximo de espaço disponível */
-    max-width: none; /* Remove a limitação de 1000px definida anteriormente */
+    flex-grow: 1;
+    max-width: none; 
 }
 
 .status-filter {
     display: flex;
     align-items: center;
     gap: 10px;
-    flex-shrink: 0; /* Impede que o filtro encolha */
-    width: 250px; /* Define uma largura fixa para o filtro para melhor controle */
+    flex-shrink: 0; 
+    width: 250px; 
 }
 
 .filter-label { 
@@ -394,7 +393,7 @@ body {
     font-size: 17px; 
     font-weight: 500;
     color: var(--color-text);
-    white-space: nowrap; /* Impede que o texto "Status:" quebre a linha */
+    white-space: nowrap; 
 }
 
 .filter-select {
@@ -407,7 +406,6 @@ body {
     outline: none;
     cursor: pointer;
 }
-/* --- FIM DOS ESTILOS DE ALINHAMENTO --- */
 
 
 @media (max-width: 1360px) {
@@ -431,9 +429,8 @@ body {
         margin-left: 35px;
     }
 
-    /* Ajustes para telas menores */
     .search-and-filter-row {
-        flex-direction: column; /* Em telas menores, volta a empilhar */
+        flex-direction: column;
         align-items: flex-start;
         gap: 15px;
     }
@@ -443,12 +440,12 @@ body {
     }
     
     .status-filter {
-        width: 100%; /* Ocupa a largura total abaixo da barra de pesquisa */
+        width: 100%; 
         justify-content: flex-start;
     }
 
     .filter-select {
-        flex-grow: 1; /* Permite que o select se expanda */
+        flex-grow: 1; 
     }
 }
 

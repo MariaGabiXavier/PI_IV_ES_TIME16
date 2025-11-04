@@ -344,16 +344,13 @@ body {
 }
 .btn-submit-nova-coleta:hover { background-color: #92e000; }
 
-/* --- Estilos do Modal de Denúncia --- */
 .denuncia-modal {
     max-width: 500px; 
 }
 
 .denuncia-modal-content {
-    /* Garante que o conteúdo não ultrapasse o modal */
     overflow-y: auto;
 }
-/* --- Fim Estilos do Modal de Denúncia --- */
 
 
 @media (max-width: 1360px) {

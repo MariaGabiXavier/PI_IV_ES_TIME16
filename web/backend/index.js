@@ -239,7 +239,6 @@ app.put('/api/perfil/:tipo/:id', async (req, res) => {
             return res.status(400).json({ error: 'Tipo de usuário inválido.' });
         }
 
-        // Validação de senha (Se a senha for enviada, ela deve ser atualizada)
         if (dadosAtualizados.senha) {
             if (dadosAtualizados.senha.length < MIN_PASSWORD_LENGTH) {
                 return res.status(400).json({ error: `A nova senha deve ter no mínimo ${MIN_PASSWORD_LENGTH} caracteres.` });
@@ -250,19 +249,14 @@ app.put('/api/perfil/:tipo/:id', async (req, res) => {
             delete dadosAtualizados.confirmarSenha;
         }
         
-        // Antes de atualizar o email, verifique se o email já está em uso por outro usuário
         if (dadosAtualizados.email) {
-            // Primeiro, buscamos o usuário atual para obter o email antigo
             const usuarioAtual = await Modelo.findById(id);
 
-            // Verificamos se o email foi realmente alterado
             if (usuarioAtual && usuarioAtual.email !== dadosAtualizados.email) {
                 
-                // Se foi alterado, verificamos se o novo email já existe em ambas as coleções
                 const empresaExistente = await userEmpresa.findOne({ email: dadosAtualizados.email });
                 const colaboradorExistente = await userColaborador.findOne({ email: dadosAtualizados.email });
                 
-                // Se o email existir E o ID for diferente do usuário que está editando (para evitar conflito consigo mesmo)
                 const isConflict = (empresaExistente && empresaExistente._id.toString() !== id) || 
                                    (colaboradorExistente && colaboradorExistente._id.toString() !== id);
 
@@ -274,7 +268,6 @@ app.put('/api/perfil/:tipo/:id', async (req, res) => {
 
         const options = { new: true, runValidators: true }; 
         
-        // Atualiza o documento
         const resultado = await Modelo.findByIdAndUpdate(id, dadosAtualizados, options); 
 
         if (!resultado) {
