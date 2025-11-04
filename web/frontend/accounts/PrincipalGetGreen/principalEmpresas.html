@@ -99,7 +99,13 @@
                             <input type="text" placeholder="Unidade de medida" name="unidadeMedida" required>
                         </div>
                         <div class="form-row">
-                            <input type="date" placeholder="Data preferencial" name="dataPreferencial" required>
+                            <input 
+                                type="text" 
+                                placeholder="Data Preferencial Retirada" 
+                                name="dataPreferencial" 
+                                onfocus="this.type='date'" 
+                                onblur="if(!this.value) this.type='text'" 
+                                required>
                         </div>
                         <div class="form-row">
                             <textarea rows="3" placeholder="Descrição" name="descricao"></textarea>
