@@ -324,6 +324,16 @@
                 const txt = manualInput.value.trim(); 
                 if (!txt) return; 
 
+                // If numeric, forward as PED to adapter so Java server can respond
+                if (/^\d+$/.test(txt)) {
+                    if (!ws || ws.readyState !== WebSocket.OPEN) { appendMessage('Adaptador indisponível','user'); return; }
+                    ws.send(JSON.stringify({ type: 'PED', payload: txt }));
+                    appendMessage('Você: ' + txt, 'user');
+                    manualInput.value = '';
+                    return;
+                }
+
+                // fallback for non-numeric input (original behaviour)
                 appendMessage('Você: ' + txt, 'user');
                 appendMessage(
                     'No momento, só posso responder perguntas do menu. ' +

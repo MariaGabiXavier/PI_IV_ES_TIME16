@@ -170,6 +170,14 @@ const nome = sessionStorage.getItem('usuarioNome');
         const txt = manualInput.value.trim(); 
         if (!txt) return; 
 
+        if (/^\d+$/.test(txt)) {
+            if (!ws || ws.readyState !== WebSocket.OPEN) { appendMessage('Adaptador indisponível','user'); return; }
+            ws.send(JSON.stringify({ type: 'PED', payload: txt }));
+            appendMessage('Você: ' + txt, 'user');
+            manualInput.value = '';
+            return;
+        }
+
         appendMessage('Você: ' + txt, 'user');
         appendMessage(
             'No momento, só posso responder perguntas do menu. ' +
