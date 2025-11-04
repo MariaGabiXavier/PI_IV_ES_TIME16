@@ -40,8 +40,16 @@ public class ChatbotRegras {
         respostas.put(6, "Se o token de coleta não está sendo reconhecido, siga os passos abaixo:"+
         "\n1. Verifique se o token foi digitado corretamente, sem espaços extras ou erros de digitação."+
         "\n2. Certifique-se de que o token ainda está válido e não expirou."+
-        "\n3. Tente reiniciar o aplicativo ou
-        oleta é garantida por meio de um sistema de rastreamento que monitora cada etapa, desde a coleta até a destinação final dos materiais."+
+        "\n3. Tente reiniciar o aplicativo ou a página onde o token está sendo inserido."+
+        "\n4. Se possível, tente usar o token em outro dispositivo para verificar se o problema persiste."+
+        "\nSe o problema continuar, entre em contato com o suporte técnico para obter ajuda adicional.");
+        respostas.put(7, "Se a coleta que você realizou não aparece no histórico, siga os passos abaixo:"+
+        "\n1. Verifique sua conexão com a internet para garantir que os dados possam ser atualizados."+
+        "\n2. Atualize a página ou reinicie o aplicativo para forçar a atualização do histórico."+
+        "\n3. Certifique-se de que você está logado na conta correta onde a coleta foi registrada."+
+        "\n4. Aguarde alguns minutos, pois pode haver um atraso na atualização do sistema."+
+        "\nSe a coleta ainda não aparecer, entre em contato com o suporte técnico para assistência.");
+        respostas.put(8, "A integridade do processo de coleta é garantida por meio de um sistema de rastreamento que monitora cada etapa, desde a coleta até a destinação final dos materiais."+
         "\nToda coleta é registrada no sistema por meio de um token que deve ser apresentado pelo coletor ao estabelecimento, permitindo transparência e responsabilidade.");
         respostas.put(9, "Os colaboradores e as empresas são conectados por meio de uma plataforma online onde os colaboradores podem se cadastrar como coletores e as empresas podem solicitar serviços de coleta seletiva."+
         "\nA plataforma facilita a comunicação e o agendamento das coletas, garantindo eficiência no processo.");
