@@ -19,19 +19,24 @@
       <nav class="sidebar-nav">
         <h4>Perfil</h4>
         <ul>
-          <li><a href="#"><span class="material-icons-outlined">person</span>visualizar perfil</a></li>
-          <li><a href="#"><span class="material-icons-outlined">edit</span>editar perfil</a></li>
-          <li><a href="#"><span class="material-icons-outlined">home</span>editar endereço</a></li>
+            <li><a href="/web/frontend/accounts/Perfil/Perfil.html"><span class="material-icons-outlined">person</span>visualizar perfil</a></li>
+            <li><a href="#"><span class="material-icons-outlined">edit</span>editar perfil</a></li>
+            <li><a href="#"><span class="material-icons-outlined">home</span>editar endereço</a></li>
+            <li><a href="#"><span class="material-icons-outlined">add_location</span>adicionar novo endereço</a></li>
         </ul>
 
         <h4>Minhas atividades</h4>
-        <ul>
-          <li><a id="linkColetas" href="#"><span class="material-icons-outlined">recycling</span>minhas coletas</a></li>
-          <li><a id="linkFeedback" href="/web/frontend/accounts/feedback/feedback.html"><span class="material-icons-outlined">feedback</span>visualizar feedbacks</a></li>
-          <li><a href="#" class="active"><span class="material-icons-outlined">report</span>realizar denúncia</a></li>
-          <li><a href="#"><span class="material-icons-outlined">support_agent</span>solicitar suporte</a></li>
-          <li><a href="#" id="logoutLink"><span class="material-icons-outlined">logout</span>sair da conta</a></li>
+        
+        <ul id="menuAtividadesColaborador">
         </ul>
+        
+        <ul>
+            <li><a href="/web/frontend/accounts/feedback/feedback.html"><span class="material-icons-outlined">feedback</span>visualizar feedbacks</a></li>
+            <li><a href="/web/frontend/accounts/Denuncia/denuncia.html" class="active"><span class="material-icons-outlined">report</span>realizar denúncia</a></li>
+            <li><a href="#" id="openChatbot"><span class="material-icons-outlined">support_agent</span>solicitar suporte</a></li> 
+            <li><a href="#" id="logoutLinkFeedback"><span class="material-icons-outlined">logout</span>sair da conta</a></li>
+        </ul>
+        
       </nav>
     </aside>
 
@@ -88,24 +93,28 @@
     const idLogado = sessionStorage.getItem('usuarioId'); 
     
     const homeLink = document.getElementById('homeLink');
-    const logoutLink = document.getElementById('logoutLink');
+    // Renomeado de 'logoutLink' para 'logoutLinkFeedback' para ser consistente com o HTML atualizado
+    const logoutLinkFeedback = document.getElementById('logoutLinkFeedback');
     const form = document.getElementById('formDenuncia');
-  const linkColetas = document.getElementById('linkColetas');
-  const linkFeedback = document.getElementById('linkFeedback');
+    // Estes IDs não existem mais no novo menu, mas a lógica de navegação deve ser atualizada para usar menuAtividadesColaborador
+    // const linkColetas = document.getElementById('linkColetas');
+    // const linkFeedback = document.getElementById('linkFeedback');
+    const usuarioNomeElement = document.getElementById('usuarioNome');
+    const menuAtividadesColaborador = document.getElementById('menuAtividadesColaborador');
 
+    usuarioNomeElement.textContent = nome || 'Usuário';
 
-    document.getElementById('usuarioNome').textContent = nome || 'Usuário';
+    // Lógica para adaptar o menu lateral e o link Home (copiada do feedback.html e adaptada)
+    if (tipo === 'colaborador') {
+        menuAtividadesColaborador.innerHTML = `
+            <li><a href="/web/frontend/accounts/MinhasColetasColaborador/ColetasColaborador.html"><span class="material-icons-outlined">recycling</span>minhas coletas</a></li>
+        `;
+        if(homeLink) homeLink.href = "/web/frontend/accounts/PrincipalGetGreen/principalColaborador.html";
+    } else if (tipo === 'empresa') {
+        menuAtividadesColaborador.innerHTML = '';
+        if(homeLink) homeLink.href = "/web/frontend/accounts/PrincipalGetGreen/principalEmpresas.html";
+    }
 
-  // Ajusta links de navegação conforme o tipo logado
-  if (tipo === 'colaborador') {
-      linkColetas.href = "/web/frontend/accounts/MinhasColetasColaborador/ColetasColaborador.html";
-  } else if (tipo === 'empresa') {
-      // Para empresa, direciona para a página principal de empresas (onde cria/gerencia coletas)
-      linkColetas.href = "/web/frontend/accounts/PrincipalGetGreen/principalEmpresas.html";
-  } else {
-      linkColetas.href = "/web/frontend/accounts/IndexGetGreen/index.html";
-  }
-  linkFeedback.href = "/web/frontend/accounts/feedback/feedback.html";
 
     homeLink.addEventListener('click', (e) => {
         e.preventDefault();
@@ -155,11 +164,22 @@
         console.error(err);
       }
     });
-
-    logoutLink.addEventListener('click', () => {
-      sessionStorage.clear();
-      window.location.href = "/web/frontend/accounts/IndexGetGreen/index.html";
-    });
+    
+    // Lógica de Logout (Copiada e adaptada do feedback.html)
+    function logout() {
+        sessionStorage.removeItem('usuarioNome');
+        sessionStorage.removeItem('usuarioTipo');
+        sessionStorage.removeItem('usuarioId'); 
+        window.location.href = "/web/frontend/accounts/IndexGetGreen/index.html"; 
+    }
+    if (logoutLinkFeedback) {
+        logoutLinkFeedback.addEventListener('click', (e) => {
+            e.preventDefault(); 
+            if (confirm('Tem certeza que deseja sair da conta?')) {
+                logout();
+            }
+        });
+    }
   </script>
 </body>
 </html>

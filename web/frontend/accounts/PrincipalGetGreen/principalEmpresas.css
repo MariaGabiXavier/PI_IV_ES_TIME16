@@ -237,11 +237,18 @@ body {
 .modal {
     background: #fff;
     width: 100%;
-    max-width: 620px;
+    /* Corrigido: Largura ajustada */
+    max-width: 480px; 
     border-radius: 16px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.2);
     padding: 28px;
     position: relative;
+    
+    /* NOVO: Altura máxima e rolagem para evitar que ocupe a tela toda */
+    max-height: 90vh; 
+    overflow-y: auto;
+    display: flex; 
+    flex-direction: column; 
 }
 .modal h3 {
     margin: 0 0 18px 0;
@@ -320,6 +327,10 @@ body {
         margin-top: 10px; justify-items: start; align-items: center; flex-direction: row; gap: 15px; width: 100%; justify-content: space-between;
     }
     .request-side .btn-action { flex-grow: 1; text-align: center; justify-content: center; }
+    
+    .modal {
+        max-width: 95%; /* Ajuste para telas pequenas */
+    }
 }
 
 @media (max-width: 576px) {

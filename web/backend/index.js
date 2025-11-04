@@ -266,7 +266,13 @@ app.get('/api/feedbacks', async (req, res) => {
     const { clienteId, destinatario } = req.query;
     const filtro = {};
     if (clienteId) filtro.clienteId = clienteId;
-    if (destinatario) filtro.destinatario = destinatario;
+    
+    // CORREÇÃO: Filtra apenas se o valor for 'coletor' ou 'empresa'. 
+    // Se for 'todos' ou omitido, retorna todos.
+    if (destinatario && ['coletor', 'empresa'].includes(destinatario.toLowerCase())) {
+        filtro.destinatario = destinatario;
+    }
+    
     const feedbacks = await Feedback.find(filtro).sort({ dataCriacao: -1 });
     res.json(feedbacks);
   } catch (err) {

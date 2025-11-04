@@ -26,19 +26,24 @@
                 </ul>
 
                 <h4>Minhas atividades</h4>
+                
+                <ul id="menuAtividadesColaborador">
+                    </ul>
+                
                 <ul>
-                    <li><a href="/web/frontend/accounts/MinhasColetasColaborador/ColetasColaborador.html"><span class="material-icons-outlined">recycling</span>minhas coletas</a></li>
                     <li><a href="/web/frontend/accounts/feedback/feedback.html" class="active"><span class="material-icons-outlined">feedback</span>visualizar feedbacks</a></li>
                     <li><a href="/web/frontend/accounts/Denuncia/denuncia.html"><span class="material-icons-outlined">report</span>realizar denúncia</a></li>
-                    <li><a href="#"><span class="material-icons-outlined">support_agent</span>solicitar suporte</a></li>
+                    <li><a href="#" id="openChatbot"><span class="material-icons-outlined">support_agent</span>solicitar suporte</a></li> 
+                    <li><a href="#" id="logoutLinkFeedback"><span class="material-icons-outlined">logout</span>sair da conta</a></li>
                 </ul>
+                
             </nav>
         </aside>
 
         <main class="dashboard-main">
             <header class="dashboard-header">
                 <nav class="main-nav">
-                    <a href="/web/frontend/accounts/IndexGetGreen/index.html">Home</a>
+                    <a href="/web/frontend/accounts/PrincipalGetGreen/principalEmpresas.html" id="homeLink">Home</a>
                 </nav>
                 <a href="#" class="user-profile">
                     <span class="material-icons-outlined">account_circle</span>
@@ -50,66 +55,12 @@
                 <div style="display:flex; gap:12px; align-items:center;">
                     <label for="filtroTipo" style="font-size:14px;color:#777;">Filtrar para:</label>
                     <select id="filtroTipo" style="border:1px solid #ddd;border-radius:10px;padding:8px 10px;font-family: 'Jomolhari', serif;">
-                        <option value="coletor">Colaborador</option>
+                        <option value="todos">Todos</option> <option value="coletor">Colaborador</option>
                         <option value="empresa">Empresa</option>
                     </select>
                 </div>
                 <button type="button" class="btn-nova-coleta" id="btnAdicionarFeedback">adicionar feedback</button>
             </div>
-
-            <section class="feedback-wrapper" id="feedbackWrapper" style="display:none;">
-                <form id="feedbackForm" class="feedback-form">
-                    <div class="form-row">
-                        <label class="label">Avaliação</label>
-                        <div class="stars" id="starPicker" aria-label="Escolha sua nota" role="radiogroup">
-                            <button type="button" class="star" data-value="1" aria-checked="false" role="radio">★</button>
-                            <button type="button" class="star" data-value="2" aria-checked="false" role="radio">★</button>
-                            <button type="button" class="star" data-value="3" aria-checked="false" role="radio">★</button>
-                            <button type="button" class="star" data-value="4" aria-checked="false" role="radio">★</button>
-                            <button type="button" class="star" data-value="5" aria-checked="false" role="radio">★</button>
-                        </div>
-                        <input type="hidden" name="rating" id="rating" value="0">
-                    </div>
-
-                    <div class="form-row">
-                        <label class="label" for="titulo">Título</label>
-                        <input id="titulo" name="titulo" type="text" placeholder="Ex.: Coleta rápida e organizada" required>
-                    </div>
-
-                    <div class="form-row two-cols">
-                        <div>
-                            <label class="label" for="coletaId">ID da coleta (opcional)</label>
-                            <input id="coletaId" name="coletaId" type="text" placeholder="id: 652f..." />
-                        </div>
-                        <div>
-                            <label class="label" for="destinatario">Para quem é o feedback</label>
-                            <select id="destinatario" name="destinatario" required>
-                                <option value="coletor">Coletor</option>
-                                <option value="empresa">Empresa</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <label class="label" for="comentario">Comentário</label>
-                        <textarea id="comentario" name="comentario" rows="5" placeholder="Compartilhe sua experiência" required></textarea>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" class="btn-submit">Enviar feedback</button>
-                        <button type="button" class="btn-submit" id="btnCancelarFeedback" style="margin-top:10px;background:#ddd;">Cancelar</button>
-                    </div>
-                </form>
-
-                <aside class="feedback-help">
-                    <h3>Dicas</h3>
-                    <ul>
-                        <li>Se possível, informe o ID da coleta para agilizar o suporte.</li>
-                        <li>Mantenha um tom respeitoso; críticas construtivas ajudam a melhorar.</li>
-                        <li>Você pode avaliar coletor ou empresa.</li>
-                    </ul>
-                </aside>
-            </section>
 
             <section class="requests-section">
                 <h4 class="requests-title">Feedbacks</h4>
@@ -117,13 +68,139 @@
                     <p>Carregando feedbacks...</p>
                 </div>
             </section>
-        </main>
+            
+            <div class="modal-overlay" id="feedbackModal" aria-hidden="true" style="display: none;">
+                <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitleFeedback">
+                    <button class="modal-close" id="closeFeedbackModal" aria-label="Fechar">
+                        <span class="material-icons-outlined">close</span>
+                    </button>
+                    <h3 id="modalTitleFeedback">Adicionar Feedback</h3>
+                    
+                    <section class="feedback-wrapper" id="feedbackWrapperContent" style="grid-template-columns: 1fr;">
+                        <form id="feedbackForm" class="feedback-form" style="border:none; box-shadow:none; padding: 0;">
+                            <div class="form-row">
+                                <label class="label">Avaliação</label>
+                                <div class="stars" id="starPicker" aria-label="Escolha sua nota" role="radiogroup">
+                                    <button type="button" class="star" data-value="1" aria-checked="false" role="radio">★</button>
+                                    <button type="button" class="star" data-value="2" aria-checked="false" role="radio">★</button>
+                                    <button type="button" class="star" data-value="3" aria-checked="false" role="radio">★</button>
+                                    <button type="button" class="star" data-value="4" aria-checked="false" role="radio">★</button>
+                                    <button type="button" class="star" data-value="5" aria-checked="false" role="radio">★</button>
+                                </div>
+                                <input type="hidden" name="rating" id="rating" value="0">
+                            </div>
+
+                            <div class="form-row">
+                                <label class="label" for="titulo">Título</label>
+                                <input id="titulo" name="titulo" type="text" placeholder="Ex.: Coleta rápida e organizada" required>
+                            </div>
+
+                            <div class="form-row two-cols">
+                                <div>
+                                    <label class="label" for="coletaId">ID da coleta (opcional)</label>
+                                    <input id="coletaId" name="coletaId" type="text" placeholder="id: 652f..." />
+                                </div>
+                                <div>
+                                    <label class="label" for="destinatario">Para quem é o feedback</label>
+                                    <select id="destinatario" name="destinatario" required>
+                                        <option value="coletor">Coletor</option>
+                                        <option value="empresa">Empresa</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <label class="label" for="comentario">Comentário</label>
+                                <textarea id="comentario" name="comentario" rows="5" placeholder="Compartilhe sua experiência" required></textarea>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn-submit">Enviar feedback</button>
+                                <button type="button" class="btn-submit" id="btnCancelarFeedbackModal" style="margin-top:10px;background:#ddd;">Cancelar</button>
+                            </div>
+                        </form>
+                    </section>
+                </div>
+            </div>
+            </main>
     </div>
 
     <script>
+        // --- VARIÁVEIS E INICIALIZAÇÃO DE PERFIL ---
         const nome = sessionStorage.getItem('usuarioNome');
-        if (nome) document.getElementById('usuarioNome').textContent = nome;
+        const tipo = sessionStorage.getItem('usuarioTipo');
+        const usuarioNomeElement = document.getElementById('usuarioNome');
+        const menuAtividadesColaborador = document.getElementById('menuAtividadesColaborador');
+        const logoutLinkFeedback = document.getElementById('logoutLinkFeedback');
+        const homeLink = document.getElementById('homeLink');
 
+        if (nome) {
+            usuarioNomeElement.textContent = nome;
+        } else {
+             usuarioNomeElement.textContent = 'Usuário';
+        }
+
+        // Lógica para adaptar o menu lateral e o link Home
+        if (tipo === 'colaborador') {
+            menuAtividadesColaborador.innerHTML = `
+                <li><a href="/web/frontend/accounts/MinhasColetasColaborador/ColetasColaborador.html"><span class="material-icons-outlined">recycling</span>minhas coletas</a></li>
+            `;
+            if(homeLink) homeLink.href = "/web/frontend/accounts/PrincipalGetGreen/principalColaborador.html";
+        } else if (tipo === 'empresa') {
+            menuAtividadesColaborador.innerHTML = '';
+            if(homeLink) homeLink.href = "/web/frontend/accounts/PrincipalGetGreen/principalEmpresas.html";
+        }
+
+        // Lógica de Logout
+        function logout() {
+            sessionStorage.removeItem('usuarioNome');
+            sessionStorage.removeItem('usuarioTipo');
+            sessionStorage.removeItem('usuarioId'); 
+            window.location.href = "/web/frontend/accounts/IndexGetGreen/index.html"; 
+        }
+        if (logoutLinkFeedback) {
+            logoutLinkFeedback.addEventListener('click', (e) => {
+                e.preventDefault(); 
+                if (confirm('Tem certeza que deseja sair da conta?')) {
+                    logout();
+                }
+            });
+        }
+        
+        // --- VARIÁVEIS E FUNÇÕES DO MODAL ---
+        const feedbackModal = document.getElementById('feedbackModal');
+        const btnAdicionarFeedback = document.getElementById('btnAdicionarFeedback');
+        const closeFeedbackModal = document.getElementById('closeFeedbackModal');
+        const btnCancelarFeedbackModal = document.getElementById('btnCancelarFeedbackModal');
+        const form = document.getElementById('feedbackForm'); 
+
+        function openFeedbackModal() {
+            feedbackModal.setAttribute('aria-hidden', 'false');
+            feedbackModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            document.getElementById('titulo').focus();
+        }
+
+        function closeFeedbackModalFunction() {
+            feedbackModal.setAttribute('aria-hidden', 'true');
+            feedbackModal.style.display = 'none';
+            document.body.style.overflow = '';
+            form.reset(); 
+            setRating(0);
+        }
+
+        // Eventos do Modal
+        btnAdicionarFeedback.addEventListener('click', openFeedbackModal);
+        closeFeedbackModal.addEventListener('click', closeFeedbackModalFunction);
+        btnCancelarFeedbackModal.addEventListener('click', closeFeedbackModalFunction); 
+
+        // Fechar ao clicar fora
+        feedbackModal.addEventListener('click', (e) => {
+            if (e.target === feedbackModal) closeFeedbackModalFunction();
+        });
+
+
+        // --- LÓGICA DE ESTRELAS E FORMULÁRIO ---
         const picker = document.getElementById('starPicker');
         const ratingInput = document.getElementById('rating');
         function setRating(n) {
@@ -141,25 +218,23 @@
             setRating(val);
         });
 
-        const form = document.getElementById('feedbackForm');
-        const feedbackWrapper = document.getElementById('feedbackWrapper');
-        const btnAdicionarFeedback = document.getElementById('btnAdicionarFeedback');
-        const btnCancelarFeedback = document.getElementById('btnCancelarFeedback');
         const filtroTipo = document.getElementById('filtroTipo');
         const destinatarioSelect = document.getElementById('destinatario');
         const listFeedbacks = document.getElementById('listFeedbacks');
+        
+        // Sincroniza o select do filtro com o select de destinatário do formulário
+        function syncFiltroParaSelect() {
+            const val = filtroTipo.value;
+            // Apenas sincroniza se não for 'todos', mantendo o valor padrão do formulário
+            if (val !== 'todos') {
+                destinatarioSelect.value = val === 'coletor' ? 'coletor' : 'empresa';
+            }
+        }
+        function syncSelectParaFiltro() {
+            const val = destinatarioSelect.value;
+            filtroTipo.value = val === 'coletor' ? 'coletor' : 'empresa';
+        }
 
-        btnAdicionarFeedback.addEventListener('click', () => {
-            feedbackWrapper.style.display = 'grid';
-            document.getElementById('titulo').focus();
-            window.scrollTo({ top: feedbackWrapper.getBoundingClientRect().top + window.scrollY - 20, behavior: 'smooth' });
-        });
-
-        btnCancelarFeedback.addEventListener('click', () => {
-            form.reset();
-            setRating(0);
-            feedbackWrapper.style.display = 'none';
-        });
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const data = Object.fromEntries(new FormData(form).entries());
@@ -174,6 +249,7 @@
                 const clienteId = sessionStorage.getItem('usuarioId') || 'client4';
                 const clienteNome = sessionStorage.getItem('usuarioNome') || 'Cliente 4';
                 const payload = { ...data, clienteId, clienteNome };
+                
                 const resp = await fetch('http://localhost:4000/api/feedbacks', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -184,30 +260,59 @@
                     throw new Error(r.error || 'Falha ao salvar feedback');
                 }
                 alert('Obrigado! Seu feedback foi registrado.');
+                closeFeedbackModalFunction();
             } catch (err) {
-                console.warn('Falha ao salvar no backend, exibindo localmente:', err);
+                console.warn('Falha ao salvar no backend:', err);
+                alert('Obrigado! Seu feedback foi registrado (Falha de conexão com o servidor).');
             }
-
-            form.reset();
-            setRating(0);
-            feedbackWrapper.style.display = 'none';
             carregarFeedbacks();
         });
 
-        // Filtro de destinatário (colaborador/empresa) controla o select do formulário
-        function syncFiltroParaSelect() {
-            const val = filtroTipo.value;
-            destinatarioSelect.value = val === 'coletor' ? 'coletor' : 'empresa';
-        }
-        function syncSelectParaFiltro() {
-            const val = destinatarioSelect.value;
-            filtroTipo.value = val === 'coletor' ? 'coletor' : 'empresa';
-        }
-        filtroTipo.addEventListener('change', syncFiltroParaSelect);
-        destinatarioSelect.addEventListener('change', syncSelectParaFiltro);
-        // Inicializa filtro a partir do select existente
-        syncSelectParaFiltro();
+        // Lógica de Carregamento de Feedbacks
+        async function carregarFeedbacks() {
+            const destino = filtroTipo.value;
+            listFeedbacks.innerHTML = '<p>Carregando feedbacks...</p>';
+            
+            try {
+                let url = 'http://localhost:4000/api/feedbacks';
+                
+                // MUDANÇA: Adiciona o parâmetro de filtro APENAS se não for 'todos'
+                if (destino !== 'todos') {
+                    url += `?destinatario=${encodeURIComponent(destino)}`;
+                }
+                
+                const resp = await fetch(url);
+                if (!resp.ok) throw new Error('Resposta não OK');
+                const itens = await resp.json();
+                const arr = Array.isArray(itens) ? itens : [];
+                if (arr.length === 0) {
+                    listFeedbacks.innerHTML = '<p>Nenhum feedback encontrado.</p>';
+                    return;
+                }
+                listFeedbacks.innerHTML = '';
+                arr.forEach(f => { listFeedbacks.innerHTML += renderFeedbackCard(f); });
+            } catch (e) {
+                console.warn('Erro ao buscar feedbacks, usando mock:', e);
+                
+                // Mock para simular a requisição de 'Todos' ou filtro
+                const mock = [
+                    { _id: 'fb1', clienteNome: 'Cliente 4', destinatario: 'empresa', rating: 5, titulo: 'Ótima experiência (Empresa)', comentario: 'Coleta rápida e organizada.', dataCriacao: new Date().toISOString() },
+                    { _id: 'fb2', clienteNome: 'Cliente 5', destinatario: 'coletor', rating: 4, titulo: 'Bom Coletor', comentario: 'Poderia ser mais rápido.', dataCriacao: new Date().toISOString() }
+                ];
 
+                const mockFiltrado = destino === 'todos' 
+                    ? mock 
+                    : mock.filter(f => f.destinatario === destino);
+
+                listFeedbacks.innerHTML = '';
+                if (mockFiltrado.length === 0) {
+                     listFeedbacks.innerHTML = '<p>Nenhum feedback encontrado.</p>';
+                     return;
+                }
+                mockFiltrado.forEach(f => { listFeedbacks.innerHTML += renderFeedbackCard(f); });
+            }
+        }
+        
         function renderFeedbackCard(item) {
             const dataTexto = item.dataCriacao
                 ? new Date(item.dataCriacao).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
@@ -230,34 +335,13 @@
             `;
         }
 
-        async function carregarFeedbacks() {
-            const destino = filtroTipo.value;
-            listFeedbacks.innerHTML = '<p>Carregando feedbacks...</p>';
-            try {
-                const url = `http://localhost:4000/api/feedbacks?destinatario=${encodeURIComponent(destino)}`;
-                const resp = await fetch(url);
-                if (!resp.ok) throw new Error('Resposta não OK');
-                const itens = await resp.json();
-                const arr = Array.isArray(itens) ? itens : [];
-                if (arr.length === 0) {
-                    listFeedbacks.innerHTML = '<p>Nenhum feedback encontrado.</p>';
-                    return;
-                }
-                listFeedbacks.innerHTML = '';
-                arr.forEach(f => { listFeedbacks.innerHTML += renderFeedbackCard(f); });
-            } catch (e) {
-                console.warn('Erro ao buscar feedbacks, usando mock:', e);
-                const mock = [
-                    { _id: 'fb1', clienteNome: 'Cliente 4', destinatario: destino, rating: 5, titulo: 'Ótima experiência', comentario: 'Coleta rápida e organizada.', dataCriacao: new Date().toISOString() }
-                ];
-                listFeedbacks.innerHTML = '';
-                mock.forEach(f => { listFeedbacks.innerHTML += renderFeedbackCard(f); });
-            }
-        }
-
+        // Eventos de Filtro
         filtroTipo.addEventListener('change', carregarFeedbacks);
+        // Desabilitando a sincronização automática para permitir o valor "Todos" no filtro
+        // destinatarioSelect.addEventListener('change', syncSelectParaFiltro);
+        // syncSelectParaFiltro();
+        
         carregarFeedbacks();
     </script>
 </body>
 </html>
-
