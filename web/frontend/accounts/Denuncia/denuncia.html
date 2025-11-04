@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Jomolhari&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/web/frontend/accounts/Denuncia/denuncia.css"> 
+  <link rel="stylesheet" href="../../chatbot/modal.css">
 </head>
 <body>
 
@@ -32,10 +33,12 @@
         
         <ul>
             <li><a href="/web/frontend/accounts/feedback/feedback.html"><span class="material-icons-outlined">feedback</span>visualizar feedbacks</a></li>
-            <li><a href="/web/frontend/accounts/Denuncia/denuncia.html" class="active"><span class="material-icons-outlined">report</span>realizar denúncia</a></li>
+            <li><a href="/web/frontend/accounts/Denuncia/denuncia.html"><span class="material-icons-outlined">report</span>realizar denúncia</a></li>
             <li><a href="#" id="openChatbot"><span class="material-icons-outlined">support_agent</span>solicitar suporte</a></li> 
             <li><a href="#" id="logoutLinkFeedback"><span class="material-icons-outlined">logout</span>sair da conta</a></li>
         </ul>
+        
+      </nav>
         
       </nav>
     </aside>
@@ -84,7 +87,25 @@
           </div>
         </form>
       </section>
-    </main>
+
+      <div id="modalOverlay" class="overlay" aria-hidden="true" style="display:none;">
+          <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+              <button class="close" id="closeModal" aria-label="Fechar">×</button>
+              <h2 id="modalTitle">Chatbot GetGreen</h2>
+
+              <div id="chatContainer" class="chat-container">
+                  <div id="chatArea" class="chat-area" aria-live="polite"></div>
+
+                  <div id="optionsContainer" class="options"></div>
+
+                  <div class="inputRow">
+                      <input id="manualInput" placeholder="Enviar mensagem (opcional)" autocomplete="off" />
+                      <button id="sendManual" class="submit-btn" style="width:120px;margin-left:8px">Enviar</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+      </main>
   </div>
 
   <script>
@@ -93,18 +114,14 @@
     const idLogado = sessionStorage.getItem('usuarioId'); 
     
     const homeLink = document.getElementById('homeLink');
-    // Renomeado de 'logoutLink' para 'logoutLinkFeedback' para ser consistente com o HTML atualizado
     const logoutLinkFeedback = document.getElementById('logoutLinkFeedback');
     const form = document.getElementById('formDenuncia');
-    // Estes IDs não existem mais no novo menu, mas a lógica de navegação deve ser atualizada para usar menuAtividadesColaborador
-    // const linkColetas = document.getElementById('linkColetas');
-    // const linkFeedback = document.getElementById('linkFeedback');
+
     const usuarioNomeElement = document.getElementById('usuarioNome');
     const menuAtividadesColaborador = document.getElementById('menuAtividadesColaborador');
 
     usuarioNomeElement.textContent = nome || 'Usuário';
 
-    // Lógica para adaptar o menu lateral e o link Home (copiada do feedback.html e adaptada)
     if (tipo === 'colaborador') {
         menuAtividadesColaborador.innerHTML = `
             <li><a href="/web/frontend/accounts/MinhasColetasColaborador/ColetasColaborador.html"><span class="material-icons-outlined">recycling</span>minhas coletas</a></li>
@@ -165,7 +182,6 @@
       }
     });
     
-    // Lógica de Logout (Copiada e adaptada do feedback.html)
     function logout() {
         sessionStorage.removeItem('usuarioNome');
         sessionStorage.removeItem('usuarioTipo');
@@ -180,6 +196,79 @@
             }
         });
     }
+
+    const btnChat = document.getElementById('openChatbot');
+    const overlayChat = document.getElementById('modalOverlay');
+    const closeChat = document.getElementById('closeModal');
+    const chatArea = document.getElementById('chatArea');
+    const opts = document.getElementById('optionsContainer');
+    const manualInput = document.getElementById('manualInput');
+    const sendManual = document.getElementById('sendManual');
+
+    function showModalChat() {
+        overlayChat.style.display = 'flex';
+        overlayChat.setAttribute('aria-hidden','false');
+        document.body.style.overflow = 'hidden';
+    }
+    function hideModalChat(){
+        overlayChat.style.display = 'none';
+        overlayChat.setAttribute('aria-hidden','true');
+        document.body.style.overflow = '';
+    }
+
+    if (btnChat) btnChat.addEventListener('click', function(e){ e.preventDefault(); showModalChat(); });
+    if (closeChat) closeChat.addEventListener('click', hideModalChat);
+    if (overlayChat) overlayChat.addEventListener('click', function(e){ if (e.target === overlayChat) hideModalChat(); });
+
+    const WS_URL = 'ws://localhost:8080';
+    let ws = null;
+    let reconnectTimer = null;
+
+    function appendMessage(text, who) {
+        const el = document.createElement('div');
+        el.className = 'msg ' + (who === 'user' ? 'user' : 'server');
+        el.textContent = text;
+        chatArea.appendChild(el);
+        chatArea.scrollTop = chatArea.scrollHeight;
+    }
+
+    function connectWS() {
+        if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) return;
+        ws = new WebSocket(WS_URL);
+        ws.addEventListener('open', () => { appendMessage('Conectado ao adaptador.', 'user'); });
+        ws.addEventListener('message', (evt) => {
+            let obj = null; try { obj = JSON.parse(evt.data); } catch (e) { return; }
+            if (obj.type === 'RESP' || obj.type === 'MSG') {
+                const text = obj.payload || '';
+                if (text.toLowerCase().includes('bem-vindo') || text.toLowerCase().includes('0 - sair')) { renderOptions(text); }
+                else appendMessage(text, 'server');
+            } else if (obj.type === 'DES') appendMessage('Servidor está desligando.', 'server');
+            else if (obj.type === 'ERROR') appendMessage('Erro: ' + obj.payload, 'server');
+        });
+        ws.addEventListener('close', () => { appendMessage('Conexão com adaptador fechada.', 'user'); if (!reconnectTimer) reconnectTimer = setTimeout(()=>{ reconnectTimer=null; connectWS(); },2000); });
+        ws.addEventListener('error', (e)=>{ console.error('WS error', e); });
+    }
+
+    function renderOptions(menuText){
+        opts.innerHTML = ''; const lines = menuText.split('\n');
+        for (const line of lines){ const m = line.match(/^\s*(\d+)\s*-\s*(.+)$/); if (m){ const btn = document.createElement('button'); btn.textContent = m[1] + ' — ' + m[2]; btn.className='option-btn'; btn.addEventListener('click', ()=>{ if (!ws||ws.readyState!==WebSocket.OPEN){ appendMessage('Adaptador indisponível','user'); return; } ws.send(JSON.stringify({type:'PED', payload: m[1]})); appendMessage('Você: '+m[2],'user'); }); opts.appendChild(btn);} }
+    }
+
+    sendManual.addEventListener('click', ()=>{ 
+        const txt = manualInput.value.trim(); 
+        if (!txt) return; 
+
+        appendMessage('Você: ' + txt, 'user');
+        appendMessage(
+            'No momento, só posso responder perguntas do menu. ' +
+            'Caso queira fazer outra pergunta, entre em contato nas redes sociais e email.',
+            'server'
+        );
+        manualInput.value = '';
+    });
+
+    let connectedOnce = false;
+    if (btnChat) btnChat.addEventListener('click', ()=>{ if(!connectedOnce){ connectWS(); connectedOnce=true; } });
   </script>
 </body>
 </html>

@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" href="/web/frontend/accounts/PrincipalGetGreen/principalEmpresas.css">
     <link rel="stylesheet" href="feedback.css">
+    <link rel="stylesheet" href="../../chatbot/modal.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Jomolhari&display=swap" rel="stylesheet">
 </head>
@@ -33,7 +34,7 @@
                 <ul>
                     <li><a href="/web/frontend/accounts/feedback/feedback.html" class="active"><span class="material-icons-outlined">feedback</span>visualizar feedbacks</a></li>
                     <li><a href="/web/frontend/accounts/Denuncia/denuncia.html"><span class="material-icons-outlined">report</span>realizar denúncia</a></li>
-                    <li><a href="#" id="openChatbot"><span class="material-icons-outlined">support_agent</span>solicitar suporte</a></li> 
+                    <li><a href="#" id="openChatbot"><span class="material-icons-outlined">support_agent</span>solicitar suporte</a></li>
                     <li><a href="#" id="logoutLinkFeedback"><span class="material-icons-outlined">logout</span>sair da conta</a></li>
                 </ul>
                 
@@ -122,11 +123,28 @@
                     </section>
                 </div>
             </div>
+
+            <div id="modalOverlay" class="overlay" aria-hidden="true" style="display:none;">
+                <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+                    <button class="close" id="closeModal" aria-label="Fechar">×</button>
+                    <h2 id="modalTitle">Chatbot GetGreen</h2>
+
+                    <div id="chatContainer" class="chat-container">
+                        <div id="chatArea" class="chat-area" aria-live="polite"></div>
+
+                        <div id="optionsContainer" class="options"></div>
+
+                        <div class="inputRow">
+                            <input id="manualInput" placeholder="Enviar mensagem (opcional)" autocomplete="off" />
+                            <button id="sendManual" class="submit-btn" style="width:120px;margin-left:8px">Enviar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             </main>
     </div>
 
     <script>
-        // --- VARIÁVEIS E INICIALIZAÇÃO DE PERFIL ---
         const nome = sessionStorage.getItem('usuarioNome');
         const tipo = sessionStorage.getItem('usuarioTipo');
         const usuarioNomeElement = document.getElementById('usuarioNome');
@@ -140,7 +158,6 @@
              usuarioNomeElement.textContent = 'Usuário';
         }
 
-        // Lógica para adaptar o menu lateral e o link Home
         if (tipo === 'colaborador') {
             menuAtividadesColaborador.innerHTML = `
                 <li><a href="/web/frontend/accounts/MinhasColetasColaborador/ColetasColaborador.html"><span class="material-icons-outlined">recycling</span>minhas coletas</a></li>
@@ -151,7 +168,6 @@
             if(homeLink) homeLink.href = "/web/frontend/accounts/PrincipalGetGreen/principalEmpresas.html";
         }
 
-        // Lógica de Logout
         function logout() {
             sessionStorage.removeItem('usuarioNome');
             sessionStorage.removeItem('usuarioTipo');
@@ -167,7 +183,6 @@
             });
         }
         
-        // --- VARIÁVEIS E FUNÇÕES DO MODAL ---
         const feedbackModal = document.getElementById('feedbackModal');
         const btnAdicionarFeedback = document.getElementById('btnAdicionarFeedback');
         const closeFeedbackModal = document.getElementById('closeFeedbackModal');
@@ -189,18 +204,15 @@
             setRating(0);
         }
 
-        // Eventos do Modal
         btnAdicionarFeedback.addEventListener('click', openFeedbackModal);
         closeFeedbackModal.addEventListener('click', closeFeedbackModalFunction);
         btnCancelarFeedbackModal.addEventListener('click', closeFeedbackModalFunction); 
 
-        // Fechar ao clicar fora
         feedbackModal.addEventListener('click', (e) => {
             if (e.target === feedbackModal) closeFeedbackModalFunction();
         });
 
 
-        // --- LÓGICA DE ESTRELAS E FORMULÁRIO ---
         const picker = document.getElementById('starPicker');
         const ratingInput = document.getElementById('rating');
         function setRating(n) {
@@ -222,10 +234,8 @@
         const destinatarioSelect = document.getElementById('destinatario');
         const listFeedbacks = document.getElementById('listFeedbacks');
         
-        // Sincroniza o select do filtro com o select de destinatário do formulário
         function syncFiltroParaSelect() {
             const val = filtroTipo.value;
-            // Apenas sincroniza se não for 'todos', mantendo o valor padrão do formulário
             if (val !== 'todos') {
                 destinatarioSelect.value = val === 'coletor' ? 'coletor' : 'empresa';
             }
@@ -268,7 +278,6 @@
             carregarFeedbacks();
         });
 
-        // Lógica de Carregamento de Feedbacks
         async function carregarFeedbacks() {
             const destino = filtroTipo.value;
             listFeedbacks.innerHTML = '<p>Carregando feedbacks...</p>';
@@ -276,7 +285,6 @@
             try {
                 let url = 'http://localhost:4000/api/feedbacks';
                 
-                // MUDANÇA: Adiciona o parâmetro de filtro APENAS se não for 'todos'
                 if (destino !== 'todos') {
                     url += `?destinatario=${encodeURIComponent(destino)}`;
                 }
@@ -294,7 +302,6 @@
             } catch (e) {
                 console.warn('Erro ao buscar feedbacks, usando mock:', e);
                 
-                // Mock para simular a requisição de 'Todos' ou filtro
                 const mock = [
                     { _id: 'fb1', clienteNome: 'Cliente 4', destinatario: 'empresa', rating: 5, titulo: 'Ótima experiência (Empresa)', comentario: 'Coleta rápida e organizada.', dataCriacao: new Date().toISOString() },
                     { _id: 'fb2', clienteNome: 'Cliente 5', destinatario: 'coletor', rating: 4, titulo: 'Bom Coletor', comentario: 'Poderia ser mais rápido.', dataCriacao: new Date().toISOString() }
@@ -335,13 +342,84 @@
             `;
         }
 
-        // Eventos de Filtro
         filtroTipo.addEventListener('change', carregarFeedbacks);
-        // Desabilitando a sincronização automática para permitir o valor "Todos" no filtro
-        // destinatarioSelect.addEventListener('change', syncSelectParaFiltro);
-        // syncSelectParaFiltro();
         
         carregarFeedbacks();
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const btn = document.getElementById('openChatbot');
+            const overlay = document.getElementById('modalOverlay');
+            const close = document.getElementById('closeModal');
+            const chatArea = document.getElementById('chatArea');
+            const opts = document.getElementById('optionsContainer');
+            const manualInput = document.getElementById('manualInput');
+            const sendManual = document.getElementById('sendManual');
+
+            function showModal() {
+                overlay.style.display = 'flex';
+                overlay.setAttribute('aria-hidden','false');
+                document.body.style.overflow = 'hidden';
+            }
+            function hideModal(){
+                overlay.style.display = 'none';
+                overlay.setAttribute('aria-hidden','true');
+                document.body.style.overflow = '';
+            }
+
+            btn.addEventListener('click', function(e){ e.preventDefault(); showModal(); });
+            close.addEventListener('click', hideModal);
+            overlay.addEventListener('click', function(e){ if (e.target === overlay) hideModal(); });
+
+            const WS_URL = 'ws://localhost:8080';
+            let ws = null;
+            let reconnectTimer = null;
+
+            function appendMessage(text, who) {
+                const el = document.createElement('div');
+                el.className = 'msg ' + (who === 'user' ? 'user' : 'server');
+                el.textContent = text;
+                chatArea.appendChild(el);
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }
+
+            function connectWS() {
+                if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) return;
+                ws = new WebSocket(WS_URL);
+                ws.addEventListener('open', () => { appendMessage('Conectado ao adaptador.', 'user'); });
+                ws.addEventListener('message', (evt) => {
+                    let obj = null; try { obj = JSON.parse(evt.data); } catch (e) { return; }
+                    if (obj.type === 'RESP' || obj.type === 'MSG') {
+                        const text = obj.payload || '';
+                        if (text.toLowerCase().includes('bem-vindo') || text.toLowerCase().includes('0 - sair')) { renderOptions(text); }
+                        else appendMessage(text, 'server');
+                    } else if (obj.type === 'DES') appendMessage('Servidor está desligando.', 'server');
+                    else if (obj.type === 'ERROR') appendMessage('Erro: ' + obj.payload, 'server');
+                });
+                ws.addEventListener('close', () => { appendMessage('Conexão com adaptador fechada.', 'user'); if (!reconnectTimer) reconnectTimer = setTimeout(()=>{ reconnectTimer=null; connectWS(); },2000); });
+                ws.addEventListener('error', (e)=>{ console.error('WS error', e); });
+            }
+
+            function renderOptions(menuText){
+                opts.innerHTML = ''; const lines = menuText.split('\n');
+                for (const line of lines){ const m = line.match(/^\s*(\d+)\s*-\s*(.+)$/); if (m){ const btn = document.createElement('button'); btn.textContent = m[1] + ' — ' + m[2]; btn.className='option-btn'; btn.addEventListener('click', ()=>{ if (!ws||ws.readyState!==WebSocket.OPEN){ appendMessage('Adaptador indisponível','user'); return; } ws.send(JSON.stringify({type:'PED', payload: m[1]})); appendMessage('Você: '+m[2],'user'); }); opts.appendChild(btn);} }
+            }
+
+            sendManual.addEventListener('click', ()=>{ 
+                const txt = manualInput.value.trim(); 
+                if (!txt) return; 
+
+                appendMessage('Você: ' + txt, 'user');
+                appendMessage(
+                    'No momento, só posso responder perguntas do menu. ' +
+                    'Caso queira fazer outra pergunta, entre em contato nas redes sociais e email.',
+                    'server'
+                );
+                manualInput.value = '';
+            });
+
+            let connectedOnce = false;
+            btn.addEventListener('click', ()=>{ if(!connectedOnce){ connectWS(); connectedOnce=true; } });
+        });
     </script>
 </body>
 </html>

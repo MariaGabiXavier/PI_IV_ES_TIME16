@@ -260,15 +260,12 @@ app.get('/api/coletas', async (req, res) => {
   }
 });
 
-// Feedbacks API
 app.get('/api/feedbacks', async (req, res) => {
   try {
     const { clienteId, destinatario } = req.query;
     const filtro = {};
     if (clienteId) filtro.clienteId = clienteId;
     
-    // CORREÇÃO: Filtra apenas se o valor for 'coletor' ou 'empresa'. 
-    // Se for 'todos' ou omitido, retorna todos.
     if (destinatario && ['coletor', 'empresa'].includes(destinatario.toLowerCase())) {
         filtro.destinatario = destinatario;
     }

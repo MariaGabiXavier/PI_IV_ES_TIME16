@@ -54,9 +54,9 @@
                 </a>
             </header>
 
-            <section class="search-section">
+            <section class="search-section" style="display: block; margin-bottom: 30px;">
                 <form class="search-bar">
-                    <input type="search" placeholder="pesquise aqui">
+                    <input type="search" id="searchInput" placeholder="Pesquisar por responsável (ex: Nome da Empresa)">
                     <button type="submit"><span class="material-icons-outlined">search</span></button>
                 </form>
             </section>
@@ -93,47 +93,61 @@
                 document.getElementById('usuarioNome').textContent = 'Usuário';
             }
 
+            let todasAsColetas = [];
+            
+            const feedColetas = document.getElementById('feedColetas');
+            const searchInput = document.getElementById('searchInput'); 
+
+            function renderizarColetas(coletasParaExibir) {
+                feedColetas.innerHTML = ''; 
+
+                if (coletasParaExibir.length === 0) {
+                    feedColetas.innerHTML = '<p>Nenhuma coleta encontrada com este critério de pesquisa.</p>';
+                    return;
+                }
+
+                coletasParaExibir.forEach(coleta => {
+                    const dataCriacao = new Date(coleta.dataCriacao).toLocaleDateString('pt-BR', {
+                        day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                    });
+                    
+                    const dataPreferencial = new Date(coleta.dataPreferencial).toLocaleDateString('pt-BR', {
+                        day: '2-digit', month: '2-digit', year: 'numeric'
+                    });
+
+                    const cardHTML = `
+                        <article class="collection-card">
+                            <div class="card-content">
+                                <h3>Responsável: ${coleta.responsavel}</h3>
+                                <p><strong>Material:</strong> ${coleta.material}</p>
+                                <p><strong>Quantidade:</strong> ${coleta.quantidade} ${coleta.unidadeMedida}</p>
+                                <p><strong>Data Preferencial:</strong> ${dataPreferencial}</p>
+                                <p><strong>Status:</strong> ${coleta.status.toUpperCase()}</p>
+                            </div>
+                            <div class="card-actions">
+                                <span>${dataCriacao}</span>
+                                <a href="../ConfirmarColeta/ConfirmarColeta.html?id=${coleta._id}" class="button-vermais">ver mais</a>
+                            </div>
+                        </article>
+                    `;
+                    feedColetas.innerHTML += cardHTML;
+                });
+            }
+
             async function carregarColetas() {
-                const feedColetas = document.getElementById('feedColetas');
                 feedColetas.innerHTML = '<p>Carregando coletas...</p>'; 
 
                 try {
                     const response = await fetch('http://localhost:4000/api/coletas');
                     const coletas = await response.json();
 
-                    feedColetas.innerHTML = ''; 
-
+                    todasAsColetas = coletas; 
+                    
                     if (coletas.length === 0) {
                         feedColetas.innerHTML = '<p>Nenhuma coleta solicitada ainda.</p>';
-                        return;
+                    } else {
+                        renderizarColetas(todasAsColetas);
                     }
-
-                    coletas.forEach(coleta => {
-                        const dataCriacao = new Date(coleta.dataCriacao).toLocaleDateString('pt-BR', {
-                            day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
-                        });
-                        
-                        const dataPreferencial = new Date(coleta.dataPreferencial).toLocaleDateString('pt-BR', {
-                            day: '2-digit', month: '2-digit', year: 'numeric'
-                        });
-
-                        const cardHTML = `
-                            <article class="collection-card">
-                                <div class="card-content">
-                                    <h3>Responsável: ${coleta.responsavel}</h3>
-                                    <p><strong>Material:</strong> ${coleta.material}</p>
-                                    <p><strong>Quantidade:</strong> ${coleta.quantidade} ${coleta.unidadeMedida}</p>
-                                    <p><strong>Data Preferencial:</strong> ${dataPreferencial}</p>
-                                    <p><strong>Status:</strong> ${coleta.status.toUpperCase()}</p>
-                                </div>
-                                <div class="card-actions">
-                                    <span>${dataCriacao}</span>
-                                    <a href="../ConfirmarColeta/ConfirmarColeta.html?id=${coleta._id}" class="button-vermais">ver mais</a>
-                                </div>
-                            </article>
-                        `;
-                        feedColetas.innerHTML += cardHTML;
-                    });
 
                 } catch (error) {
                     console.error('Erro ao buscar coletas:', error);
@@ -141,7 +155,26 @@
                 }
             }
 
+            function filtrarColetas() {
+                const termoPesquisa = searchInput.value.toLowerCase().trim(); 
+
+                const coletasFiltradas = todasAsColetas.filter(coleta => {
+                    return coleta.responsavel.toLowerCase().includes(termoPesquisa);
+                });
+
+                renderizarColetas(coletasFiltradas);
+            }
+
+            searchInput.addEventListener('keyup', filtrarColetas);
+
+            document.querySelector('.search-bar').addEventListener('submit', (e) => {
+                e.preventDefault(); 
+                filtrarColetas(); 
+            });
+
+
             carregarColetas();
+            
             
             const logoutLink = document.getElementById('logoutLink');
 

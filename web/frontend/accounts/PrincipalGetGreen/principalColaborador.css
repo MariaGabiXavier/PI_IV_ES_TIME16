@@ -188,8 +188,7 @@ body {
 }
 
 .collection-card {
-    /* CORREÇÃO 1: Adiciona altura mínima para padronizar os cards */
-    min-height: 150px; /* Ajuste este valor se necessário */
+    min-height: 150px; 
     
     display: flex;
     flex-wrap: wrap;
@@ -238,14 +237,13 @@ body {
     align-items: flex-end;
     flex-shrink: 0;
     padding-left: 20px;
-    /* CORREÇÃO 2: Usa justify-content para espaçar data e botão na vertical */
     justify-content: space-between;
 }
 
 .card-actions span {
     font-size: 17px;
     color: #777;
-    margin-bottom: 0px; /* Ajustado de 30px para 0 para usar o espaço do flexbox */
+    margin-bottom: 0px; 
     font-weight: bold;
     font-family: var(--font-family); 
 }
@@ -331,7 +329,6 @@ body {
 
     .collection-card {
         flex-direction: column;
-        /* Remove o min-height em mobile para permitir o crescimento vertical */
         min-height: auto;
     }
     .card-actions {
@@ -340,7 +337,6 @@ body {
         align-items: flex-start;
         padding-left: 0;
         margin-top: 20px;
-        /* Volta a ser coluna simples, pois a data e o botão estão separados */
         justify-content: flex-start;
     }
     .card-actions span {
