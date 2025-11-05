@@ -66,7 +66,7 @@ reduzindo a burocracia e **conectando empresas a coletores parceiros**, garantin
 
 | Camada | Tecnologia |
 |---------|-------------|
-| Frontend | HTML, CSS, TypeScript |
+| Frontend | HTML, CSS, JavaScript |
 | Backend | Java |
 | Banco de Dados | Mongo DB |
 | Design | Figma |
