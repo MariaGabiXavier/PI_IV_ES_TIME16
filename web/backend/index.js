@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const bcrypt = require('bcrypt'); //
 
 const app = express();
 
@@ -19,9 +20,8 @@ const UserEmpresaModel = new mongoose.Schema({
   cnpj: String,
   razaoSocial: String,
   segmento: String,
-  email: String,
-  senha: String,
-  confirmarSenha: String, 
+  email: { type: String, required: true, unique: true }, 
+  senha: { type: String, required: true }, 
   uf: String,
   cidade: String,
   cep: String,
@@ -34,9 +34,8 @@ const UserColaboradorModel = new mongoose.Schema({
   nome: String,
   cpf: String,
   data: Date,
-  email: String,
-  senha: String,
-  confirmarSenha: String, 
+  email: { type: String, required: true, unique: true },
+  senha: { type: String, required: true }, 
   uf: String,
   cidade: String,
   cep: String,
@@ -83,6 +82,7 @@ app.get('/', (req, res) => {
 });
 
 const MIN_PASSWORD_LENGTH = 6; 
+const SALT_ROUNDS = 10;
 
 app.post('/api/userEmpresa', async (req, res) => {
   try {
@@ -102,7 +102,15 @@ app.post('/api/userEmpresa', async (req, res) => {
       return res.status(409).json({ error: 'Este email já está cadastrado. Por favor, use outro.' });
     }
     
-    const novoUserEmpresa = new userEmpresa(req.body);
+    const hashedPassword = await bcrypt.hash(senha, SALT_ROUNDS); 
+
+    const novoUserEmpresa = new userEmpresa({ 
+      ...req.body, 
+      senha: hashedPassword 
+    });
+
+    delete novoUserEmpresa.confirmarSenha; 
+
     await novoUserEmpresa.save();
 
     res.status(201).json({
@@ -115,13 +123,17 @@ app.post('/api/userEmpresa', async (req, res) => {
       usuarioId: novoUserEmpresa._id
     });
   } catch (err) {
+    if (err.code === 11000) { 
+        return res.status(409).json({ error: 'Este email já está cadastrado. Por favor, use outro.' });
+    }
     res.status(500).json({ error: 'Erro ao cadastrar empresa: ' + err.message });
   }
 });
 
 app.post('/api/userColaborador', async (req, res) => {
   try {
-    const { email, senha } = req.body; 
+    const { email, senha, confirmarSenha } = req.body; 
+    
     const colaboradorExistente = await userColaborador.findOne({ email });
     const empresaExistente = await userEmpresa.findOne({ email });
 
@@ -131,11 +143,19 @@ app.post('/api/userColaborador', async (req, res) => {
     if (!senha || senha.length < MIN_PASSWORD_LENGTH) {
       return res.status(400).json({ error: `A senha deve ter no mínimo ${MIN_PASSWORD_LENGTH} caracteres.` });
     }
-    if (senha !== req.body.confirmarSenha) {
+    if (senha !== confirmarSenha) { 
       return res.status(400).json({ error: 'As senhas não coincidem.' });
     }
     
-    const novoUserColaborador = new userColaborador(req.body);
+    const hashedPassword = await bcrypt.hash(senha, SALT_ROUNDS); //
+
+    const novoUserColaborador = new userColaborador({
+      ...req.body,
+      senha: hashedPassword 
+    });
+
+    delete novoUserColaborador.confirmarSenha; 
+
     await novoUserColaborador.save();
     
     res.status(201).json({
@@ -145,6 +165,9 @@ app.post('/api/userColaborador', async (req, res) => {
       usuarioId: novoUserColaborador._id
     });
   } catch (err) {
+    if (err.code === 11000) {
+        return res.status(409).json({ error: 'Este email já está cadastrado. Por favor, use outro.' });
+    }
     res.status(500).json({ error: 'Erro ao cadastrar colaborador: ' + err.message });
   }
 });
@@ -166,7 +189,8 @@ app.post('/api/login', async (req, res) => {
     const empresa = await userEmpresa.findOne({ email });
 
     if (empresa) {
-      if (empresa.senha === senha) {
+      const isMatch = await bcrypt.compare(senha, empresa.senha); 
+      if (isMatch) {
         return res.json({ 
           tipo: 'empresa', 
           mensagem: 'Login bem-sucedido', 
@@ -175,10 +199,12 @@ app.post('/api/login', async (req, res) => {
         });
       } 
     }
+    
     const colaborador = await userColaborador.findOne({ email });
 
     if (colaborador) {
-      if (colaborador.senha === senha) {
+      const isMatch = await bcrypt.compare(senha, colaborador.senha); //
+      if (isMatch) {
         console.log({ tipo: 'colaborador', mensagem: 'Login bem-sucedido', usuario: colaborador }); 
         return res.json({ 
           tipo: 'colaborador', 
@@ -188,9 +214,11 @@ app.post('/api/login', async (req, res) => {
         });
       }
     }
-    res.status(404).json({ error: 'Usuário não encontrado' });
+    
+    res.status(401).json({ error: 'Credenciais inválidas. Por favor, verifique seu email ou senha.' });
 
   } catch (err) {
+    console.error('Erro no servidor durante o login:', err);
     res.status(500).json({ error: 'Erro no servidor' });
   }
 });
@@ -212,8 +240,7 @@ app.get('/api/perfil/:tipo/:id', async (req, res) => {
         
         const dadosPerfil = { ...usuario.toObject(), tipo: tipo }; 
 
-        delete dadosPerfil.senha;
-        delete dadosPerfil.confirmarSenha;
+        delete dadosPerfil.senha; 
         delete dadosPerfil.resetPasswordToken;
         delete dadosPerfil.resetPasswordExpires;
 
@@ -243,7 +270,11 @@ app.put('/api/perfil/:tipo/:id', async (req, res) => {
             if (dadosAtualizados.senha.length < MIN_PASSWORD_LENGTH) {
                 return res.status(400).json({ error: `A nova senha deve ter no mínimo ${MIN_PASSWORD_LENGTH} caracteres.` });
             }
-            delete dadosAtualizados.confirmarSenha;
+            
+            const hashedPassword = await bcrypt.hash(dadosAtualizados.senha, SALT_ROUNDS); 
+            dadosAtualizados.senha = hashedPassword; 
+            
+            delete dadosAtualizados.confirmarSenha; 
         } else {
             delete dadosAtualizados.senha;
             delete dadosAtualizados.confirmarSenha;
