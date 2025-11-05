@@ -27,6 +27,9 @@ Empresas de setores como **alimentação e varejo** produzem diariamente grandes
 
 A **GetGreen** nasce para resolver esse problema, oferecendo uma **solução digital integrada** que conecta geradores e coletores, simplificando o agendamento, a rastreabilidade e a comprovação de práticas sustentáveis.
 
+> 🎨 Veja o protótipo visual do projeto no Figma:  
+> [Acessar Protótipo no Figma]([https://www.figma.com/...](https://www.figma.com/design/gXrNrKIqBOYofP25wlPVWa/Untitled?node-id=0-1&p=f&t=5XDmwd6F4YTJ4E5G-0))
+
 ---
 
 ## ♻️ Problema
@@ -66,7 +69,7 @@ reduzindo a burocracia e **conectando empresas a coletores parceiros**, garantin
 
 | Camada | Tecnologia |
 |---------|-------------|
-| Frontend | HTML, CSS, JavaScript |
+| Frontend | HTML, CSS, JavaScript, TypeScript |
 | Backend | Java |
 | Banco de Dados | Mongo DB |
 | Design | Figma |
