@@ -8,11 +8,15 @@ O projeto foi desenvolvido como parte do componente curricular **Ideação e Val
 
 ## 📘 Índice
 - [Introdução](#-introdução)
-- [Problema](#-problema)
+- [Problema](#️-problema)
 - [Objetivo](#-objetivo)
-- [Funcionalidades Principais](#-funcionalidades-principais)
+- [Funcionalidades Principais](#️-funcionalidades-principais)
 - [Tecnologias Utilizadas](#-tecnologias-utilizadas)
-- [Equipe](#-equipe)
+- [Servidor Java](#️-servidor-java)
+- [Banco de Dados MongoDB](#-banco-de-dados-mongodb)
+- [Como Executar](#-como-executar)
+- [Equipe de Desenvolvimento](#-equipe-de-desenvolvimento)
+- [Instituição](#-instituição)
 
 ---
 
@@ -86,7 +90,7 @@ O processo de negócio do MVP escolhido para ser implementado no servidor é o c
   
 5. Encerrar conexão - o servidor em caso de desativamento deve avisar todos os clientes conectados sobre o seu desligamento.
 ---
-##  🖥️ Banco de Dados MongoDB
+##  🍃 Banco de Dados MongoDB
 
 O MongoDB será o único banco de dados utilizado no projeto.
 O banco de dados MongoDB será o único banco de dados utilizado no projeto
@@ -108,6 +112,40 @@ medida da quantidade (g, Kg), data da solicitação, data preferencial para
 realizar a coleta, descrição da coleta, e observações se houver necessidade.
 
 ---
+
+## 🚀 Como Executar
+
+### 🖥️ Rodando o Servidor
+
+#### 🧩 1° Terminal
+1. **Entre na pasta do backend:**
+   ```bash
+   cd PI_IV_ES_TIME16\web\backend\adapter
+2. **Instale as dependências e inicie o servidor Node.js:**
+   ```bash
+   npm install
+   npm start
+#### 🧩 2° Terminal  
+1. **Entre na pasta do ChatBot:**
+   ```bash
+   cd PI_IV_ES_TIME16\chatBot
+2. **Compile e execute o servidor Java::**
+   ```bash
+   javac servidor\*.java 
+   java servidor.Servidor
+
+### 🍃 Rodando o MongoDB
+
+1. **Entre na pasta principal do backend:**
+   ```bash
+   cd PI_IV_ES_TIME16\web\backend
+2. **Instale as dependências e inicie o servidor Node.js:**
+   ```bash
+   npm install
+   npm run dev
+
+---
+
 ## 👥 Equipe de Desenvolvimento
 
 - **Anna Clara Olbi** 
