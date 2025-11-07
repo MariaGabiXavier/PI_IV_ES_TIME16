@@ -57,14 +57,15 @@ const ColetaSchema = new mongoose.Schema({
   usuarioId: { type: String, required: true }, 
   usuarioNome: { type: String, required: true },
   coletorId: { type: String, default: null }, 
-  coletorNome: { type: String, default: null } 
+  coletorNome: { type: String, default: null },
+  enderecoColeta: String, 
+  itensDisponiveis: Number, 
 });
 
 const userEmpresa = mongoose.model('User Empresa', UserEmpresaModel);
 const userColaborador = mongoose.model('User Colaborador', UserColaboradorModel);
 const Coleta = mongoose.model('Coleta', ColetaSchema); 
 
-// Feedbacks
 const FeedbackSchema = new mongoose.Schema({
   clienteId: { type: String, required: true },
   clienteNome: { type: String, required: true },

@@ -1,4 +1,4 @@
- const nome = sessionStorage.getItem('usuarioNome');
+const nome = sessionStorage.getItem('usuarioNome');
             const tipo = sessionStorage.getItem('usuarioTipo');
             const idLogado = sessionStorage.getItem('usuarioId'); 
 
@@ -28,7 +28,7 @@
                     });
                     
                     const dataPreferencial = new Date(coleta.dataPreferencial).toLocaleDateString('pt-BR', {
-                        day: '2-digit', month: '2-digit', year: 'numeric'
+                        day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC'
                     });
 
                     const cardHTML = `

@@ -64,7 +64,7 @@
                     });
                     const resultado = await response.json();
                     if (response.ok) {
-                        alert('Coleta marcada como realizada com sucesso! Ela está aguardando a finalização pelo solicitante.');
+                        alert('Coleta marcada como concluída! Ela está aguardando a finalização do solicitante.');
                         carregarColetasColaborador(); 
                     } else {
                         alert(`Erro ao marcar como realizada: ${resultado.error}`);
@@ -324,7 +324,6 @@
                 const txt = manualInput.value.trim(); 
                 if (!txt) return; 
 
-                // If numeric, forward as PED to adapter so Java server can respond
                 if (/^\d+$/.test(txt)) {
                     if (!ws || ws.readyState !== WebSocket.OPEN) { appendMessage('Adaptador indisponível','user'); return; }
                     ws.send(JSON.stringify({ type: 'PED', payload: txt }));
@@ -333,7 +332,6 @@
                     return;
                 }
 
-                // fallback for non-numeric input (original behaviour)
                 appendMessage('Você: ' + txt, 'user');
                 appendMessage(
                     'No momento, só posso responder perguntas do menu. ' +

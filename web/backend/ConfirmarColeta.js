@@ -48,6 +48,14 @@ const nome = sessionStorage.getItem('usuarioNome');
 
             document.getElementById("titulo").textContent = coleta.responsavel || "Sem responsável";
 
+            // NOVO: Endereço de Coleta
+            document.getElementById("endereco-coleta").textContent = coleta.enderecoColeta || "Não informado";
+
+            // NOVO: Itens Disponíveis
+            document.getElementById("itens-disponiveis").textContent = 
+                coleta.itensDisponiveis ? `${coleta.itensDisponiveis} itens` : "Não informada";
+
+
             const materialContainer = document.getElementById("material-tags");
             materialContainer.innerHTML = "";
             const materiais = (coleta.material || "").split(",").map(m => m.trim()).filter(Boolean);

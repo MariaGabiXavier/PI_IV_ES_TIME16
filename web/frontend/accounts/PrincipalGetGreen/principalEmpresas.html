@@ -94,9 +94,26 @@
                         <div class="form-row">
                             <input type="text" placeholder="Material" name="material" required>
                         </div>
+                        <div class="form-row">
+                            <input 
+                                type="text" 
+                                placeholder="Endereço de Coleta Completo" 
+                                name="enderecoColeta" 
+                                autocomplete="street-address"
+                                required>
+                        </div>
+                        <div class="form-row">
+                            <input 
+                                type="number" 
+                                placeholder="Itens Disponíveis para Retirada (ex: 10 caixas)" 
+                                name="itensDisponiveis" 
+                                min="1" 
+                                step="1" 
+                                required>
+                        </div>
                         <div class="form-row two-cols">
-                            <input type="number" placeholder="Quantidade" name="quantidade" min="0" step="any" required>
-                            <input type="text" placeholder="Unidade de medida" name="unidadeMedida" required>
+                            <input type="number" placeholder="Quantidade (ex: 10.5)" name="quantidade" min="0" step="any" required>
+                            <input type="text" placeholder="Unidade de medida (ex: kg, Litros)" name="unidadeMedida" required>
                         </div>
                         <div class="form-row">
                             <input 

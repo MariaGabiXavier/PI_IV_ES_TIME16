@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - GetGreen</title>
-  <link rel="stylesheet" href="login.css">
+  <link rel="stylesheet" href="Login.css">
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
@@ -36,8 +36,24 @@
 
         <p class="register">Ainda não tem uma conta? <a href="../Cadastro/CadastroColaborador.html">Cadastre-se</a></p>
       </form>
+    </div>
+  </div>
 
-      <script src="../../../backend/login.js"></script>
+  <div id="forgotPasswordModal" class="modal">
+    <div class="modal-content">
+      <span class="close-button" id="closeForgot">&times;</span>
+      <h2>Esqueceu sua Senha?</h2>
+      <p>Insira o seu endereço de e-mail e enviaremos um link para redefinir sua senha.</p>
+      <form id="forgot-password-form">
+        <label for="forgotEmail">Email</label>
+        <input type="email" name="email" id="forgotEmail" placeholder="Digite seu email" required>
+        <span id="erro-forgot" class="mensagem-erro"></span> 
+        <button type="submit">Enviar Link</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="../../../backend/login.js"></script>
 </body>
 
 </html>

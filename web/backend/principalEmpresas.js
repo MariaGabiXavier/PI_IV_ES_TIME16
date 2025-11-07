@@ -290,6 +290,8 @@ form.addEventListener('submit', async (e) => {
     const data = Object.fromEntries(formData.entries());
 
     data.quantidade = parseFloat(data.quantidade);
+    
+    data.itensDisponiveis = parseInt(data.itensDisponiveis, 10);
 
     data.usuarioId = idLogado;
     data.usuarioNome = nomeLogado;
