@@ -16,9 +16,43 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
+    // Toggle de visualização de senha
+    const toggleNewPassword = document.getElementById('toggleNewPassword');
+    const toggleConfirmNewPassword = document.getElementById('toggleConfirmNewPassword');
+
+    if (toggleNewPassword) {
+        toggleNewPassword.addEventListener('click', function() {
+            const type = newPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            newPasswordInput.setAttribute('type', type);
+            const icon = toggleNewPassword.querySelector('i');
+            if (type === 'text') {
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            } else {
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            }
+        });
+    }
+
+    if (toggleConfirmNewPassword) {
+        toggleConfirmNewPassword.addEventListener('click', function() {
+            const type = confirmNewPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            confirmNewPasswordInput.setAttribute('type', type);
+            const icon = toggleConfirmNewPassword.querySelector('i');
+            if (type === 'text') {
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            } else {
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            }
+        });
+    }
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        exibirMensagem(''); 
+        exibirMensagem('');
 
         const newPassword = newPasswordInput.value.trim();
         const confirmPassword = confirmNewPasswordInput.value.trim();
@@ -37,53 +71,53 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         confirmNewPasswordInput.classList.remove('input-erro');
 
+        // Obter tipo de usuário (pode vir da URL ou de um campo no formulário)
+        let tipo = new URLSearchParams(window.location.search).get('type');
+        
+        // Se não vier da URL, verificar se há um campo de tipo no formulário
+        if (!tipo) {
+            const tipoInput = document.getElementById('type');
+            tipo = tipoInput ? tipoInput.value : null;
+        }
 
-        const token = new URLSearchParams(window.location.search).get('token');
-        if (!token) return exibirMensagem('Token de redefinição não encontrado.');
+        if (!tipo) {
+            return exibirMensagem('Tipo de usuário é obrigatório (empresa ou colaborador).');
+        }
+
+        // Obter o token do campo de input
+        const tokenInput = document.getElementById('tokenInput');
+        const token = tokenInput ? tokenInput.value.trim() : null;
+
+        if (!token) {
+            return exibirMensagem('Token é obrigatório.');
+        }
 
         try {
-            const res = await fetch(`http://localhost:4000/api/reset-password/${token}`, {
+            const res = await fetch('http://localhost:4000/api/reset-password', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ newPassword })
+                body: JSON.stringify({
+                    token,
+                    type: tipo,
+                    newPassword,
+                    confirmPassword
+                })
             });
+
             const data = await res.json();
 
             if (res.ok) {
-                exibirMensagem(data.message || 'Senha redefinida com sucesso!', true);
+                exibirMensagem(data.mensagem, true);
+
                 setTimeout(() => {
                     window.location.href = '../Login/Login.html';
                 }, 3000);
             } else {
-                exibirMensagem(data.error || 'Erro ao redefinir a senha.');
+                exibirMensagem(data.error || 'Erro ao redefinir senha.');
             }
-        } catch (err) {
-            console.error(err);
-            exibirMensagem('Erro de conexão com o servidor.');
+        } catch (erro) {
+            exibirMensagem('Erro de conexão com o servidor. Tente novamente.');
+            console.error(erro);
         }
     });
-
-    function setupPasswordToggle(toggleId, inputId) {
-        const toggle = document.getElementById(toggleId);
-        const input = document.getElementById(inputId);
-        const icon = toggle?.querySelector('i');
-
-        if (toggle && input && icon) {
-            toggle.addEventListener('click', () => {
-                const isPassword = input.type === 'password';
-                input.type = isPassword ? 'text' : 'password';
-
-                if (input.type === 'text') {
-                    icon.classList.remove('fa-eye-slash');
-                    icon.classList.add('fa-eye');
-                } else {
-                    icon.classList.remove('fa-eye');
-                    icon.classList.add('fa-eye-slash');
-                }
-            });
-        }
-    }
-
-    setupPasswordToggle('toggleNewPassword', 'newPassword');
-    setupPasswordToggle('toggleConfirmNewPassword', 'confirmNewPassword');
 });

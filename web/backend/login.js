@@ -135,10 +135,17 @@ if (forgotForm) {
                 body: JSON.stringify({ email })
             });
 
+            const resultado = await resposta.json();
+
             if (resposta.ok) {
-                exibirErro('Se o e-mail estiver cadastrado, um link de redefinição foi enviado. Verifique sua caixa de entrada.', true);
+                exibirErro('E-mail enviado com sucesso! Redirecionando...', true);
+                console.log('Resultado da busca de email:', resultado);
+                
+                // Redirecionar para a página de reset de senha após 2 segundos
+                setTimeout(() => {
+                    window.location.href = '../ResetPassword/ResetPassword.html';
+                }, 2000);
             } else {
-                const resultado = await resposta.json();
                 exibirErro(resultado.error || 'Erro ao processar a requisição.');
             }
 

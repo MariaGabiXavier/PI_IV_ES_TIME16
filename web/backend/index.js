@@ -3,7 +3,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
-const fetch = require('node-fetch'); 
+const fetch = require('node-fetch');
+const nodemailer = require('nodemailer');
+const crypto = require('crypto'); 
 
 const app = express();
 
@@ -28,7 +30,9 @@ const UserEmpresaModel = new mongoose.Schema({
   cep: String,
   bairro: String,
   logradouro: String,
-  numero: Number 
+  numero: Number,
+  resetPasswordToken: { type: String, default: null },
+  resetPasswordExpires: { type: Date, default: null }
 });
 
 const UserColaboradorModel = new mongoose.Schema({
@@ -42,7 +46,9 @@ const UserColaboradorModel = new mongoose.Schema({
   cep: String,
   bairro: String,
   logradouro: String,
-  numero: Number 
+  numero: Number,
+  resetPasswordToken: { type: String, default: null },
+  resetPasswordExpires: { type: Date, default: null }
 });
 
 const ColetaSchema = new mongoose.Schema({
@@ -86,6 +92,65 @@ app.get('/', (req, res) => {
 
 const MIN_PASSWORD_LENGTH = 6; 
 const SALT_ROUNDS = 10;
+
+// Configurar transportador de email (Gmail)
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD
+  }
+});
+
+// Função para enviar email de reset de senha
+async function enviarEmailReset(email, token, tipo) {
+  try {
+    const mailOptions = {
+      from: process.env.EMAIL_FROM,
+      to: email,
+      subject: 'Token de Redefinição de Senha - GetGreen',
+      html: `
+        <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+          <div style="max-width: 600px; margin: 0 auto; background-color: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <h2 style="color: #49643E; margin-bottom: 20px;">Redefinição de Senha - GetGreen</h2>
+            
+            <p style="color: #333; font-size: 16px; margin-bottom: 15px;">
+              Você recebeu esta mensagem porque solicitou a redefinição de sua senha.
+            </p>
+            
+            <p style="color: #333; font-size: 16px; margin-bottom: 20px;">
+              Use este token para redefinir sua senha. Este token é válido por 1 hora.
+            </p>
+            
+            <div style="background-color: #f9f9f9; border-left: 4px solid #a9ff00; padding: 15px; margin-bottom: 30px; font-family: monospace;">
+              <p style="color: #333; font-size: 14px; margin: 0; font-weight: bold;">Token de Reset:</p>
+              <p style="color: #0066cc; font-size: 16px; margin: 10px 0 0 0; word-break: break-all; letter-spacing: 1px;">
+                ${token}
+              </p>
+            </div>
+            
+            <p style="color: #666; font-size: 14px; margin-bottom: 10px;">
+              Copie este token e use-o para redefinir sua senha no aplicativo.
+            </p>
+            
+            <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;">
+            
+            <p style="color: #999; font-size: 12px;">
+              Se você não solicitou esta redefinição de senha, ignore este email.
+            </p>
+          </div>
+        </div>
+      `
+    };
+    
+    await transporter.sendMail(mailOptions);
+    console.log(`Email de reset enviado para: ${email}`);
+    return true;
+  } catch (err) {
+    console.error('Erro ao enviar email:', err);
+    return false;
+  }
+}
 
 app.post('/api/userEmpresa', async (req, res) => {
   try {
@@ -222,6 +287,118 @@ app.post('/api/login', async (req, res) => {
 
   } catch (err) {
     console.error('Erro no servidor durante o login:', err);
+    res.status(500).json({ error: 'Erro no servidor' });
+  }
+});
+
+app.post('/api/forgot-password', async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ error: 'Email é obrigatório.' });
+  }
+
+  try {
+    // Buscar o usuário em ambas as coleções (empresa e colaborador)
+    const empresa = await userEmpresa.findOne({ email });
+    const colaborador = await userColaborador.findOne({ email });
+
+    if (!empresa && !colaborador) {
+      // Por segurança, não revelamos se o email existe ou não
+      return res.status(200).json({ 
+        mensagem: 'Se o e-mail estiver cadastrado, um link de redefinição foi enviado. Verifique sua caixa de entrada.' 
+      });
+    }
+
+    const usuario = empresa || colaborador;
+    const tipo = empresa ? 'empresa' : 'colaborador';
+    const Modelo = empresa ? userEmpresa : userColaborador;
+
+    // Gerar token de reset (válido por 1 hora)
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetTokenHash = crypto.createHash('sha256').update(resetToken).digest('hex');
+    const resetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hora
+
+    // Salvar token e data de expiração no usuário
+    usuario.resetPasswordToken = resetTokenHash;
+    usuario.resetPasswordExpires = resetExpires;
+    await usuario.save();
+
+    // Enviar email com o link de reset
+    const emailEnviado = await enviarEmailReset(email, resetToken, tipo);
+
+    if (emailEnviado) {
+      console.log(`Email de reset enviado para ${tipo}:`, email);
+      return res.status(200).json({ 
+        mensagem: 'Se o e-mail estiver cadastrado, um link de redefinição foi enviado. Verifique sua caixa de entrada.',
+        usuarioEncontrado: true,
+        tipo: tipo
+      });
+    } else {
+      return res.status(500).json({ 
+        error: 'Erro ao enviar email. Tente novamente mais tarde.' 
+      });
+    }
+
+  } catch (err) {
+    console.error('Erro no servidor durante forgot-password:', err);
+    res.status(500).json({ error: 'Erro no servidor' });
+  }
+});
+
+app.post('/api/reset-password', async (req, res) => {
+  const { token, type, newPassword, confirmPassword } = req.body;
+
+  if (!token || !type || !newPassword || !confirmPassword) {
+    return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
+  }
+
+  if (newPassword !== confirmPassword) {
+    return res.status(400).json({ error: 'As senhas não coincidem.' });
+  }
+
+  if (newPassword.length < MIN_PASSWORD_LENGTH) {
+    return res.status(400).json({ error: `A senha deve ter no mínimo ${MIN_PASSWORD_LENGTH} caracteres.` });
+  }
+
+  try {
+    // Fazer hash do token recebido para comparar com o armazenado
+    const resetTokenHash = crypto.createHash('sha256').update(token).digest('hex');
+
+    let usuario = null;
+    let Modelo = null;
+
+    if (type === 'empresa') {
+      Modelo = userEmpresa;
+      usuario = await userEmpresa.findOne({
+        resetPasswordToken: resetTokenHash,
+        resetPasswordExpires: { $gt: new Date() } // Token ainda válido
+      });
+    } else if (type === 'colaborador') {
+      Modelo = userColaborador;
+      usuario = await userColaborador.findOne({
+        resetPasswordToken: resetTokenHash,
+        resetPasswordExpires: { $gt: new Date() } // Token ainda válido
+      });
+    } else {
+      return res.status(400).json({ error: 'Tipo de usuário inválido.' });
+    }
+
+    if (!usuario) {
+      return res.status(400).json({ error: 'Token inválido ou expirado. Solicite um novo reset de senha.' });
+    }
+
+    // Atualizar a senha
+    const hashedPassword = await bcrypt.hash(newPassword, SALT_ROUNDS);
+    usuario.senha = hashedPassword;
+    usuario.resetPasswordToken = null;
+    usuario.resetPasswordExpires = null;
+    await usuario.save();
+
+    res.status(200).json({ mensagem: 'Senha redefinida com sucesso! Você pode fazer login com sua nova senha.' });
+
+  } catch (err) {
+    console.error('Erro no servidor durante reset-password:', err);
     res.status(500).json({ error: 'Erro no servidor' });
   }
 });
