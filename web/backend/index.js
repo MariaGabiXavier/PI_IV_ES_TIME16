@@ -1,8 +1,9 @@
-require('dotenv').config(); 
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const bcrypt = require('bcrypt'); //
+const bcrypt = require('bcrypt');
+const fetch = require('node-fetch'); 
 
 const app = express();
 
@@ -148,7 +149,7 @@ app.post('/api/userColaborador', async (req, res) => {
       return res.status(400).json({ error: 'As senhas não coincidem.' });
     }
     
-    const hashedPassword = await bcrypt.hash(senha, SALT_ROUNDS); //
+    const hashedPassword = await bcrypt.hash(senha, SALT_ROUNDS); 
 
     const novoUserColaborador = new userColaborador({
       ...req.body,
@@ -204,7 +205,7 @@ app.post('/api/login', async (req, res) => {
     const colaborador = await userColaborador.findOne({ email });
 
     if (colaborador) {
-      const isMatch = await bcrypt.compare(senha, colaborador.senha); //
+      const isMatch = await bcrypt.compare(senha, colaborador.senha); 
       if (isMatch) {
         console.log({ tipo: 'colaborador', mensagem: 'Login bem-sucedido', usuario: colaborador }); 
         return res.json({ 
@@ -306,9 +307,15 @@ app.put('/api/perfil/:tipo/:id', async (req, res) => {
             return res.status(404).json({ error: 'Usuário não encontrado para atualização.' });
         }
         
-        res.status(200).json({ message: 'Perfil atualizado com sucesso!', usuario: resultado });
+        const respostaUsuario = resultado.toObject();
+        delete respostaUsuario.senha;
+
+        res.status(200).json({ message: 'Perfil atualizado com sucesso!', usuario: respostaUsuario });
 
     } catch (err) {
+        if (err.name === 'ValidationError') {
+            return res.status(400).json({ error: `Erro de validação: ${err.message}` });
+        }
         console.error('Erro ao atualizar perfil:', err);
         res.status(500).json({ error: 'Erro no servidor ao atualizar perfil: ' + err.message });
     }

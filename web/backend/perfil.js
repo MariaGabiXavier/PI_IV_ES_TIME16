@@ -11,6 +11,13 @@ const labelDocumento = document.getElementById('label-documento');
 let dadosAtuais = {}; 
 const usuarioTipo = sessionStorage.getItem('usuarioTipo'); 
 
+const cepInput = document.getElementById('edit-cep');
+const logradouroInput = document.getElementById('edit-logradouro');
+const bairroInput = document.getElementById('edit-bairro'); 
+const cidadeInput = document.getElementById('edit-cidade');
+const ufInput = document.getElementById('edit-uf');
+
+
 const handleLogout = () => {
     sessionStorage.removeItem('usuarioNome');
     sessionStorage.removeItem('usuarioTipo');
@@ -34,17 +41,18 @@ const mostrarModalSucesso = (mensagem) => {
 
 const exibirDadosNaTela = (dados) => {
     document.getElementById('email-usuario').textContent = dados.email || 'N/A';
+    const enderecoParts = [
+        dados.logradouro || '',
+        dados.numero || '',
+        dados.bairro || '',
+        dados.cidade || '',
+        dados.uf || '',
+    ];
     
-    const endereco = [
-        dados.logradouro,
-        dados.numero,
-        dados.bairro,
-        dados.cidade,
-        dados.uf,
-        dados.cep ? `(CEP: ${dados.cep})` : ''
-    ].filter(Boolean).join(', ');
+    const enderecoCompleto = enderecoParts.filter(Boolean).join(', ');
+    const cepString = dados.cep ? ` (CEP: ${dados.cep})` : '';
 
-    document.getElementById('endereco-completo').textContent = endereco || 'Endereço não cadastrado.';
+    document.getElementById('endereco-completo').textContent = enderecoCompleto + cepString || 'Endereço não cadastrado.';
     
     if (dados.tipo === 'empresa') {
         document.getElementById('saudacao-menu').textContent = `Olá, ${dados.razaoSocial.split(' ')[0]}!`;
@@ -101,6 +109,10 @@ const carregarDadosParaEdicao = (dados) => {
     document.getElementById('edit-cep').value = dados.cep || '';
     document.getElementById('edit-logradouro').value = dados.logradouro || '';
     document.getElementById('edit-numero').value = dados.numero || '';
+
+    if (bairroInput) bairroInput.value = dados.bairro || '';
+    if (cidadeInput) cidadeInput.value = dados.cidade || '';
+    if (ufInput) ufInput.value = dados.uf || '';
     
     document.getElementById('edit-senha').value = '';
     document.getElementById('edit-confirmar-senha').value = '';
@@ -115,6 +127,37 @@ const fecharModalEdicao = () => {
     modalEdicao.style.display = 'none';
     document.getElementById('erro-edicao-senha').textContent = '';
     document.getElementById('erro-edicao-geral').textContent = '';
+};
+
+const buscarCep = async (cep) => {
+    const cepLimpo = cep.replace(/\D/g, ''); 
+    if (cepLimpo.length !== 8) return; 
+
+    logradouroInput.value = 'Buscando...'; 
+    if (bairroInput) bairroInput.value = 'Buscando...';
+    if (cidadeInput) cidadeInput.value = 'Buscando...';
+    if (ufInput) ufInput.value = 'Buscando...';
+    
+    try {
+        const response = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
+        const data = await response.json();
+        
+        if (!data.erro) {
+            logradouroInput.value = data.logradouro || ''; 
+
+            if (bairroInput) bairroInput.value = data.bairro || '';
+            if (cidadeInput) cidadeInput.value = data.localidade || '';
+            if (ufInput) ufInput.value = data.uf || '';
+        } else {
+            console.log('CEP não encontrado.');
+            logradouroInput.value = ''; 
+            if (bairroInput) bairroInput.value = '';
+            if (cidadeInput) cidadeInput.value = '';
+            if (ufInput) ufInput.value = '';
+        }
+    } catch (e) {
+        console.error('Erro ao buscar CEP:', e);
+    }
 };
 
 const lidarEnvioEdicao = async (e) => {
@@ -142,15 +185,21 @@ const lidarEnvioEdicao = async (e) => {
         cep: formEdicao.cep.value,
         logradouro: formEdicao.logradouro.value,
         numero: formEdicao.numero.value,
+        // ENVIANDO TODOS OS CAMPOS DE ENDEREÇO
+        bairro: bairroInput ? bairroInput.value : undefined,
+        cidade: cidadeInput ? cidadeInput.value : undefined,
+        uf: ufInput ? ufInput.value : undefined,
     };
     
     const tipoBackend = dadosAtuais.tipo || usuarioTipo.toLowerCase();
 
     if (tipoBackend === 'colaborador') {
         dadosParaEnvio.nome = formEdicao.nome.value;
+        dadosParaEnvio.cpf = formEdicao.documento.value;
     } else {
         dadosParaEnvio.razaoSocial = formEdicao.nome.value;
         dadosParaEnvio.segmento = formEdicao.segmento.value;
+        dadosParaEnvio.cnpj = formEdicao.documento.value;
     }
 
     if (novaSenha) {
@@ -241,6 +290,10 @@ btnEdit.addEventListener('click', abrirModalEdicao);
 btnCancelarModal.addEventListener('click', fecharModalEdicao);
 formEdicao.addEventListener('submit', lidarEnvioEdicao);
 
+cepInput.addEventListener('blur', (e) => {
+    buscarCep(e.target.value);
+});
+
 modalEdicao.addEventListener('click', (e) => {
     if (e.target === modalEdicao) {
         fecharModalEdicao();
@@ -248,12 +301,5 @@ modalEdicao.addEventListener('click', (e) => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('link-logout').addEventListener('click', (e) => {
-        e.preventDefault();
-        if (confirm('Tem certeza que deseja sair da conta?')) { 
-            handleLogout();
-        }
-    });
-    
     carregarPerfilInicial();
 });
