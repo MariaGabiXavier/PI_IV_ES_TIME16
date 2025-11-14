@@ -268,7 +268,7 @@ body {
     grid-template-columns: 1fr 1fr;
     gap: 12px;
 }
-.form-nova-coleta input,
+.form-nova-coleta input,select,
 .form-nova-coleta textarea {
     width: 100%;
     box-sizing: border-box;
@@ -279,7 +279,7 @@ body {
     font-size: 16px;
     outline: none;
 }
-.form-nova-coleta input:focus,
+.form-nova-coleta input:focus, select:focus,
 .form-nova-coleta textarea:focus {
     border-color: var(--color-primary);
     box-shadow: 0 0 0 3px rgba(169,255,0,0.15);

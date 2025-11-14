@@ -57,10 +57,25 @@ const nome = sessionStorage.getItem('usuarioNome');
                     const response = await fetch('http://localhost:4000/api/coletas');
                     const coletas = await response.json();
 
-                    todasAsColetas = coletas; 
-                    
+                    // validar formato da resposta
+                    if (!Array.isArray(coletas)) {
+                        console.error('Resposta inesperada de /api/coletas:', coletas);
+                        feedColetas.innerHTML = '<p>Erro: resposta inválida do servidor ao carregar coletas.</p>';
+                        return;
+                    }
+
+                    // manter apenas as coletas com status 'pendente'
+                    const pendentes = coletas.filter(c => c && c.status && c.status.toLowerCase() === 'pendente');
+                    todasAsColetas = pendentes;
+
+                    // diagnóstico rápido para o usuário
                     if (coletas.length === 0) {
-                        feedColetas.innerHTML = '<p>Nenhuma coleta solicitada ainda.</p>';
+                        feedColetas.innerHTML = '<p>Nenhuma coleta cadastrada no sistema.</p>';
+                        return;
+                    }
+
+                    if (todasAsColetas.length === 0) {
+                        feedColetas.innerHTML = `<p>Nenhuma coleta pendente encontrada. (total no servidor: ${coletas.length})</p>`;
                     } else {
                         renderizarColetas(todasAsColetas);
                     }
@@ -73,14 +88,14 @@ const nome = sessionStorage.getItem('usuarioNome');
 
             function filtrarColetas() {
                 const termoPesquisa = searchInput.value.toLowerCase().trim(); 
-                const statusSelecionado = statusFilter.value.toLowerCase(); 
+                const ufSelecionada = statusFilter.value.toUpperCase(); 
 
                 const coletasFiltradas = todasAsColetas.filter(coleta => {
                     const matchPesquisa = coleta.responsavel.toLowerCase().includes(termoPesquisa);
                     
-                    const matchStatus = statusSelecionado === 'todos' || coleta.status.toLowerCase() === statusSelecionado;
+                    const matchUf = ufSelecionada === '' || (coleta.uf && coleta.uf.toUpperCase() === ufSelecionada);
 
-                    return matchPesquisa && matchStatus;
+                    return matchPesquisa && matchUf;
                 });
 
                 renderizarColetas(coletasFiltradas);

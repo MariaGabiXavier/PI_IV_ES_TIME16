@@ -60,7 +60,8 @@ const ColetaSchema = new mongoose.Schema({
   coletorId: { type: String, default: null }, 
   coletorNome: { type: String, default: null },
   enderecoColeta: String, 
-  itensDisponiveis: Number, 
+  itensDisponiveis: Number,
+  uf: { type: String, required: true }, 
 });
 
 const userEmpresa = mongoose.model('User Empresa', UserEmpresaModel);
