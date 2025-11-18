@@ -29,6 +29,12 @@ body {
     min-height: 100vh;
 }
 
+
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+
 .dashboard-sidebar {
     width: 330px;
     background-color: #49643E; 
@@ -38,16 +44,35 @@ body {
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
+    
+}
+
+
+.logo-getgreen {
+    font-size: 26px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;    
+    margin-left: -35px;    
+    gap: 10px;                 
+    padding: 10px 15px;            
+}
+
+.header-logo-image {
+   height: 75px; 
+    width: auto;
+    margin-right: 0px; 
+    filter: drop-shadow(0 0 1px rgba(0,0,0,0.2)); 
 }
 
 .dashboard-sidebar .logo-getgreen {
     font-size: 28px;
-    color: black; 
-    margin-top: 0px;
+    color: rgb(255, 255, 255); 
     margin-bottom: 40px; 
     text-decoration: none;
     font-family: var(--font-family);
     font-weight: bold;
+   
 }
 
 .sidebar-nav {

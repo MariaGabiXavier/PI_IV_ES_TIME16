@@ -38,7 +38,7 @@ body {
 
 .dashboard-sidebar .logo-getgreen {
     font-size: 28px;
-    color: black; 
+    color: rgb(255, 255, 255); 
     margin-bottom: 40px;
     text-decoration: none;
     font-family: var(--font-family);
