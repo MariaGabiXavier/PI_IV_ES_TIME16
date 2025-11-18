@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons+Outlined');
+
 :root {
     --color-primary: #a9ff00;
     --color-text: #000;
@@ -7,15 +8,10 @@
     --muted: #777;
 }
 
-html {
-     scroll-behavior: smooth; 
-    }
+html { scroll-behavior: smooth; }
 body { margin: 0; padding: 0; min-height: 100vh; font-family: 'Jomolhari', serif; color: var(--color-text); background: #f9f9f9; }
 
-.dashboard-container {
-     display: flex; min-height: 100vh; 
-    }
-
+.dashboard-container { display: flex; min-height: 100vh; }
 .dashboard-sidebar {
     width: 330px;
     background-color: #49643E; 
@@ -25,7 +21,6 @@ body { margin: 0; padding: 0; min-height: 100vh; font-family: 'Jomolhari', serif
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    font-family: var(--font-family);
     
 }
 
@@ -37,8 +32,7 @@ body { margin: 0; padding: 0; min-height: 100vh; font-family: 'Jomolhari', serif
     align-items: center;    
     margin-left: -35px;    
     gap: 10px;                 
-    padding: 10px 15px;        
-    font-family: var(--font-family);    
+    padding: 10px 15px;            
 }
 
 .header-logo-image {
@@ -57,13 +51,8 @@ body { margin: 0; padding: 0; min-height: 100vh; font-family: 'Jomolhari', serif
     font-weight: bold;
    
 }
-
-.sidebar-nav h4 {
-     font-size: 28px; color: #f0f0f0; margin: 25px 0 15px; font-weight: bold;
-     }
-.sidebar-nav ul {
-     list-style: none; margin: 0; padding: 0; 
-    }
+.sidebar-nav h4 { font-size: 28px; color: #f0f0f0; margin: 25px 0 15px; font-weight: bold; }
+.sidebar-nav ul { list-style: none; margin: 0; padding: 0; }
 
 .sidebar-nav li a { 
     display: flex; 
@@ -83,22 +72,8 @@ body { margin: 0; padding: 0; min-height: 100vh; font-family: 'Jomolhari', serif
 }
 
 
-.dashboard-main { 
-    flex: 1; 
-    background: #fff; 
-    padding: 40px 50px; 
-    box-sizing: border-box; 
-    overflow-y: auto; 
-}
-.dashboard-header {
-     display: flex; 
-     justify-content: space-between; 
-     align-items: center; 
-     background: #fff; 
-     box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
-     margin: -40px -50px 40px; 
-     padding: 20px 50px 20px 150px; 
-    }
+.dashboard-main { flex: 1; background: #fff; padding: 40px 50px; box-sizing: border-box; overflow-y: auto; }
+.dashboard-header { display: flex; justify-content: space-between; align-items: center; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin: -40px -50px 40px; padding: 20px 50px 20px 150px; }
 .main-nav a { text-decoration: none; color: var(--color-text); margin-left: 100px; font-size: 17px; font-weight: 500; }
 .main-nav a:first-child { margin-left: 0; }
 .main-nav a:hover { color: #88cc00; }
