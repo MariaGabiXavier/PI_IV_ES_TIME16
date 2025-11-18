@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "bcrypt": "^6.0.0",
-    "node-fetch": "^3.3.2"
-  }
-}
