@@ -160,6 +160,14 @@ realizar a coleta, descrição da coleta, e observações se houver necessidade.
 
 ---
 
+## Teste 
+-entrar na branch
+- baixar pasta teste 
+-abrir como projeto no intellij
+-procurar pelo arquivo pom
+xml e sincronizar o maven do projeto
+-para rodar os testes execute os scripts da pasta test
+
 ## 🏫 Instituição
 
 **Pontifícia Universidade Católica de Campinas (PUC-Campinas)**  
