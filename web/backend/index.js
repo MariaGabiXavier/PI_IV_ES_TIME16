@@ -315,7 +315,7 @@ app.post('/api/forgot-password', async (req, res) => {
     const Modelo = empresa ? userEmpresa : userColaborador;
 
     // Gerar token de reset (válido por 1 hora)
-    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetToken = crypto.randomBytes(4).toString('base64url');
     const resetTokenHash = crypto.createHash('sha256').update(resetToken).digest('hex');
     const resetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hora
 

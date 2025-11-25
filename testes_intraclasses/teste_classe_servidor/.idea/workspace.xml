@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="7a2e9a34-d85c-47d7-91b3-e129c438e1af" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../Servidor/Cliente.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Servidor/Comunicado.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Servidor/ComunicadoDeDesligamento.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Servidor/Parceiro.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Servidor/PedidoDeOperacao.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Servidor/PedidoDeResultado.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Servidor/PedidoParaSair .java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Servidor/Resultado.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Servidor/Teclado.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/backend/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/backend/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/backend/src/accounts/accounts.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/backend/src/events/events.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/backend/src/server.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/backend/src/wallet/wallet.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/backend/tsconfig.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/bcd/script.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/docs/PI-2-Descritivo do Projeto_ES-2024.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/docs/logico.drawio" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/docs/modelagemPI.drawio" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/BetOnEvent/User1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/BetOnEvent/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/BetOnEvent/jogador.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/BetOnEvent/jogo1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/BetOnEvent/logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/BetOnEvent/logo2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/BetOnEvent/player.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/BetOnEvent/script.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/BetOnEvent/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/accounts/images_accounts/logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/accounts/images_accounts/logo2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/accounts/login.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/accounts/modalLogin/modalLogin.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/accounts/modalLogin/modalLogin.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/accounts/modalLogin/modalLogin.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/accounts/signup.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/accounts/style_accounts.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/admin/admin.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/carteira/script.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/carteira/usersProfile.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/User1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/brasileirao/brasileirao.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/brasileirao/script.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/categoria.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/categoria.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/champions/champions.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/champions/script.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/copaDoBrasil/copa_brasil.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/copaDoBrasil/script.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/estaduais/estaduais.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/estaduais/script.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/imagens/brasil_pag.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/imagens/brasileirao_icon.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/imagens/brasileirao_pag.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/imagens/champions_icon.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/imagens/champions_pag.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/imagens/copa_brasil_icon.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/imagens/copa_brasil_pag.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/imagens/estaduais_pag.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/imagens/estatuais_icon.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/imagens/laliga_icon.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/imagens/laliga_pag.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/imagens/libertadores_icon.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/imagens/libertadores_pag.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/imagens/premier_icon.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/imagens/premier_pag.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/imagens/sul_americana_icon.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/imagens/sulamericana_pag.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/jogador.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/laliga/laliga.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/laliga/script.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/libertadores/libertadores.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/libertadores/script.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/logo2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/premierLeague/premier.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/premierLeague/script.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/principal.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/principal.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/principal.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/sulamericana/script.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/categorias/sulamericana/sulamericana.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/css/cadevento.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/css/perfil.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/events/addNewEvent.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/events/script.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/img/logo-perfil.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/modalAddFounds/modal.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/modalAddFounds/script.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/modalAddFounds/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/modalWithDrawFounds/modal.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/modalWithDrawFounds/script.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../footbet/frontend/modalWithDrawFounds/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../teste_classe_supervisora/src/test/java/SupervisoraDeConexaoTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../teste_servidor/.idea/workspace.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 7
+}]]></component>
+  <component name="ProjectId" id="35y8pXnpeBl85z97pKN3OgpVXkQ" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JUnit.ServidorTest.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/ester/OneDrive/Área de Trabalho/teste_classe_servidor",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="ServidorTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="servidor" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="ServidorTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.ServidorTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.27397.103" />
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-IU-252.27397.103" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7a2e9a34-d85c-47d7-91b3-e129c438e1af" name="Changes" comment="" />
+      <created>1764071134027</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1764071134027</updated>
+      <workItem from="1764071135390" duration="604000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
