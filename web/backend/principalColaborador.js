@@ -68,14 +68,14 @@ const nome = sessionStorage.getItem('usuarioNome');
                     const pendentes = coletas.filter(c => c && c.status && c.status.toLowerCase() === 'pendente');
                     todasAsColetas = pendentes;
 
-                    // diagnóstico rápido para o usuário
+                    // caso não tenha coleta
                     if (coletas.length === 0) {
                         feedColetas.innerHTML = '<p>Nenhuma coleta cadastrada no sistema.</p>';
                         return;
                     }
 
                     if (todasAsColetas.length === 0) {
-                        feedColetas.innerHTML = `<p>Nenhuma coleta pendente encontrada. (total no servidor: ${coletas.length})</p>`;
+                        feedColetas.innerHTML = `<p>Nenhuma coleta pendente encontrada.</p>`;
                     } else {
                         renderizarColetas(todasAsColetas);
                     }

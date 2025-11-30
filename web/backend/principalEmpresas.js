@@ -100,29 +100,94 @@ async function excluirColeta(coletaId) {
 }
 
 async function finalizarColeta(coletaId) {
-    if (!confirm('Deseja realmente finalizar esta coleta? Esta ação é definitiva e será registrada como concluída.')) {
-        return;
+    // Abrir modal para inserção do token de coleta para validação
+    const overlay = document.createElement('div');
+    overlay.style.position = 'fixed';
+    overlay.style.top = 0;
+    overlay.style.left = 0;
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.backgroundColor = 'rgba(0,0,0,0.5)';
+    overlay.style.display = 'flex';
+    overlay.style.alignItems = 'center';
+    overlay.style.justifyContent = 'center';
+    overlay.style.zIndex = 10000;
+
+    const modal = document.createElement('div');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.style.background = '#fff';
+    modal.style.padding = '20px';
+    modal.style.borderRadius = '8px';
+    modal.style.maxWidth = '400px';
+    modal.style.width = '90%';
+    modal.style.boxShadow = '0 6px 18px rgba(0,0,0,0.2)';
+
+    modal.innerHTML = `
+        <h3 style="margin:0 0 10px 0;">Finalizar Coleta</h3>
+        <p style="margin:0 0 12px 0;">Insira o token fornecido pelo coletor para validar a finalização desta coleta.</p>
+        <input id="inputTokenFinalizar" placeholder="Token de coleta" style="width:100%; padding:8px; margin-bottom:10px; box-sizing:border-box;" />
+        <div style="display:flex; gap:8px; justify-content:flex-end;">
+            <button id="cancelFinalizarBtn" style="background:#eee; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">Cancelar</button>
+            <button id="confirmFinalizarBtn" style="background:#4CAF50; color:#fff; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">Validar e Finalizar</button>
+        </div>
+        <p id="finalizarMsg" style="margin-top:8px; color:#d00; display:none;"></p>
+    `;
+
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+
+    const inputToken = modal.querySelector('#inputTokenFinalizar');
+    const cancelBtn = modal.querySelector('#cancelFinalizarBtn');
+    const confirmBtn = modal.querySelector('#confirmFinalizarBtn');
+    const msgP = modal.querySelector('#finalizarMsg');
+
+    function closeModal() {
+        overlay.remove();
     }
 
-    try {
-        const response = await fetch(`http://localhost:4000/api/coletas/${coletaId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ status: 'concluida' })
-        });
+    cancelBtn.addEventListener('click', (e) => { e.preventDefault(); closeModal(); });
 
-        const resultado = await response.json();
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
 
-        if (response.ok) {
-            alert('Coleta finalizada com sucesso! Ela foi movida para o histórico.');
-            carregarColetasEmpresa();
-        } else {
-            alert(`Erro ao finalizar coleta: ${resultado.error}`);
+    confirmBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const token = inputToken.value.trim();
+        if (!token) {
+            msgP.textContent = 'Informe o token para validar a coleta.';
+            msgP.style.display = 'block';
+            return;
         }
-    } catch (err) {
-        console.error('Fetch error:', err);
-        alert('Erro de conexão com o servidor ao tentar finalizar a coleta.');
-    }
+
+        try {
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'Validando...';
+
+            const res = await fetch(`http://localhost:4000/coletas/${coletaId}/validar-token`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token })
+            });
+
+            const result = await res.json();
+            if (res.ok) {
+                alert('Coleta finalizada com sucesso! Ela foi movida para o histórico.');
+                closeModal();
+                carregarColetasEmpresa();
+            } else {
+                msgP.textContent = result.error || 'Token inválido ou erro ao validar.';
+                msgP.style.display = 'block';
+                confirmBtn.disabled = false;
+                confirmBtn.textContent = 'Validar e Finalizar';
+            }
+        } catch (err) {
+            console.error('Erro ao validar token:', err);
+            msgP.textContent = 'Erro de conexão ao validar token.';
+            msgP.style.display = 'block';
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = 'Validar e Finalizar';
+        }
+    });
 }
 
 
@@ -176,14 +241,19 @@ async function carregarColetasEmpresa() {
             let cardClass = '';
             let listType;
 
-            if (coleta.status === 'pendente' || coleta.status === 'confirmada') {
-                 statusText = coleta.status === 'pendente' ? 'Aguardando Coletor' : 'Coletor Confirmado (Em Andamento)';
+            if (coleta.status === 'pendente') {
+                 statusText = 'Aguardando Coletor';
                  actionButton = `<button class="btn-action btn-cancel" data-coleta-id="${coleta._id}"><span class="material-icons-outlined">close</span>cancelar</button>`;
                  cardClass = 'is-pending';
                  listType = 'pendente';
-            } else if (coleta.status === 'realizada') {
-                statusText = 'Coleta Realizada (Aguardando Finalização)';
-                actionButton = `<button class="btn-action btn-finish btn-finalizar" data-coleta-id="${coleta._id}"><span class="material-icons-outlined">check</span>finalizar</button>`;
+            } else if (coleta.status === 'confirmada' || coleta.status === 'realizada') {
+                // Mostrar botão de finalizar tanto para 'confirmada' (coletor confirmado)
+                // quanto para 'realizada' (coleta realizada, aguardando validação)
+                statusText = coleta.status === 'confirmada' ? 'Coletor Confirmado (Em Andamento)' : 'Coleta Realizada (Aguardando Finalização)';
+                actionButton = `
+                    <button class="btn-action btn-cancel" data-coleta-id="${coleta._id}"><span class="material-icons-outlined">close</span>cancelar</button>
+                    <button class="btn-action btn-finish btn-finalizar" data-coleta-id="${coleta._id}"><span class="material-icons-outlined">check</span>finalizar</button>
+                `;
                 cardClass = 'is-done';
                 listType = 'concluida';
                 coletorNome = coleta.coletorNome || 'Coletor Parceiro';
@@ -227,6 +297,17 @@ async function carregarColetasEmpresa() {
                     const coletaId = e.currentTarget.getAttribute('data-coleta-id');
                     if (coletaId) {
                         finalizarColeta(coletaId);
+                    }
+                });
+            });
+
+            // Also attach cancel listeners for confirmed/realized items
+            document.querySelectorAll('#listConcluidas .btn-cancel').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const coletaId = e.currentTarget.getAttribute('data-coleta-id');
+                    if (coletaId) {
+                        excluirColeta(coletaId);
                     }
                 });
             });

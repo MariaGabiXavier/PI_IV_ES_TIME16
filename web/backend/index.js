@@ -68,6 +68,7 @@ const ColetaSchema = new mongoose.Schema({
   enderecoColeta: String, 
   itensDisponiveis: Number,
   uf: { type: String, required: true }, 
+  tokenColeta: { type: String, default: null }
 });
 
 const userEmpresa = mongoose.model('User Empresa', UserEmpresaModel);
@@ -93,7 +94,7 @@ app.get('/', (req, res) => {
 const MIN_PASSWORD_LENGTH = 6; 
 const SALT_ROUNDS = 10;
 
-// Configurar transportador de email (Gmail)
+//transportador de email (Gmail)
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -290,7 +291,7 @@ app.post('/api/login', async (req, res) => {
     res.status(500).json({ error: 'Erro no servidor' });
   }
 });
-
+//Esqueci senha
 app.post('/api/forgot-password', async (req, res) => {
   const { email } = req.body;
 
@@ -299,12 +300,11 @@ app.post('/api/forgot-password', async (req, res) => {
   }
 
   try {
-    // Buscar o usuário em ambas as coleções (empresa e colaborador)
     const empresa = await userEmpresa.findOne({ email });
     const colaborador = await userColaborador.findOne({ email });
 
     if (!empresa && !colaborador) {
-      // Por segurança, não revelamos se o email existe ou não
+      
       return res.status(200).json({ 
         mensagem: 'Se o e-mail estiver cadastrado, um link de redefinição foi enviado. Verifique sua caixa de entrada.' 
       });
@@ -324,7 +324,7 @@ app.post('/api/forgot-password', async (req, res) => {
     usuario.resetPasswordExpires = resetExpires;
     await usuario.save();
 
-    // Enviar email com o link de reset
+    // Envia email com o link 
     const emailEnviado = await enviarEmailReset(email, resetToken, tipo);
 
     if (emailEnviado) {
@@ -638,10 +638,17 @@ app.post('/coletas/:id/confirmar', async (req, res) => {
     coleta.status = 'confirmada'; 
     coleta.coletorId = coletorId;
     coleta.coletorNome = coletorNome;
+
+    // Gerar token de coleta
+    const token = crypto.randomBytes(4).toString('base64url');
+    const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+
+    // Salvar token no documento da coleta
+    coleta.tokenColeta = tokenHash;
     
     await coleta.save();
 
-    res.json({ message: 'Coleta confirmada com sucesso! Agora ela está na sua lista de Pendentes.', coleta });
+    res.json({ message: "Coleta confirmada com sucesso! Utilize o token a seguir ao realizar a coleta: " + token, token: token, coleta });
   } catch (err) {
     console.error('Erro ao aceitar coleta:', err);
     res.status(500).json({ error: 'Erro ao aceitar coleta.' });
@@ -667,5 +674,36 @@ app.post('/api/denuncias', async (req, res) => {
     res.json({ mensagem: 'Denúncia registrada com sucesso!', denuncia });
   } catch (err) {
     res.status(500).json({ error: 'Erro ao registrar denúncia: ' + err.message });
+  }
+});
+
+// Validar token de coleta e marcar como concluída
+app.post('/coletas/:id/validar-token', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { token } = req.body;
+
+    if (!token) return res.status(400).json({ error: 'Token é obrigatório.' });
+
+    const coleta = await Coleta.findById(id);
+    if (!coleta) return res.status(404).json({ error: 'Coleta não encontrada.' });
+
+    if (!coleta.tokenColeta) return res.status(400).json({ error: 'Nenhum token associado a esta coleta.' });
+
+    const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+
+    if (tokenHash !== coleta.tokenColeta) {
+      return res.status(400).json({ error: 'Token inválido.' });
+    }
+
+    coleta.status = 'concluida';
+    // Remover o token para evitar reutilização
+    coleta.tokenColeta = null;
+    await coleta.save();
+
+    return res.json({ message: 'Token válido. Coleta marcada como concluída.', coleta });
+  } catch (err) {
+    console.error('Erro ao validar token de coleta:', err);
+    res.status(500).json({ error: 'Erro ao validar token de coleta.' });
   }
 });

@@ -101,11 +101,64 @@ const nome = sessionStorage.getItem('usuarioNome');
                         const data = await res.json();
 
                         if (res.ok) {
-                            alert("Coleta confirmada com sucesso! Ela está na sua lista 'Pendentes'.");
-                            botaoConfirmar.disabled = true;
-                            botaoConfirmar.textContent = "Coleta Confirmada";
-                            botaoConfirmar.style.backgroundColor = "#4CAF50";
-                            window.location.href = "/web/frontend/accounts/MinhasColetasColaborador/ColetasColaborador.html"; 
+                            const tokenPlain = data.token || '';
+
+                            // Modal simples para exibir o token 
+                            const overlay = document.createElement('div');
+                            overlay.style.position = 'fixed';
+                            overlay.style.top = 0;
+                            overlay.style.left = 0;
+                            overlay.style.width = '100%';
+                            overlay.style.height = '100%';
+                            overlay.style.backgroundColor = 'rgba(0,0,0,0.5)';
+                            overlay.style.display = 'flex';
+                            overlay.style.alignItems = 'center';
+                            overlay.style.justifyContent = 'center';
+                            overlay.style.zIndex = 10000;
+
+                            const modal = document.createElement('div');
+                            modal.setAttribute('role', 'dialog');
+                            modal.setAttribute('aria-modal', 'true');
+                            modal.style.background = '#fff';
+                            modal.style.padding = '20px';
+                            modal.style.borderRadius = '8px';
+                            modal.style.maxWidth = '420px';
+                            modal.style.width = '90%';
+                            modal.style.boxShadow = '0 6px 18px rgba(0,0,0,0.2)';
+
+                            modal.innerHTML = `
+                                <h2 style="margin-top:0; color:#2f7a2f;">Coleta Confirmada</h2>
+                                <p>A coleta somente poderá ser realizada mediante a apresentação do token de coleta ao estabelecimento. </p>
+                                <p style="margin-top:12px; font-weight:600;">Token de coleta:</p>
+                                <div id="tokenValue" style="font-weight:300;background:#f4f4f4; padding:10px; border-radius:6px; word-break:break-all; margin-bottom:12px; font-family:monospace;">${tokenPlain || 'não disponível'}</div>
+                                <div style="display:flex; gap:8px; justify-content:flex-end;">
+                                    <button id="closeTokenBtn" style="background:#eee; color:#333; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">OK</button>
+                                </div>
+                            `;
+
+                            overlay.appendChild(modal);
+                            document.body.appendChild(overlay);
+
+                            const closeBtn = modal.querySelector('#closeTokenBtn');
+
+                            
+                            function closeModalAndRedirect() {
+                                overlay.remove();
+                                botaoConfirmar.disabled = true;
+                                botaoConfirmar.textContent = 'Coleta Confirmada';
+                                botaoConfirmar.style.backgroundColor = '#4CAF50';
+                                window.location.href = '/web/frontend/accounts/MinhasColetasColaborador/ColetasColaborador.html';
+                            }
+
+                            closeBtn.addEventListener('click', (e) => { e.preventDefault(); closeModalAndRedirect(); });
+
+                            // Fechar ao clicar fora do modal
+                            overlay.addEventListener('click', function (ev) {
+                                if (ev.target === overlay) closeModalAndRedirect();
+                            });
+
+                            console.log('Token de coleta (plain):', tokenPlain);
+
                         } else {
                             alert("Erro: " + (data.error || "Não foi possível confirmar."));
                         }

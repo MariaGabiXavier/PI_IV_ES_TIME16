@@ -55,25 +55,7 @@
             }
 
 
-            async function marcarComoRealizada(coletaId) {
-                if (!confirm('Você concluiu esta coleta? Esta ação irá movê-la para a aba de Concluídas.')) return;
-                try {
-                    const response = await fetch(`http://localhost:4000/api/coletas/${coletaId}`, {
-                        method: 'PUT', headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ status: 'realizada' }) 
-                    });
-                    const resultado = await response.json();
-                    if (response.ok) {
-                        alert('Coleta marcada como concluída! Ela está aguardando a finalização do solicitante.');
-                        carregarColetasColaborador(); 
-                    } else {
-                        alert(`Erro ao marcar como realizada: ${resultado.error}`);
-                    }
-                } catch (err) {
-                    console.error('Fetch error:', err);
-                    alert('Erro de conexão com o servidor ao tentar marcar como realizada.');
-                }
-            }
+            
             
             function visualizarColetaFinalizada() {
                  alert("Esta coleta já foi marcada como FINALIZADA pelo solicitante. Use esta aba para visualizar o histórico.");
@@ -180,7 +162,6 @@
                             requestSideClass = 'request-side request-side-pending-actions'; 
                             actionButton = `
                                 <div class="action-buttons-group">
-                                    <button class="btn-action btn-finish" data-coleta-id="${coleta._id}"><span class="material-icons-outlined">check</span>Marcar Realizada</button>
                                     <button class="btn-action btn-cancel" data-coleta-id="${coleta._id}"><span class="material-icons-outlined">close</span>Cancelar</button>
                                 </div>
                             `;
