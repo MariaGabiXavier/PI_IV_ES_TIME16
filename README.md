@@ -16,6 +16,7 @@ O projeto foi desenvolvido como parte do componente curricular **Ideação e Val
 - [Banco de Dados MongoDB](#-banco-de-dados-mongodb)
 - [Como Executar](#-como-executar)
 - [Equipe de Desenvolvimento](#-equipe-de-desenvolvimento)
+- [Teste](-#-teste)
 - [Instituição](#-instituição)
 
 ---
@@ -160,13 +161,15 @@ realizar a coleta, descrição da coleta, e observações se houver necessidade.
 
 ---
 
-## Teste 
--entrar na branch
-- baixar pasta teste 
--abrir como projeto no intellij
--procurar pelo arquivo pom
-xml e sincronizar o maven do projeto
--para rodar os testes execute os scripts da pasta test
+## 🖱️ Teste 
+1. **Entre na branch testeServidor**
+2. **Baixar pasta teste**
+3. **Abrir como projeto no intellij**
+4. **Procurar pelo arquivo pom
+xml e sincronizar o maven do projeto**
+5. **Para rodar os testes execute os scripts da pasta test**
+
+---
 
 ## 🏫 Instituição
 
