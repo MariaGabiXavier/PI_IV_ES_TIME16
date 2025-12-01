@@ -38,10 +38,8 @@
       if (!overlay) return;
       overlay.style.display = 'flex';
       overlay.setAttribute('aria-hidden', 'false');
-      // foco no input manual se existir, senão tenta o primeiro input do form
       const manual = document.getElementById('manualInput');
       if (manual) {
-        // pequeno timeout garante que o elemento esteja interativo no DOM
         setTimeout(() => manual.focus(), 10);
         return;
       }
@@ -122,15 +120,12 @@
         });
       }
 
-      // 🌿 Lista global com as opções atuais do menu
 let currentOptions = [];
 
-// ===============================
-// Renderiza as opções do menu
-// ===============================
+
 function renderOptions(menuText) {
   opts.innerHTML = '';
-  currentOptions = []; // limpa opções anteriores
+  currentOptions = []; 
 
   const lines = menuText.split('\n');
   for (const line of lines) {
@@ -138,7 +133,7 @@ function renderOptions(menuText) {
     if (m) {
       const num = m[1];
       const label = m[2];
-      currentOptions.push({ num, label }); // salva opção para busca
+      currentOptions.push({ num, label }); 
 
       const btn = document.createElement('button');
       btn.textContent = `${num} — ${label}`;
@@ -156,9 +151,6 @@ function renderOptions(menuText) {
   }
 }
 
-// ===============================
-// Envia mensagens manuais (campo de texto)
-// ===============================
 sendManual.addEventListener('click', sendMessageManual);
 manualInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') sendMessageManual();
@@ -172,7 +164,6 @@ function sendMessageManual() {
     return; 
   }
 
-  // Caso o usuário digite apenas um número → envia direto como PED
   if (/^\d+$/.test(txt)) {
     ws.send(JSON.stringify({ type: 'PED', payload: txt }));
     appendMessage('Você: ' + txt, 'user');
@@ -180,15 +171,13 @@ function sendMessageManual() {
     return;
   }
 
-  // Caso digite texto → tenta identificar a opção correspondente
   const userLower = txt.toLowerCase();
 
-  // busca por palavra inicial (ex: "agendar" em "1 - Agendar coleta")
   const found =
     currentOptions.find(opt =>
       userLower.includes(opt.label.toLowerCase().split(' ')[0])
     ) ||
-    // ou busca se o texto do usuário aparece dentro do rótulo
+
     currentOptions.find(opt =>
       opt.label.toLowerCase().includes(userLower)
     );
@@ -203,12 +192,8 @@ function sendMessageManual() {
   manualInput.value = '';
 }
 
-
-
-      // inicializa
       connectWS();
 
-      // Inicia escondido
       hideModal();
   </script>
 </body>
