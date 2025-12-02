@@ -19,7 +19,7 @@ public class ChatbotRegras {
         perguntas.put(9, "Como são conectados os colaboradores e as empresas?");
         perguntas.put(10, "Como faço para me comunicar com o suporte técnico?");
         perguntas.put(11, "Qual a importância da coleta seletiva?");
-        perguntas.put(12, "Outros");
+       
 
         respostas.put(1, "O GetGreen é um projeto que incentiva práticas sustentáveis e conscientização ambiental. Para mais informações, visite a pagina sobre o GetGreen.");
         respostas.put(2, "Para mudar sua senha, vá para a página de login e clique em 'Esqueci minha senha'. Siga as instruções enviadas");
@@ -58,7 +58,7 @@ public class ChatbotRegras {
         "\n2. Telefone: ligue para (11) 1234-5678, atendimento 24hrs."+
         "\n3. Telefone: ligue para (11) 3378-9023, durante o horário comercial (9hrs às 18hrs).");
         respostas.put(11, "A coleta seletiva é importante porque reduz o desperdício e permite a reciclagem de materiais.");
-        respostas.put(12, "Desculpe, infelizmente não posso te ajudar por aqui!\n"+"Se você tiver outras dúvidas ou precisar de mais informações, por favor, entre em contato com nosso suporte técnico");
+       
     }
 
     public String montarMenu() {
